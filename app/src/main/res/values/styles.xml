@@ -1,0 +1,24 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    </style>
+
+    <style name="TransparentTheme" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen">
+    </style>
+
+    <!-- ActionBar styles -->
+    <style
+        name="MyActionBar"
+        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">#FFBB33</item>
+    </style>
+
+
+    <!-- Colors -->
+    <color name="veryLightGray">#D9D9D9</color>
+    <color name="lightGray">#ffcdcdcd</color>
+    <color name="drawer_additional_button_text_color">#ff373737</color>
+
+</resources>
