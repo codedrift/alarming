@@ -24,7 +24,6 @@ dependencies {
         fileTree(dir: 'libs', include: ['*.jar']),
             'com.google.code.gson:gson:2.2.4',
             'com.doomonafireball.betterpickers:library:1.5.2',
-            'com.actionbarsherlock:actionbarsherlock:4.4.0@aar',
             'com.android.support:support-v4:18.0.+',
             'commons-io:commons-io:2.4'
     )
