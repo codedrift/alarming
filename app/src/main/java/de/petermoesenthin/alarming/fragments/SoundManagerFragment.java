@@ -33,7 +33,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -43,7 +42,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.petermoesenthin.alarming.AlarmReceiverActivity;
 import de.petermoesenthin.alarming.AlarmSoundEditActivity;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmSoundListAdapter;
@@ -122,12 +120,16 @@ public class SoundManagerFragment extends Fragment implements
             if (position == mListItemCount) {
                 startAudioFileIntent();
             }else {
-                showItemEditDialog(position);
+                showItemActionDialog(position);
             }
         }
     };
 
-    private void showItemEditDialog(final int pPosition) {
+    /**
+     * Show a dialog to interact with an audio file.
+     * @param itemPosition Selected item in parent listView
+     */
+    private void showItemActionDialog(final int itemPosition) {
         if (D) {Log.d(DEBUG_TAG,"Showing item options dialog");}
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -146,13 +148,15 @@ public class SoundManagerFragment extends Fragment implements
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
                     case 0:
+                        if (D) {Log.d(DEBUG_TAG,"Starting AlarmSoundEditActivity");}
                         Context context = getActivity().getApplicationContext();
                         Intent i = new Intent(context, AlarmSoundEditActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(i);
                         break;
                     case 1:
-                        FileUtil.deleteFile(PrefUtil.getAlarmSoundUris(getActivity())[pPosition]);
+                        FileUtil.deleteFile(
+                                PrefUtil.getAlarmSoundUris(getActivity())[itemPosition]);
                         PrefUtil.updateAlarmSoundUris(getActivity());
                         break;
                 }
@@ -169,6 +173,9 @@ public class SoundManagerFragment extends Fragment implements
     }
 
 
+    /**
+     * Start an intent to load an audio file
+     */
     private void startAudioFileIntent(){
         if (D) {Log.d(DEBUG_TAG,"Starting file intent");}
         Intent audioIntent = new Intent();
@@ -201,6 +208,9 @@ public class SoundManagerFragment extends Fragment implements
         }
     }
 
+    /**
+     * Show a dialog to inform the user that a wrong file type has been selected
+     */
     private void showWrongFileTypeDialog(){
         if (D) {Log.d(DEBUG_TAG,"Showing wrong file type dialog");}
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -215,6 +225,7 @@ public class SoundManagerFragment extends Fragment implements
         AlertDialog alert = builder.create();
         alert.show();
     }
+
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
