@@ -32,6 +32,10 @@
             android:name=".SettingsActivity"
             >
         </activity>
+        <activity
+            android:name=".AlarmSoundEditActivity"
+            >
+        </activity>
         <receiver android:name=".receiver.AlarmReceiver"/>
         <receiver android:name=".receiver.AlarmStateBootReceiver">
             <intent-filter>

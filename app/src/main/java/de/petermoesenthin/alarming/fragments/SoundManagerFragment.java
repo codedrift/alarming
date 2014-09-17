@@ -43,6 +43,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.petermoesenthin.alarming.AlarmReceiverActivity;
+import de.petermoesenthin.alarming.AlarmSoundEditActivity;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmSoundListAdapter;
 import de.petermoesenthin.alarming.ui.AlarmSoundListItem;
@@ -131,7 +133,7 @@ public class SoundManagerFragment extends Fragment implements
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_alarmsoundoptions, null);
         ListView optionlist = (ListView) dialogView.findViewById(R.id.listView_alarmSoundOptions);
-        String[] options = {"Delete"};
+        String[] options = {"Edit","Delete"};
         final ArrayList<String> list = new ArrayList<String>();
         for (int i = 0; i < options.length; ++i) {
             list.add(options[i]);
@@ -142,8 +144,18 @@ public class SoundManagerFragment extends Fragment implements
         optionlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FileUtil.deleteFile(PrefUtil.getAlarmSoundUris(getActivity())[pPosition]);
-                PrefUtil.updateAlarmSoundUris(getActivity());
+                switch (position){
+                    case 0:
+                        Context context = getActivity().getApplicationContext();
+                        Intent i = new Intent(context, AlarmSoundEditActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(i);
+                        break;
+                    case 1:
+                        FileUtil.deleteFile(PrefUtil.getAlarmSoundUris(getActivity())[pPosition]);
+                        PrefUtil.updateAlarmSoundUris(getActivity());
+                        break;
+                }
                 if(mOptionsDialog != null){
                     mOptionsDialog.dismiss();
                 }
