@@ -29,7 +29,16 @@ import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.ui.AlarmSoundListItem;
 
 public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
+
+    //==========================================================================
+    // Members
+    //==========================================================================
+
     private Context context;
+
+    //==========================================================================
+    // Lifecycle
+    //==========================================================================
 
     public AlarmSoundListAdapter(Context context, int layoutId,
                                    List<AlarmSoundListItem> itemList) {
@@ -37,6 +46,9 @@ public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
         this.context = context;
     }
 
+    //==========================================================================
+    // Methods
+    //==========================================================================
 
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
@@ -59,6 +71,11 @@ public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
 
         return convertView;
     }
+
+    //==========================================================================
+    // Inner Classes
+    //==========================================================================
+
 
     private class ViewHolder {
         TextView itemText;

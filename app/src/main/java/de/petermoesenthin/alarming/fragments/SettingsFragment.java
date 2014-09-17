@@ -21,6 +21,10 @@ import de.petermoesenthin.alarming.R;
 
 public class SettingsFragment extends android.preference.PreferenceFragment {
 
+    //================================================================================
+    // Lifecycle
+    //================================================================================
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -34,16 +34,24 @@ import de.petermoesenthin.alarming.ui.DrawerItem;
 public class DrawerItemArrayAdapter extends ArrayAdapter<DrawerItem> {
 
     //==========================================================================
-    // CLASS MEMBERS
+    // Members
     //==========================================================================
 
     private Context context;
+
+    //==========================================================================
+    // Lifecycle
+    //==========================================================================
 
     public DrawerItemArrayAdapter(Context context, int layoutId,
                                   List<DrawerItem> drawerItemList) {
         super(context, layoutId, drawerItemList);
         this.context = context;
     }
+
+    //==========================================================================
+    // Methods
+    //==========================================================================
 
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -74,6 +82,11 @@ public class DrawerItemArrayAdapter extends ArrayAdapter<DrawerItem> {
 
         return convertView;
     }
+
+
+    //==========================================================================
+    // Inner Classes
+    //==========================================================================
 
     private class ViewHolder {
         ImageView itemImage;

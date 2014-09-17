@@ -25,7 +25,7 @@ import de.petermoesenthin.alarming.fragments.SettingsFragment;
 public class SettingsActivity extends Activity {
 
     //==========================================================================
-    // LIFECYCLE METHODS
+    // Lifecycle
     //==========================================================================
 
     @Override
@@ -40,7 +40,7 @@ public class SettingsActivity extends Activity {
     }
 
     //==========================================================================
-    // HOOK METHODS
+    // Callbacks
     //==========================================================================
 
     @Override

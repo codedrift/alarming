@@ -16,7 +16,16 @@
 package de.petermoesenthin.alarming;
 
 import android.app.Activity;
+import android.os.Bundle;
 
 public class AlarmSoundEditActivity extends Activity{
 
+    //================================================================================
+    // Lifecycle
+    //================================================================================
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_alarmsoundedit);
+    }
 }

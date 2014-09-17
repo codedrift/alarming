@@ -52,12 +52,32 @@ import de.petermoesenthin.alarming.util.PrefUtil;
 public class SoundManagerFragment extends Fragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
+    //================================================================================
+    // Members
+    //================================================================================
+
     public static final String DEBUG_TAG = "SoundManagerFragment";
     private static final boolean D = true;
 
     private ListView mListView;
     private AlertDialog mOptionsDialog;
     private int mListItemCount = 0;
+
+    private AdapterView.OnItemClickListener mListClickListener =
+            new AdapterView.OnItemClickListener(){
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (position == mListItemCount) {
+                        startAudioFileIntent();
+                    }else {
+                        showItemActionDialog(position);
+                    }
+                }
+            };
+
+    //================================================================================
+    // Lifecycle
+    //================================================================================
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,18 +88,56 @@ public class SoundManagerFragment extends Fragment implements
         return rootView;
     }
 
-    private void setupListView(){
-        if (D) {Log.d(DEBUG_TAG,"Setting up ListView");}
-        mListView.setOnItemClickListener(mListClickListener);
-        View footerView = ((LayoutInflater) getActivity()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.listfooter_alarm_sounds, null, false);
-        if(mListView.getFooterViewsCount() == 0) {
-            mListView.addFooterView(footerView);
-        }
+    @Override
+    public void onResume(){
+        super.onResume();
+        PrefUtil.getApplicationPrefs(getActivity())
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        PrefUtil.getApplicationPrefs(getActivity())
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    //================================================================================
+    // Callbacks
+    //================================================================================
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (D) {Log.d(DEBUG_TAG,"Preferences changed");}
         updateListItems();
     }
 
+    @Override
+    public void onActivityResult(int requestCode,int resultCode,Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            if(resultCode == Activity.RESULT_OK){
+                if (D) {Log.d(DEBUG_TAG,"File chosen");}
+                //the selected audio file
+                Uri uri = data.getData();
+                String mimeType = FileUtil.getMimeType(uri.toString());
+                if (D)  Log.d(DEBUG_TAG, "MIME type of selected file is " + mimeType);
+                if(!mimeType.startsWith("audio")){
+                    showWrongFileTypeDialog();
+                    return;
+                }
+                FileUtil.saveFileToExtAppStorage(getActivity().getApplicationContext(), uri);
+            }
+        }
+    }
+
+    //================================================================================
+    // Methods
+    //================================================================================
+
+    /**
+     * Update list item in the listview containing all alarm sounds
+     */
     private void updateListItems(){
         if (D) {Log.d(DEBUG_TAG,"Updating sound item list");}
         List<AlarmSoundListItem> listItems = new ArrayList<AlarmSoundListItem>();
@@ -98,32 +156,6 @@ public class SoundManagerFragment extends Fragment implements
                 )
         );
     }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        PrefUtil.getApplicationPrefs(getActivity())
-                .registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-        PrefUtil.getApplicationPrefs(getActivity())
-                .unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    private AdapterView.OnItemClickListener mListClickListener =
-            new AdapterView.OnItemClickListener(){
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (position == mListItemCount) {
-                startAudioFileIntent();
-            }else {
-                showItemActionDialog(position);
-            }
-        }
-    };
 
     /**
      * Show a dialog to interact with an audio file.
@@ -155,6 +187,7 @@ public class SoundManagerFragment extends Fragment implements
                         context.startActivity(i);
                         break;
                     case 1:
+                        if (D) {Log.d(DEBUG_TAG,"Deleting sound file");}
                         FileUtil.deleteFile(
                                 PrefUtil.getAlarmSoundUris(getActivity())[itemPosition]);
                         PrefUtil.updateAlarmSoundUris(getActivity());
@@ -172,7 +205,6 @@ public class SoundManagerFragment extends Fragment implements
         mOptionsDialog.show();
     }
 
-
     /**
      * Start an intent to load an audio file
      */
@@ -185,26 +217,6 @@ public class SoundManagerFragment extends Fragment implements
             startActivityForResult(audioIntent, 1);
         }catch (ActivityNotFoundException e){
             if (D) {Log.e(DEBUG_TAG,"No activity for file intents availiable");}
-        }
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode,int resultCode,Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1){
-            if(resultCode == Activity.RESULT_OK){
-                if (D) {Log.d(DEBUG_TAG,"File chosen");}
-                //the selected audio file
-                Uri uri = data.getData();
-                String mimeType = FileUtil.getMimeType(uri.toString());
-                if (D)  Log.d(DEBUG_TAG, "MIME type of selected file is " + mimeType);
-                if(!mimeType.startsWith("audio")){
-                    showWrongFileTypeDialog();
-                    return;
-                }
-                FileUtil.saveFileToExtAppStorage(getActivity().getApplicationContext(), uri);
-            }
         }
     }
 
@@ -226,10 +238,23 @@ public class SoundManagerFragment extends Fragment implements
         alert.show();
     }
 
+    //================================================================================
+    // UI setup
+    //================================================================================
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (D) {Log.d(DEBUG_TAG,"Preferences changed");}
+    /**
+     * Setup the listView containing all alarm sounds
+     */
+    private void setupListView(){
+        if (D) {Log.d(DEBUG_TAG,"Setting up ListView");}
+        mListView.setOnItemClickListener(mListClickListener);
+        View footerView = ((LayoutInflater) getActivity()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.listfooter_alarm_sounds, null, false);
+        if(mListView.getFooterViewsCount() == 0) {
+            mListView.addFooterView(footerView);
+        }
         updateListItems();
     }
 }
+

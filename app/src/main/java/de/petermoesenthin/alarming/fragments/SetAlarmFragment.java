@@ -52,7 +52,6 @@ public class SetAlarmFragment extends Fragment implements
     public static final String DEBUG_TAG = "SetAlarmFragment";
     private static final boolean D = true;
 
-    // UI
     private TextView textView_alarmTime;
     private Switch switch_alarm;
 
@@ -81,7 +80,9 @@ public class SetAlarmFragment extends Fragment implements
     // Methods
     //================================================================================
 
-
+    /**
+     * Show a timepicker to set the alarm time
+     */
     private void showTimePicker() {
         if(D) {Log.d(DEBUG_TAG,"Showing timpicker dialog");}
         TimePickerBuilder tpb = new TimePickerBuilder()
@@ -91,12 +92,18 @@ public class SetAlarmFragment extends Fragment implements
         tpb.show();
     }
 
+    /**
+     * Load all preferences
+     */
     private void loadPreferences() {
         if(D) {Log.d(DEBUG_TAG,"Loading preferences");}
         updateAlarmState();
         updateSwitch();
     }
 
+    /**
+     * Set the alarm switch state from preference
+     */
     private void updateSwitch() {
         if(D) {Log.d(DEBUG_TAG,"Updating alarm switch state");}
         boolean alarmSet = PrefUtil.getBoolean(getActivity(), PrefKey.ALARM_SET);
@@ -110,6 +117,9 @@ public class SetAlarmFragment extends Fragment implements
     }
 
 
+    /**
+     * Update the alarm state view and preference
+     */
     private void updateAlarmState(){
         if(D) {Log.d(DEBUG_TAG,"Getting alarm state");}
         AlarmGson alg = PrefUtil.getAlarmTimeGson(getActivity());
@@ -122,7 +132,7 @@ public class SetAlarmFragment extends Fragment implements
     }
 
     //================================================================================
-    // UI setup
+    // UI
     //================================================================================
 
     private void setUpSwitch(){
