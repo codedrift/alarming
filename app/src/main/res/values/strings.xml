@@ -35,4 +35,11 @@
     <string name="textView_volume">Volume</string>
     <string name="zero_Percent">0%</string>
 
+    <!-- .AlarmSoundEditActivity -->
+    <string name="textView_soundTitle">Title</string>
+    <string name="textView_soundArtist">Artist</string>
+    <string name="textView_soundStart">Start</string>
+    <string name="textView_soundEnd">End</string>
+    <string name="textView_soundLength">Length</string>
+
 </resources>
