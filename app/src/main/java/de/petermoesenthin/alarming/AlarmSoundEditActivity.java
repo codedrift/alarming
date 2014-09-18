@@ -16,9 +16,23 @@
 package de.petermoesenthin.alarming;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+import de.petermoesenthin.alarming.util.PrefUtil;
 
 public class AlarmSoundEditActivity extends Activity{
+
+    //================================================================================
+    // Members
+    //================================================================================
+
+    public static final String DEBUG_TAG = "AlarmSoundEditActivity";
+    private static final boolean D = true;
+
+    private String alarmUri;
 
     //================================================================================
     // Lifecycle
@@ -27,5 +41,20 @@ public class AlarmSoundEditActivity extends Activity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarmsoundedit);
+        Intent intent = getIntent();
+        int audioId = intent.getIntExtra("audio_id",-1);
+        if (audioId == -1) {
+            if (D) {Log.d(DEBUG_TAG, "Preferences changed");}
+            return;
+        } else {
+            alarmUri = PrefUtil.getAlarmSoundUris(this)[audioId];
+            Toast.makeText(this,alarmUri,Toast.LENGTH_SHORT).show();
+        }
     }
+
+
+    private void loadAudioMetaData(){
+
+    }
+
 }
