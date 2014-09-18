@@ -28,7 +28,7 @@ import de.petermoesenthin.alarming.MainActivity;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.pref.PrefKey;
 
-public class NotificationHandler {
+public class NotificationUtil {
 
     private static final int ALARM_NOTIFICATION_ID = 0x000001234;
 
