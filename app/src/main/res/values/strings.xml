@@ -40,6 +40,6 @@
     <string name="textView_soundArtist">Artist</string>
     <string name="textView_soundStart">Start</string>
     <string name="textView_soundEnd">End</string>
-    <string name="textView_soundLength">Length</string>
+    <string name="textView_soundLength">Absolute length</string>
 
 </resources>
