@@ -43,4 +43,8 @@
     <string name="textView_soundEnd">End</string>
     <string name="textView_soundLength">Absolute length</string>
 
+    <!-- Notifications -->
+    <string name="notification_alarmActivated">Alarming activated</string>
+    <string name="notification_timeSetTo">Time set to</string>
+
 </resources>

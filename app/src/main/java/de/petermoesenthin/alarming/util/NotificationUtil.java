@@ -33,14 +33,16 @@ public class NotificationUtil {
     private static final int ALARM_NOTIFICATION_ID = 0x000001234;
 
     /**
-     * Shows a persistent notification indicating the alarmtime if set.
+     * Shows a persistent notification indicating the alarm time if is set.
      */
     public static void showAlarmSetNotification(Context context){
         NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_alarmclock_light)
                 .setOngoing(true)
-                .setContentTitle("Alarming activated")
-                .setContentText("Time set to " + PrefUtil.getAlarmTimeGson(context).getFormatted());
+                .setContentTitle(
+                        context.getResources().getString(R.string.notification_alarmActivated))
+                .setContentText(context.getResources().getString(R.string.notification_timeSetTo) +
+                        " " + PrefUtil.getAlarmTimeGson(context).getFormatted());
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
