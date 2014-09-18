@@ -16,13 +16,11 @@
 
 package de.petermoesenthin.alarming.pref;
 
-import java.util.List;
-
 public class AlarmSoundGson {
 
     private String uri;
-    private int start;
-    private int end;
+    private int startTime;
+    private int endTime;
     private String displayName;
 
     public String getUri() {
@@ -33,20 +31,20 @@ public class AlarmSoundGson {
         this.uri = uri;
     }
 
-    public int getStart() {
-        return start;
+    public int getStartTime() {
+        return startTime;
     }
 
-    public void setStart(int start) {
-        this.start = start;
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
     }
 
-    public int getEnd() {
-        return end;
+    public int getEndTime() {
+        return endTime;
     }
 
-    public void setEnd(int end) {
-        this.end = end;
+    public void setEndTime(int endTime) {
+        this.endTime = endTime;
     }
 
     public String getDisplayName() {
