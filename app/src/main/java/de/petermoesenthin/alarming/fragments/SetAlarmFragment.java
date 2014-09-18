@@ -144,7 +144,7 @@ public class SetAlarmFragment extends Fragment implements
                     if(mCalendarSet != null){
                         AlarmUtil.setAlarm(getActivity(), mCalendarSet);
                     } else {
-                        Toast.makeText(getActivity(), "Could not set Alarm! No time set.",
+                        Toast.makeText(getActivity(), R.string.toast_alarmTimeNotSet,
                                 Toast.LENGTH_SHORT).show();
                         buttonView.setChecked(false);
                     }
@@ -161,7 +161,7 @@ public class SetAlarmFragment extends Fragment implements
 
     @Override
     public void onDialogTimeSet(int reference, int hourOfDay, int minute) {
-        if(D) {Log.d(DEBUG_TAG,"Timepicker finished. Setting alarm time...");}
+        if(D) {Log.d(DEBUG_TAG,"Timepicker finished. Setting alarm time.");}
         String alarmTime = StringUtil.getAlarmTimeFormatted(hourOfDay, minute);
         textView_alarmTime.setText(alarmTime);
         mCalendarSet = AlarmUtil.getNextAlarmTimeAbsolute(hourOfDay,minute);
