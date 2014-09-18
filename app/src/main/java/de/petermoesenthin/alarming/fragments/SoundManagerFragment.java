@@ -250,7 +250,7 @@ public class SoundManagerFragment extends Fragment implements
         mListView.setOnItemClickListener(mListClickListener);
         View footerView = ((LayoutInflater) getActivity()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.listfooter_alarm_sounds, null, false);
+                .inflate(R.layout.listfooter_alarm_sounds, mListView, false);
         if(mListView.getFooterViewsCount() == 0) {
             mListView.addFooterView(footerView);
         }
