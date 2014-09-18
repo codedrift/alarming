@@ -166,34 +166,34 @@ public class SoundManagerFragment extends Fragment implements
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_alarmsoundoptions, null);
-        ListView optionlist = (ListView) dialogView.findViewById(R.id.listView_alarmSoundOptions);
-        String[] options = {"Edit","Delete"};
+        ListView optionsListView =
+                (ListView) dialogView.findViewById(R.id.listView_alarmSoundOptions);
+        String[] options =
+                getActivity().getResources().getStringArray(R.array.sound_action_options);
         final ArrayList<String> list = new ArrayList<String>();
-        for (int i = 0; i < options.length; ++i) {
-            list.add(options[i]);
-        }
+        for (int i = 0; i < options.length; ++i) {list.add(options[i]);}
         ListAdapter adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, list);
-        optionlist.setAdapter(adapter);
-        optionlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        optionsListView.setAdapter(adapter);
+        optionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
+                switch (position) {
                     case 0:
-                        if (D) {Log.d(DEBUG_TAG,"Starting AlarmSoundEditActivity");}
-                        Context context = getActivity().getApplicationContext();
-                        Intent i = new Intent(context, AlarmSoundEditActivity.class);
+                        if (D) {Log.d(DEBUG_TAG, "Starting AlarmSoundEditActivity");}
+                        Intent i = new Intent(getActivity(), AlarmSoundEditActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(i);
+                        i.putExtra("audio_id",itemPosition);
+                        getActivity().startActivity(i);
                         break;
                     case 1:
-                        if (D) {Log.d(DEBUG_TAG,"Deleting sound file");}
+                        if (D) {Log.d(DEBUG_TAG, "Deleting sound file");}
                         FileUtil.deleteFile(
                                 PrefUtil.getAlarmSoundUris(getActivity())[itemPosition]);
                         PrefUtil.updateAlarmSoundUris(getActivity());
                         break;
                 }
-                if(mOptionsDialog != null){
+                if (mOptionsDialog != null) {
                     mOptionsDialog.dismiss();
                 }
             }
