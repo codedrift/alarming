@@ -23,6 +23,7 @@ import java.util.Calendar;
 
 import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.util.AlarmUtil;
+import de.petermoesenthin.alarming.util.NotificationUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
 public class AlarmStateBootReceiver extends BroadcastReceiver {
@@ -40,6 +41,7 @@ public class AlarmStateBootReceiver extends BroadcastReceiver {
                 long alarmTimeMillis = PrefUtil.getLong(context,PrefKey.NEXT_ALARM_TIME_MILLIS);
                 calendar.setTimeInMillis(alarmTimeMillis);
                 AlarmUtil.setAlarm(context,calendar);
+                NotificationUtil.showAlarmSetNotification(context);
             }
         }
     }

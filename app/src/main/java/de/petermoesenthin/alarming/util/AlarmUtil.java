@@ -48,7 +48,7 @@ public class AlarmUtil {
                     AlarmManager.RTC_WAKEUP,
                     calendar.getTimeInMillis(),
                     pi);
-            NotificationHandler.showAlarmSetNotification(context);
+            NotificationUtil.showAlarmSetNotification(context);
         }
     }
 
@@ -56,7 +56,7 @@ public class AlarmUtil {
         if(D) {Log.d(DEBUG_TAG,"Canceling alarm");}
         PendingIntent.getBroadcast(context, ALARM_ID, getAlarmIntent(context),
                 PendingIntent.FLAG_CANCEL_CURRENT);
-        NotificationHandler.clearAlarmNotifcation(context);
+        NotificationUtil.clearAlarmNotifcation(context);
     }
 
     private static Intent getAlarmIntent(Context context){

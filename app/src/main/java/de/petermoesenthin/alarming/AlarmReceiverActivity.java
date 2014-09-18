@@ -35,7 +35,7 @@ import android.view.WindowManager;
 import java.io.IOException;
 import java.util.Random;
 
-import de.petermoesenthin.alarming.util.NotificationHandler;
+import de.petermoesenthin.alarming.util.NotificationUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
 public class AlarmReceiverActivity extends Activity {
@@ -81,7 +81,7 @@ public class AlarmReceiverActivity extends Activity {
         }
         disableKeyguard();
         setAlarmVolume();
-        NotificationHandler.clearAlarmNotifcation(this);
+        NotificationUtil.clearAlarmNotifcation(this);
     }
 
     private void disableKeyguard(){
