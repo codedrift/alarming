@@ -40,6 +40,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.petermoesenthin.alarming.AlarmSoundEditActivity;
@@ -171,7 +172,7 @@ public class SoundManagerFragment extends Fragment implements
         String[] options =
                 getActivity().getResources().getStringArray(R.array.sound_action_options);
         final ArrayList<String> list = new ArrayList<String>();
-        for (int i = 0; i < options.length; ++i) {list.add(options[i]);}
+        Collections.addAll(list, options);
         ListAdapter adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, list);
         optionsListView.setAdapter(adapter);
