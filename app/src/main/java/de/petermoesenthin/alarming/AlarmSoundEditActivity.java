@@ -45,7 +45,6 @@ public class AlarmSoundEditActivity extends Activity{
         int audioId = intent.getIntExtra("audio_id",-1);
         if (audioId == -1) {
             if (D) {Log.d(DEBUG_TAG, "Preferences changed");}
-            return;
         } else {
             alarmUri = PrefUtil.getAlarmSoundUris(this)[audioId];
             Toast.makeText(this,alarmUri,Toast.LENGTH_SHORT).show();
