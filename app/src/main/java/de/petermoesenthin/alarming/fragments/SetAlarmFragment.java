@@ -23,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,8 +70,9 @@ public class SetAlarmFragment extends Fragment implements
             }
         });
         switch_alarm = (Switch) rootView.findViewById(R.id.switch_alarm);
-        setUpSwitch();
-        loadPreferences();
+        setSwitchCheckedListener();
+        updateAlarmState();
+        updateSwitch();
         return rootView;
     }
 
@@ -93,27 +93,12 @@ public class SetAlarmFragment extends Fragment implements
     }
 
     /**
-     * Load all preferences
-     */
-    private void loadPreferences() {
-        if(D) {Log.d(DEBUG_TAG,"Loading preferences");}
-        updateAlarmState();
-        updateSwitch();
-    }
-
-    /**
      * Set the alarm switch state from preference
      */
     private void updateSwitch() {
         if(D) {Log.d(DEBUG_TAG,"Updating alarm switch state");}
         boolean alarmSet = PrefUtil.getBoolean(getActivity(), PrefKey.ALARM_SET);
         switch_alarm.setChecked(alarmSet);
-        if(alarmSet){
-            long alarmTimeMillis = PrefUtil.getLong(getActivity(), PrefKey.NEXT_ALARM_TIME_MILLIS);
-            mCalendarSet = Calendar.getInstance();
-            mCalendarSet.setTimeInMillis(alarmTimeMillis);
-            AlarmUtil.setAlarm(getActivity(), mCalendarSet);
-        }
     }
 
 
@@ -126,6 +111,7 @@ public class SetAlarmFragment extends Fragment implements
         if(alg != null){
             textView_alarmTime.setText(alg.getFormatted());
             mCalendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
+            AlarmUtil.setAlarm(getActivity(), mCalendarSet);
         } else {
             if(D) {Log.d(DEBUG_TAG,"No alarm state found");}
         }
@@ -135,7 +121,7 @@ public class SetAlarmFragment extends Fragment implements
     // UI
     //================================================================================
 
-    private void setUpSwitch(){
+    private void setSwitchCheckedListener(){
         switch_alarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
