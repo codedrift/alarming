@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package de.petermoesenthin.alarming;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import de.petermoesenthin.alarming.util.PrefUtil;
@@ -34,6 +36,10 @@ public class AlarmSoundEditActivity extends Activity{
 
     private String alarmUri;
 
+    private TextView soundTitle;
+    private TextView soundArtist;
+
+
     //================================================================================
     // Lifecycle
     //================================================================================
@@ -41,6 +47,10 @@ public class AlarmSoundEditActivity extends Activity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarmsoundedit);
+
+        this.getActionBar().setHomeButtonEnabled(true);
+        this.getActionBar().setDisplayHomeAsUpEnabled(true);
+
         Intent intent = getIntent();
         int audioId = intent.getIntExtra("audio_id",-1);
         if (audioId == -1) {
