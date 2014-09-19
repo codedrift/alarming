@@ -15,9 +15,12 @@
  */
 package de.petermoesenthin.alarming.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import de.petermoesenthin.alarming.R;
+import de.petermoesenthin.alarming.pref.PrefKey;
 
 public class SettingsFragment extends android.preference.PreferenceFragment {
 
@@ -28,6 +31,11 @@ public class SettingsFragment extends android.preference.PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        PreferenceManager prefMgr = getPreferenceManager();
+        prefMgr.setSharedPreferencesName(PrefKey.PREF_FILE_NAME);
+        prefMgr.setSharedPreferencesMode(Activity.MODE_PRIVATE);
+
         addPreferencesFromResource(R.xml.preferences);
     }
 
