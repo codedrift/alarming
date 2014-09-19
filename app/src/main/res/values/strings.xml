@@ -36,6 +36,16 @@
     <string name="textView_volume">Volume</string>
     <string name="zero_Percent">0%</string>
 
+        <!-- fragments/SettingsFragment -->
+        <string name="preference_category_general">General</string>
+        <string name="preference_show_notification_title">Show Notification</string>
+        <string name="preference_show_notification_summary">Show a notification when an alarm is scheduled</string>
+        <string name="preference_category_media_playback">Media Playback</string>
+        <string name="preference_alarm_sound_volume_title">Alarm sound volume</string>
+        <string name="preference_alarm_sound_volume_summary">Set the volume level for alarms</string>
+
+
+
     <!-- .AlarmSoundEditActivity -->
     <string name="textView_soundTitle">Title</string>
     <string name="textView_soundArtist">Artist</string>
@@ -46,5 +56,6 @@
     <!-- Notifications -->
     <string name="notification_alarmActivated">Alarming activated</string>
     <string name="notification_timeSetTo">Time set to</string>
+
 
 </resources>
