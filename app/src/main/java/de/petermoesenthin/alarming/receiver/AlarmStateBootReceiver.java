@@ -35,7 +35,7 @@ public class AlarmStateBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            boolean alarmSet = PrefUtil.getBoolean(context, PrefKey.ALARM_SET);
+            boolean alarmSet = PrefUtil.getBoolean(context, PrefKey.ALARM_SET, false);
             if(alarmSet){
                 Calendar calendar = Calendar.getInstance();
                 long alarmTimeMillis = PrefUtil.getLong(context,PrefKey.NEXT_ALARM_TIME_MILLIS);

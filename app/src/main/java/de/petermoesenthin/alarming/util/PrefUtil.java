@@ -69,14 +69,14 @@ public class PrefUtil {
         return getApplicationPrefs(context).getString(key, null);
     }
     public static long getLong(Context context, String key){
-        return getApplicationPrefs(context).getLong(key, 0);
+        return getApplicationPrefs(context).getLong(key, -1);
     }
-    public static boolean getBoolean(Context context, String key){
-        return getApplicationPrefs(context).getBoolean(key, false);
+    public static boolean getBoolean(Context context, String key, boolean defaultValue){
+        return getApplicationPrefs(context).getBoolean(key, defaultValue);
     }
 
     public static int getInt(Context context, String key){
-        return getApplicationPrefs(context).getInt(key, 0);
+        return getApplicationPrefs(context).getInt(key, -1);
     }
 
     public static void updateAlarmSoundUris(Context context){

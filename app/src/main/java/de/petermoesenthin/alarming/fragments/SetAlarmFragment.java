@@ -97,7 +97,7 @@ public class SetAlarmFragment extends Fragment implements
      */
     private void updateSwitch() {
         if(D) {Log.d(DEBUG_TAG,"Updating alarm switch state");}
-        boolean alarmSet = PrefUtil.getBoolean(getActivity(), PrefKey.ALARM_SET);
+        boolean alarmSet = PrefUtil.getBoolean(getActivity(), PrefKey.ALARM_SET, false);
         switch_alarm.setChecked(alarmSet);
     }
 
@@ -152,5 +152,6 @@ public class SetAlarmFragment extends Fragment implements
         textView_alarmTime.setText(alarmTime);
         mCalendarSet = AlarmUtil.getNextAlarmTimeAbsolute(hourOfDay,minute);
         PrefUtil.updateAlarmTime(getActivity(), hourOfDay, minute);
+        updateAlarmState();
     }
 }
