@@ -3,25 +3,25 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="General"
+        android:title="@string/preference_category_general"
         android:key="general_settings_category">
 
         <CheckBoxPreference
-            android:key="enable_notification"
-            android:title="Show Notification"
-            android:summary="Show a notification when an alarm is scheduled"
+            android:key="show_alarm_notification"
+            android:title="@string/preference_show_notification_title"
+            android:summary="@string/preference_show_notification_summary"
             android:defaultValue="true"
             />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Media Playback"
+        android:title="@string/preference_category_media_playback"
         android:key="media_playback_category">
 
         <EditTextPreference
-            android:key="audio_volume"
-            android:title="Audio Volume"
-            android:summary="Set the audio volume in %"
+            android:key="alarm_sound_volume"
+            android:title="@string/preference_alarm_sound_volume_title"
+            android:summary="@string/preference_alarm_sound_volume_summary"
             android:inputType="numberDecimal"
             />
 
