@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="textSize_drawerItem">20sp</dimen>
+    <dimen name="textSize_drawerItem">24sp</dimen>
     <dimen name="textSize_drawerAdditionalItem">18sp</dimen>
     <dimen name="textSize_drawerItemSelected">22sp</dimen>
     <dimen name="seperator_container_margin">10dp</dimen>
