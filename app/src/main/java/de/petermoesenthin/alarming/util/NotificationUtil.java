@@ -23,6 +23,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import de.petermoesenthin.alarming.MainActivity;
 import de.petermoesenthin.alarming.R;
@@ -32,10 +33,22 @@ public class NotificationUtil {
 
     private static final int ALARM_NOTIFICATION_ID = 0x000001234;
 
+    public static final String DEBUG_TAG = "NotificationUtil";
+    private static final boolean D = true;
+
     /**
      * Shows a persistent notification indicating the alarm time if is set.
      */
     public static void showAlarmSetNotification(Context context){
+        //Early out if a notification is not wanted
+        boolean showNotification = PrefUtil.getBoolean(context,
+                PrefKey.SHOW_ALARM_NOTIFICATION, true);
+        if(!showNotification){
+            if (D) {Log.d(DEBUG_TAG, "Notifications disabled. Returning.");}
+            return;
+        }
+
+        //Build and show Notification
         NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_alarmclock_light)
                 .setOngoing(true)
