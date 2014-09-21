@@ -71,31 +71,26 @@ public class SetAlarmFragment extends Fragment implements
         });
         switch_alarm = (Switch) rootView.findViewById(R.id.switch_alarm);
         setSwitchCheckedListener();
-        updateAlarmState();
-        updateSwitch();
+
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateAlarmStateFromPreference();
+        updateSwitchFromPreference();
     }
 
     //================================================================================
     // Methods
     //================================================================================
 
-    /**
-     * Show a timepicker to set the alarm time
-     */
-    private void showTimePicker() {
-        if(D) {Log.d(DEBUG_TAG,"Showing timpicker dialog");}
-        TimePickerBuilder tpb = new TimePickerBuilder()
-                .setFragmentManager(getChildFragmentManager())
-                .setStyleResId(R.style.BetterPickersDialogFragment_Light)
-                .setTargetFragment(SetAlarmFragment.this);
-        tpb.show();
-    }
 
     /**
      * Set the alarm switch state from preference
      */
-    private void updateSwitch() {
+    private void updateSwitchFromPreference() {
         if(D) {Log.d(DEBUG_TAG,"Updating alarm switch state");}
         boolean alarmSet = PrefUtil.getBoolean(getActivity(), PrefKey.ALARM_SET, false);
         switch_alarm.setChecked(alarmSet);
@@ -105,13 +100,13 @@ public class SetAlarmFragment extends Fragment implements
     /**
      * Update the alarm state view and preference
      */
-    private void updateAlarmState(){
+    private void updateAlarmStateFromPreference(){
         if(D) {Log.d(DEBUG_TAG,"Getting alarm state");}
         AlarmGson alg = PrefUtil.getAlarmTimeGson(getActivity());
         if(alg != null){
+            if(D) {Log.d(DEBUG_TAG,"Setting alarm to " + alg.getHour() + ":" + alg.getMinute());}
             textView_alarmTime.setText(alg.getFormatted());
             mCalendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
-            AlarmUtil.setAlarm(getActivity(), mCalendarSet);
         } else {
             if(D) {Log.d(DEBUG_TAG,"No alarm state found");}
         }
@@ -141,6 +136,18 @@ public class SetAlarmFragment extends Fragment implements
         });
     }
 
+    /**
+     * Show a timepicker to set the alarm time
+     */
+    private void showTimePicker() {
+        if(D) {Log.d(DEBUG_TAG,"Showing timpicker dialog");}
+        TimePickerBuilder tpb = new TimePickerBuilder()
+                .setFragmentManager(getChildFragmentManager())
+                .setStyleResId(R.style.BetterPickersDialogFragment_Light)
+                .setTargetFragment(SetAlarmFragment.this);
+        tpb.show();
+    }
+
     //================================================================================
     // Callbacks
     //================================================================================
@@ -152,6 +159,5 @@ public class SetAlarmFragment extends Fragment implements
         textView_alarmTime.setText(alarmTime);
         mCalendarSet = AlarmUtil.getNextAlarmTimeAbsolute(hourOfDay,minute);
         PrefUtil.updateAlarmTime(getActivity(), hourOfDay, minute);
-        updateAlarmState();
     }
 }
