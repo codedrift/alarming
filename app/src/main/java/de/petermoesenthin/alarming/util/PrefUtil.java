@@ -33,7 +33,7 @@ public class PrefUtil {
     public static final boolean D = false;
 
     public static void putString(Context context, String key, String value){
-        context.getSharedPreferences(PrefKey.PREF_FILE_NAME, Activity.MODE_PRIVATE)
+        getApplicationPrefs(context)
                 .edit().putString(
                 key,
                 value
@@ -41,7 +41,7 @@ public class PrefUtil {
     }
 
     public static void putLong(Context context, String key, long value){
-        context.getSharedPreferences(PrefKey.PREF_FILE_NAME, Activity.MODE_PRIVATE)
+        getApplicationPrefs(context)
                 .edit().putLong(
                 key,
                 value
@@ -49,7 +49,7 @@ public class PrefUtil {
     }
 
     public static void putBoolean(Context context, String key, boolean value){
-        context.getSharedPreferences(PrefKey.PREF_FILE_NAME, Activity.MODE_PRIVATE)
+        getApplicationPrefs(context)
                 .edit().putBoolean(
                 key,
                 value
@@ -57,7 +57,7 @@ public class PrefUtil {
     }
 
     public static void putInt(Context context, String key, int value){
-        context.getSharedPreferences(PrefKey.PREF_FILE_NAME, Activity.MODE_PRIVATE)
+        getApplicationPrefs(context)
                 .edit().putInt(
                 key,
                 value
