@@ -24,6 +24,13 @@ public class StringUtil {
             return "0" + String.valueOf(number);
     }
 
+    public static String getZeroPaddedString(long number){
+        if (number >= 10)
+            return String.valueOf(number);
+        else
+            return "0" + String.valueOf(number);
+    }
+
     public static String getAlarmTimeFormatted(int hourOfDay, int minute){
         String alarmTimeFormatted = "";
         alarmTimeFormatted += getZeroPaddedString(hourOfDay)
