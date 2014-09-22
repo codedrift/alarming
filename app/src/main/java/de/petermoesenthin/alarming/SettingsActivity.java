@@ -55,7 +55,6 @@ public class SettingsActivity extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
 }

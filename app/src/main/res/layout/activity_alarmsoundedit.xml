@@ -14,12 +14,15 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/textView_soundTitle"
-        android:id="@+id/textView_AudioName"
+        android:id="@+id/textView_soundTitle"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:paddingTop="5dp"
         android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         />
 
     <TextView
@@ -27,17 +30,20 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/textView_soundArtist"
-        android:id="@+id/textView_ArtistName"
-        android:layout_below="@+id/textView_AudioName"
-        android:layout_alignLeft="@+id/textView_AudioName"
-        android:layout_alignStart="@+id/textView_AudioName"
-        android:paddingLeft="5dp"/>
+        android:id="@+id/textView_soundArtist"
+        android:layout_below="@+id/textView_soundTitle"
+        android:layout_alignLeft="@+id/textView_soundTitle"
+        android:layout_alignStart="@+id/textView_soundTitle"
+        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
+        android:paddingRight="5dp"
+        android:paddingEnd="5dp"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2px"
+        android:layout_height="2dp"
         android:background="@color/veryLightGray"
-        android:layout_below="@+id/textView_ArtistName"
+        android:layout_below="@+id/textView_soundArtist"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:id="@+id/view" />
@@ -49,45 +55,9 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/textView_soundLength"
         android:id="@+id/textView_soundLength"
-        android:layout_alignBottom="@+id/textView_ArtistName"
+        android:layout_alignBottom="@+id/textView_soundArtist"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/view"
-        android:id="@+id/relativeLayout">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/textView_soundStart"
-            android:id="@+id/textView_audioStartTime"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/textView_soundEnd"
-            android:id="@+id/textView_audioEndTime"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-        <SeekBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:layout_below="@id/textView_audioStartTime"/>
-
-    </RelativeLayout>
-
-
 
 
 </RelativeLayout>
