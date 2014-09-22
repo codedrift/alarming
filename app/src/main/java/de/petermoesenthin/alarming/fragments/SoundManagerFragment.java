@@ -29,6 +29,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -85,8 +88,15 @@ public class SoundManagerFragment extends Fragment implements
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_soundmanager, container, false);
         mListView = (ListView) rootView.findViewById(R.id.listView_alarmSounds);
+        setHasOptionsMenu(true);
         setupListView();
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_soundmanager, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -106,6 +116,18 @@ public class SoundManagerFragment extends Fragment implements
     //================================================================================
     // Callbacks
     //================================================================================
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.action_add_new_sound:
+                startAudioFileIntent();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -249,12 +271,6 @@ public class SoundManagerFragment extends Fragment implements
     private void setupListView(){
         if (D) {Log.d(DEBUG_TAG,"Setting up ListView");}
         mListView.setOnItemClickListener(mListClickListener);
-        View footerView = ((LayoutInflater) getActivity()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.listfooter_alarm_sounds, mListView, false);
-        if(mListView.getFooterViewsCount() == 0) {
-            mListView.addFooterView(footerView);
-        }
         updateListItems();
     }
 }
