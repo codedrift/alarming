@@ -39,16 +39,6 @@
         android:paddingRight="5dp"
         android:paddingEnd="5dp"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/veryLightGray"
-        android:layout_below="@+id/textView_soundArtist"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:id="@+id/view" />
-
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,6 +48,52 @@
         android:layout_alignBottom="@+id/textView_soundArtist"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <!-- ######### Divider ######### -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/veryLightGray"
+        android:layout_below="@+id/textView_soundArtist"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:id="@+id/view_divider1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_startTime"
+        android:text="@string/textView_soundStart"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/view_divider1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_endTime"
+        android:text="@string/textView_soundEnd"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/view_divider1"/>
+
+    <com.edmodo.rangebar.RangeBar
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/rangebar_audiosection"
+        android:layout_width="match_parent"
+        android:layout_below="@id/view_divider1"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        custom:tickHeight="0dp"
+        custom:tickCount="100"
+        custom:barColor="@color/lightGray"
+        custom:connectingLineColor="@color/yellow_main"
+        custom:thumbColorNormal="@color/yellow_main"
+        custom:thumbColorPressed="@color/yellow_darker"
+        />
+
 
 
 </RelativeLayout>
