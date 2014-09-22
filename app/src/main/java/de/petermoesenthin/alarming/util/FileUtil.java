@@ -135,7 +135,7 @@ public class FileUtil {
 
     public static File getApplicationDirectory(){
         return new File(Environment.getExternalStorageDirectory()
-                .getPath()+ File.separatorChar + APP_EXT_STORAGE_FOLDER + File.separatorChar);
+                .getPath() + File.separatorChar + APP_EXT_STORAGE_FOLDER + File.separatorChar);
     }
 
     public static File[] getAlarmDirectoryFileList(){

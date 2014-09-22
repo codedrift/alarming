@@ -73,7 +73,7 @@ public class AlarmUtil {
         cal.set(Calendar.MILLISECOND, 0);
 
         if(cal.compareTo(calNow) <= 0){
-            //Today Set time passed, count to tomorrow
+            //Todays time passed, count to tomorrow
             cal.add(Calendar.DATE, 1);
         }
         return cal;
