@@ -27,6 +27,7 @@ import android.util.Log;
 
 import de.petermoesenthin.alarming.MainActivity;
 import de.petermoesenthin.alarming.R;
+import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
 
 public class NotificationUtil {
@@ -49,13 +50,15 @@ public class NotificationUtil {
         }
 
         //Build and show Notification
+        AlarmGson alg = PrefUtil.getAlarmTimeGson(context);
+        String alarmFormatted = StringUtil.getAlarmTimeFormatted(alg.getHour(),alg.getMinute());
         NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_alarmclock_light)
                 .setOngoing(true)
                 .setContentTitle(
                         context.getResources().getString(R.string.notification_alarmActivated))
                 .setContentText(context.getResources().getString(R.string.notification_timeSetTo) +
-                        " " + PrefUtil.getAlarmTimeGson(context).getFormatted());
+                        " " + alarmFormatted);
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);

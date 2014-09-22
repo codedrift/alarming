@@ -21,12 +21,10 @@ public class AlarmGson {
 
     private int hour;
     private int minute;
-    private String formatted;
 
     public AlarmGson(int hour, int minute){
         this.hour = hour;
         this.minute = minute;
-        formatted = StringUtil.getAlarmTimeFormatted(hour, minute);
     }
 
     public int getHour() {
@@ -43,14 +41,6 @@ public class AlarmGson {
 
     public void setMinute(int minute) {
         this.minute = minute;
-    }
-
-    public String getFormatted() {
-        return formatted;
-    }
-
-    public void setFormatted(String formatted) {
-        this.formatted = formatted;
     }
 
 }

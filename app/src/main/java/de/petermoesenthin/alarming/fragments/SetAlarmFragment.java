@@ -104,8 +104,8 @@ public class SetAlarmFragment extends Fragment implements
         if(D) {Log.d(DEBUG_TAG,"Getting alarm state");}
         AlarmGson alg = PrefUtil.getAlarmTimeGson(getActivity());
         if(alg != null){
-            if(D) {Log.d(DEBUG_TAG,"Setting alarm to " + alg.getHour() + ":" + alg.getMinute());}
-            textView_alarmTime.setText(alg.getFormatted());
+            String alarmFormatted = StringUtil.getAlarmTimeFormatted(alg.getHour(),alg.getMinute());
+            textView_alarmTime.setText(alarmFormatted);
             mCalendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
         } else {
             if(D) {Log.d(DEBUG_TAG,"No alarm state found");}
