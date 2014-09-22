@@ -21,7 +21,7 @@ public class AlarmSoundGson {
     private String uri;
     private int startTime;
     private int endTime;
-    private String displayName;
+    private String lastHashFromUri;
 
     public String getUri() {
         return uri;
@@ -47,12 +47,12 @@ public class AlarmSoundGson {
         this.endTime = endTime;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getLastHashFromUri() {
+        return lastHashFromUri;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setLastHashFromUri(String lastHashFromUri) {
+        this.lastHashFromUri = lastHashFromUri;
     }
 
 }
