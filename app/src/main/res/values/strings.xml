@@ -21,7 +21,7 @@
         <string name="toast_alarmTimeNotSet">Could not set Alarm! No time set.</string>
 
         <!-- fragments/SoundManagerFragment -->
-        <string name="button_addAudioFile">Add audio file</string>
+        <string name="action_save_config">Save configuration</string>
         <string name="action_add_new_sound">Add new sound</string>
         <string name="alertTitle_wrongFileType">Wrong file type!</string>
         <string name="alert_wrongFileType">It appears that you opened an unsupported file type. Please select an audio file.</string>
