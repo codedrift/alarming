@@ -19,8 +19,8 @@ package de.petermoesenthin.alarming.pref;
 public class AlarmSoundGson {
 
     private String uri;
-    private int startTime;
-    private int endTime;
+    private long startTimeMillis;
+    private long endTimeMillis;
     private String lastHashFromUri;
 
     public String getUri() {
@@ -31,20 +31,20 @@ public class AlarmSoundGson {
         this.uri = uri;
     }
 
-    public int getStartTime() {
-        return startTime;
+    public long getStartTimeMillis() {
+        return startTimeMillis;
     }
 
-    public void setStartTime(int startTime) {
-        this.startTime = startTime;
+    public void setStartTimeMillis(long startTimeMillis) {
+        this.startTimeMillis = startTimeMillis;
     }
 
-    public int getEndTime() {
-        return endTime;
+    public long getEndTimeMillis() {
+        return endTimeMillis;
     }
 
-    public void setEndTime(int endTime) {
-        this.endTime = endTime;
+    public void setEndTimeMillis(long endTimeMillis) {
+        this.endTimeMillis = endTimeMillis;
     }
 
     public String getLastHashFromUri() {
