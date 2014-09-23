@@ -29,8 +29,16 @@ import de.petermoesenthin.alarming.pref.PrefKey;
 
 public class PrefUtil {
 
+    //================================================================================
+    // Members
+    //================================================================================
+
     public static final String DEBUG_TAG = "PrefUtil";
     public static final boolean D = false;
+
+    //================================================================================
+    // Insert
+    //================================================================================
 
     public static void putString(Context context, String key, String value){
         getApplicationPrefs(context)
@@ -64,20 +72,27 @@ public class PrefUtil {
         ).commit();
     }
 
+    //================================================================================
+    // Read
+    //================================================================================
 
-    public static String getString(Context context, String key){
-        return getApplicationPrefs(context).getString(key, null);
+    public static String getString(Context context, String key, String defaultValue){
+        return getApplicationPrefs(context).getString(key, defaultValue);
     }
-    public static long getLong(Context context, String key){
-        return getApplicationPrefs(context).getLong(key, -1);
+    public static long getLong(Context context, String key, long defaultValue){
+        return getApplicationPrefs(context).getLong(key, defaultValue);
     }
     public static boolean getBoolean(Context context, String key, boolean defaultValue){
         return getApplicationPrefs(context).getBoolean(key, defaultValue);
     }
 
-    public static int getInt(Context context, String key){
-        return getApplicationPrefs(context).getInt(key, -1);
+    public static int getInt(Context context, String key, int defaultValue){
+        return getApplicationPrefs(context).getInt(key, defaultValue);
     }
+
+    //================================================================================
+    // Helper methods
+    //================================================================================
 
     public static void updateAlarmSoundUris(Context context){
         File[] files = FileUtil.getAlarmDirectoryFileList();
@@ -100,7 +115,7 @@ public class PrefUtil {
     public static String[] getAlarmSoundUris(Context context){
         String[] files;
         Gson gson = new Gson();
-        files = gson.fromJson(getString(context, PrefKey.ALARM_SOUND_URIS_GSON), String[].class);
+        files = gson.fromJson(getString(context, PrefKey.ALARM_SOUND_URIS_GSON, null), String[].class);
         return files;
     }
 
@@ -118,7 +133,7 @@ public class PrefUtil {
     public static AlarmGson getAlarmTimeGson(Context context){
         Gson gson = new Gson();
         AlarmGson alg;
-        alg = gson.fromJson(getString(context, PrefKey.ALARM_GSON), AlarmGson.class);
+        alg = gson.fromJson(getString(context, PrefKey.ALARM_GSON, null), AlarmGson.class);
         return alg;
     }
 
