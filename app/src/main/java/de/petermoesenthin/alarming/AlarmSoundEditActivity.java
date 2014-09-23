@@ -18,7 +18,6 @@ package de.petermoesenthin.alarming;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -27,16 +26,9 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.edmodo.rangebar.RangeBar;
-import com.google.gson.Gson;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-
-import java.io.File;
-import java.io.IOException;
-
-import de.petermoesenthin.alarming.pref.AlarmSoundGson;
-import de.petermoesenthin.alarming.util.FileUtil;
+import de.petermoesenthin.alarming.util.MediaPlayerUtil;
+import de.petermoesenthin.alarming.util.NumberUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
 
@@ -76,15 +68,16 @@ public class AlarmSoundEditActivity extends Activity{
 
         // call after ui setup to load all variables
         soundFilePath = readIntentUri();
-        loadAudioMetaDataToViews(soundFilePath);
+        String[] metaData = MediaPlayerUtil.getBasicMetaData(soundFilePath);
+        soundArtist = metaData[0];
+        soundTitle = metaData[1];
+        soundMillis = Long.parseLong(metaData[2]);
 
         setUpRangeBar();
 
         textView_soundTitle.setText(soundTitle);
         textView_soundArtist.setText(soundArtist);
-        textView_soundLength.setText(getTimeFormattedFromMillis(soundMillis));
-        textView_soundStart.setText("Start: " + getTimeFormattedFromSeconds(0));
-        textView_soundEnd.setText("End: " + getTimeFormattedFromMillis(soundMillis));
+        textView_soundLength.setText(StringUtil.getTimeFormattedFromMillis(soundMillis));
     }
 
     @Override
@@ -95,6 +88,30 @@ public class AlarmSoundEditActivity extends Activity{
         return super.onCreateOptionsMenu(menu);
     }
 
+    //================================================================================
+    // Callbacks
+    //================================================================================
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            case R.id.action_save_sound_config:
+                //TODO write meta data
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //================================================================================
+    // Methods
+    //================================================================================
 
     private String readIntentUri(){
         String intentUri = "";
@@ -109,18 +126,9 @@ public class AlarmSoundEditActivity extends Activity{
         return intentUri;
     }
 
-
-    private void loadAudioMetaDataToViews(String filePath){
-        if (D) {Log.d(DEBUG_TAG, "Reading audio metadata");}
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(filePath);
-        soundArtist =
-                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-        soundTitle =
-                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-        soundMillis =
-                Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-    }
+    //================================================================================
+    // UI
+    //================================================================================
 
     private void loadUiResources(){
         textView_soundTitle = (TextView) findViewById(R.id.textView_soundTitle);
@@ -133,76 +141,17 @@ public class AlarmSoundEditActivity extends Activity{
 
     private void setUpRangeBar(){
         long duration = soundMillis / 1000;
-        tickCount = parseLongToIntMaxValue(duration);
+        tickCount = NumberUtil.parseLongToCappedInt(duration);
         rangeBar_soundSelector.setTickCount(tickCount);
         rangeBar_soundSelector.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onIndexChangeListener(RangeBar rangeBar, int i, int i2) {
-                textView_soundStart.setText("Start:" + getTimeFormattedFromSeconds(i));
-                textView_soundEnd.setText("End:" + getTimeFormattedFromSeconds(i2));
+                textView_soundStart.setText("Start:" + StringUtil.getTimeFormattedFromSeconds(i));
+                textView_soundEnd.setText("End:" + StringUtil.getTimeFormattedFromSeconds(i2));
             }
         });
     }
 
-    private int parseLongToIntMaxValue(long number){
-        int maxInt = Integer.MAX_VALUE;
-        if (number >= maxInt){
-            return maxInt;
-        } else {
-            return (int) number;
-        }
-    }
 
-    private String getTimeFormattedFromSeconds(int seconds){
-        return getTimeFormattedFromMillis(seconds * 1000);
-    }
-
-    private String getTimeFormattedFromMillis(long millis){
-        long duration = millis / 1000;
-        long h = duration / 3600;
-        long m = (duration - h * 3600) / 60;
-        long s = duration - (h * 3600 + m * 60);
-        String durationString = "";
-        if(h != 0) {
-            durationString += StringUtil.getZeroPaddedString(h) + ":";
-        }
-        durationString += StringUtil.getZeroPaddedString(m) + ":";
-        durationString += StringUtil.getZeroPaddedString(s);
-        return durationString;
-    }
-
-    private void writeMetaFile(){
-        String metaFilePath = FilenameUtils.removeExtension(soundFilePath) + ".alarming";
-        File mf = FileUtil.getFile(metaFilePath);
-        AlarmSoundGson alsg = new AlarmSoundGson();
-        alsg.setUri(soundFilePath);
-        alsg.setLastHashFromUri("" + soundFilePath.hashCode());
-        alsg.setStartTimeMillis(0);
-        alsg.setEndTimeMillis(soundMillis);
-        Gson gs = new Gson();
-        String js = gs.toJson(alsg);
-        try {
-            FileUtils.write(mf,js,"UTF-8");
-        } catch (IOException e) {
-            if (D) {Log.e(DEBUG_TAG, "Could not write metadata",e);}
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // app icon in action bar clicked; go home
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                return true;
-            case R.id.action_save_sound_config:
-                writeMetaFile();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }
 
