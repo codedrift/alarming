@@ -26,6 +26,7 @@ dependencies {
             'com.doomonafireball.betterpickers:library:1.5.2',
             'com.android.support:support-v4:18.0.+',
             'commons-io:commons-io:2.4',
-            'com.edmodo:rangebar:1.0.0'
+            'com.edmodo:rangebar:1.0.0',
+            'com.github.castorflex.smoothprogressbar:library:1.0.0'
     )
 }
