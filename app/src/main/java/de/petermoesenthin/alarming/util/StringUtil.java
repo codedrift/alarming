@@ -38,4 +38,32 @@ public class StringUtil {
         return alarmTimeFormatted;
     }
 
+    /**
+     * Returns a formatted time string in the form of (hh:)mm:ss generated from seconds
+     * @param seconds
+     * @return
+     */
+    public static String getTimeFormattedFromSeconds(int seconds){
+        return getTimeFormattedFromMillis(seconds * 1000);
+    }
+
+    /**
+     * Returns a formatted time string in the form of (hh:)mm:ss generated from milliseconds
+     * @param millis
+     * @return
+     */
+    public static String getTimeFormattedFromMillis(long millis){
+        long duration = millis / 1000;
+        long h = duration / 3600;
+        long m = (duration - h * 3600) / 60;
+        long s = duration - (h * 3600 + m * 60);
+        String durationString = "";
+        if(h != 0) {
+            durationString += StringUtil.getZeroPaddedString(h) + ":";
+        }
+        durationString += StringUtil.getZeroPaddedString(m) + ":";
+        durationString += StringUtil.getZeroPaddedString(s);
+        return durationString;
+    }
+
 }
