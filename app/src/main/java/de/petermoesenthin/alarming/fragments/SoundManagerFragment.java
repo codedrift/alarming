@@ -49,8 +49,10 @@ import java.util.List;
 import de.petermoesenthin.alarming.AlarmSoundEditActivity;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmSoundListAdapter;
+import de.petermoesenthin.alarming.callbacks.OperationFinishedListener;
 import de.petermoesenthin.alarming.ui.AlarmSoundListItem;
 import de.petermoesenthin.alarming.util.FileUtil;
+import de.petermoesenthin.alarming.util.MediaPlayerUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
 public class SoundManagerFragment extends Fragment implements
@@ -104,6 +106,7 @@ public class SoundManagerFragment extends Fragment implements
         super.onResume();
         PrefUtil.getApplicationPrefs(getActivity())
                 .registerOnSharedPreferenceChangeListener(this);
+
     }
 
     @Override
@@ -149,7 +152,13 @@ public class SoundManagerFragment extends Fragment implements
                     showWrongFileTypeDialog();
                     return;
                 }
-                FileUtil.saveFileToExtAppStorage(getActivity().getApplicationContext(), uri);
+                FileUtil.saveFileToExtAppStorage(getActivity().getApplicationContext(), uri,
+                        new OperationFinishedListener(){
+                    @Override
+                    public void onOperationFinished() {
+                        PrefUtil.updateAlarmSoundUris(getActivity());
+                    }
+                });
             }
         }
     }
@@ -168,9 +177,8 @@ public class SoundManagerFragment extends Fragment implements
         if(uris != null){
             mListItemCount = uris.length;
             for (String uri : uris) {
-                File f = FileUtil.getFile(uri);
-                String displayName = FilenameUtils.removeExtension(f.getName());
-                listItems.add(new AlarmSoundListItem(displayName));
+                String[] metaData = MediaPlayerUtil.getBasicMetaData(uri);
+                listItems.add(new AlarmSoundListItem(metaData[0], metaData[1]));
             }
         }
         mListView.setAdapter(new AlarmSoundListAdapter(getActivity(),
