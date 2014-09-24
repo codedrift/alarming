@@ -29,6 +29,8 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.IOException;
 import java.util.Random;
 
+import de.petermoesenthin.alarming.pref.PrefKey;
+
 public class MediaUtil {
 
     public static final String DEBUG_TAG = "MediaUtil";
@@ -88,6 +90,20 @@ public class MediaUtil {
     }
 
 
+    private void setMediaVolume(Context context){
+        int originalVolume;
+        AudioManager audioManager =
+                (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        PrefUtil.putInt(context, PrefKey.AUDIO_ORIGINAL_VOLUME, originalVolume);
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        float percent = 0.8f;
+        int targetVolume = (int) (maxVolume*percent);
+        audioManager.setStreamVolume (
+                AudioManager.STREAM_MUSIC,
+                targetVolume,
+                0);
+    }
 
 
 

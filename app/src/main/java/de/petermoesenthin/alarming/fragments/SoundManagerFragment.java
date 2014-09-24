@@ -20,7 +20,6 @@ package de.petermoesenthin.alarming.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,9 +38,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import org.apache.commons.io.FilenameUtils;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +48,7 @@ import de.petermoesenthin.alarming.adapter.AlarmSoundListAdapter;
 import de.petermoesenthin.alarming.callbacks.OperationFinishedListener;
 import de.petermoesenthin.alarming.ui.AlarmSoundListItem;
 import de.petermoesenthin.alarming.util.FileUtil;
-import de.petermoesenthin.alarming.util.MediaPlayerUtil;
+import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
 public class SoundManagerFragment extends Fragment implements
@@ -171,7 +167,7 @@ public class SoundManagerFragment extends Fragment implements
             return false;
         }
         try{
-            MediaPlayerUtil.getBasicMetaData(uri.getPath());
+            MediaUtil.getBasicMetaData(uri.getPath());
         }catch (RuntimeException e){
             if (D) {Log.e(DEBUG_TAG,"No activity for file intents availiable",e);}
             return false;
@@ -193,7 +189,7 @@ public class SoundManagerFragment extends Fragment implements
         if(uris != null){
             mListItemCount = uris.length;
             for (String uri : uris) {
-                String[] metaData = MediaPlayerUtil.getBasicMetaData(uri);
+                String[] metaData = MediaUtil.getBasicMetaData(uri);
                 listItems.add(new AlarmSoundListItem(metaData[0], metaData[1]));
             }
         }
