@@ -21,13 +21,9 @@ import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.provider.Settings;
 import android.util.Log;
 
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.IOException;
-import java.util.Random;
 
 import de.petermoesenthin.alarming.pref.PrefKey;
 
@@ -36,10 +32,13 @@ public class MediaUtil {
     public static final String DEBUG_TAG = "MediaUtil";
     private static final boolean D = true;
 
+    private static final MediaPlayer mediaPlayer = new MediaPlayer();
+
 
     /**
      * Creates an array of basic information about an audio file obtained through the
-     * MediaMetaDataRetriever.
+     * MediaMetaDataRetriever. If a file does not provide MetaData, the filename will be used as
+     * the title.
      * The array contains information as follows:
      * [0] METADATA_KEY_ARTIST
      * [1] METADATA_KEY_TITLE
@@ -69,43 +68,97 @@ public class MediaUtil {
     }
 
 
-    private void playAlarmSound(Context context, Uri dataSource){
+    /**
+     * Play the audio file at the specified source
+     * @param context Application context
+     * @param dataSource Audio file
+     */
+    public static void playAudio(Context context, Uri dataSource){
         if (D) {Log.d(DEBUG_TAG, "Audio file uri: " + dataSource);}
-        MediaPlayer mediaPlayer;
-        mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mediaPlayer.setDataSource(context, dataSource);
         } catch (IOException e) {
-            Log.e(DEBUG_TAG, "Failed to access alarm sound uri", e);
+            if (D) {Log.e(DEBUG_TAG, "Failed to access alarm sound uri", e);}
             return;
         }
         try {
             mediaPlayer.prepare();
         } catch (IOException e) {
-            Log.e(DEBUG_TAG, "Failed to prepare media player");
+            if (D) {Log.e(DEBUG_TAG, "Failed to prepare media player", e);}
             return;
         }
         mediaPlayer.start();
     }
 
+    public static void stopAudioPlayback(){
+        mediaPlayer.stop();
+        mediaPlayer.reset();
+        mediaPlayer.release();
+    }
 
-    private void setMediaVolume(Context context){
-        int originalVolume;
-        AudioManager audioManager =
-                (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-        originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        PrefUtil.putInt(context, PrefKey.AUDIO_ORIGINAL_VOLUME, originalVolume);
-        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
+    /**
+     * Sets STREAM_MUSIC to the user specified volume that will be used to play alarm sounds
+     * @param context Application context
+     */
+    public static void setMediaVolume(Context context){
+        if (D) {Log.d(DEBUG_TAG, "Setting alarm sound volume");}
+        saveStreamMusicVolume(context);
         float percent = 0.8f;
-        int targetVolume = (int) (maxVolume*percent);
-        audioManager.setStreamVolume (
+        setStreamMusicVolume(context, percent);
+    }
+
+
+    /**
+     * Sets STREAM_MUSIC volume back to the previously set amount (user defined)
+     * @param context Application context
+     */
+    public static void resetMediaVolume(Context context){
+        float percentage = PrefUtil.getFloat(context, PrefKey.AUDIO_ORIGINAL_VOLUME, 0f);
+        setStreamMusicVolume(context, percentage);
+    }
+
+    /**
+     * @param context Application context
+     * @return AudioManger system service
+     */
+    public static AudioManager getAudioManager(Context context){
+        return (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+    }
+
+
+    /**
+     * Saves the current volume percentage of STREAM_MUSIC
+     * @param context Application context
+     */
+    public static void saveStreamMusicVolume(Context context){
+        int currentVolume  = getAudioManager(context).getStreamVolume(AudioManager.STREAM_MUSIC);
+        float percentage = currentVolume / getAudioStreamMaxVolume(context);
+        PrefUtil.putFloat(context, PrefKey.AUDIO_ORIGINAL_VOLUME, percentage);
+    }
+
+
+    /**
+     * Sets STREAM_MUSIC volume to the given percentage
+     * @param context Application context
+     * @param percentage percentage to set the volume to
+     */
+    public static void setStreamMusicVolume(Context context, float percentage){
+        int targetVolume = (int) (getAudioStreamMaxVolume(context) * percentage);
+        getAudioManager(context).setStreamVolume(
                 AudioManager.STREAM_MUSIC,
                 targetVolume,
                 0);
     }
 
-
-
+    /**
+     *
+     * @param context Application context
+     * @return Maximum value for STREAM_MUSIC volume
+     */
+    public static int getAudioStreamMaxVolume(Context context){
+        return getAudioManager(context).getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+    }
 
 }

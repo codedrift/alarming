@@ -32,10 +32,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
-import java.io.IOException;
 import java.util.Random;
 
-import de.petermoesenthin.alarming.util.NotificationUtil;
+import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
 public class AlarmReceiverActivity extends Activity {
@@ -80,7 +79,6 @@ public class AlarmReceiverActivity extends Activity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
         disableKeyguard();
-        setAlarmVolume();
     }
 
 
@@ -104,6 +102,7 @@ public class AlarmReceiverActivity extends Activity {
                 }
         );
         AlertDialog alert = builder.create();
+        MediaUtil.setMediaVolume(this);
         playAlarmSound();
         alert.show();
     }
@@ -121,27 +120,12 @@ public class AlarmReceiverActivity extends Activity {
         }
     }
 
-    private void setAlarmVolume(){
-        mAudioManager =
-                (AudioManager)this.getSystemService(Context.AUDIO_SERVICE);
-        mOriginalVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        float percent = 0.8f;
-        int targetVolume = (int) (maxVolume*percent);
-        mAudioManager.setStreamVolume (
-                AudioManager.STREAM_MUSIC,
-                targetVolume,
-                0);
-    }
-
     /**
      * Does additional work to finish this activity
      */
     public void finishThis(){
-        mMediaPlayer.stop();
-        mMediaPlayer.reset();
-        mMediaPlayer.release();
-        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mOriginalVolume, 0);
+        MediaUtil.stopAudioPlayback();
+        MediaUtil.resetMediaVolume(this);
         mKeyguardLock.reenableKeyguard();
         finish();
     }
@@ -159,23 +143,6 @@ public class AlarmReceiverActivity extends Activity {
             // Play default
             dataSource = Settings.System.DEFAULT_ALARM_ALERT_URI;
         }
-
-        if (D) {Log.d(DEBUG_TAG, "Audio file uri: " + dataSource);}
-
-        mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mMediaPlayer.setDataSource(this, dataSource);
-        } catch (IOException e) {
-            Log.e(DEBUG_TAG, "Failed to access alarm sound uri", e);
-            return;
-        }
-        try {
-            mMediaPlayer.prepare();
-        } catch (IOException e) {
-            Log.e(DEBUG_TAG, "Failed to prepare media player");
-            return;
-        }
-        mMediaPlayer.start();
+        MediaUtil.playAudio(this, dataSource);
     }
 }
