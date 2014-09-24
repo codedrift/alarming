@@ -27,7 +27,9 @@ import android.widget.TextView;
 
 import com.edmodo.rangebar.RangeBar;
 
-import de.petermoesenthin.alarming.util.MediaPlayerUtil;
+import de.petermoesenthin.alarming.pref.AlarmSoundGson;
+import de.petermoesenthin.alarming.util.FileUtil;
+import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.NumberUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
@@ -46,6 +48,8 @@ public class AlarmSoundEditActivity extends Activity{
     private String soundArtist;
     private String soundTitle;
     private long soundMillis;
+    private long soundStartMillis;
+    private long soundEndMillis;
 
     private TextView textView_soundTitle;
     private TextView textView_soundArtist;
@@ -68,7 +72,7 @@ public class AlarmSoundEditActivity extends Activity{
 
         // call after ui setup to load all variables
         soundFilePath = readIntentUri();
-        String[] metaData = MediaPlayerUtil.getBasicMetaData(soundFilePath);
+        String[] metaData = MediaUtil.getBasicMetaData(soundFilePath);
         soundArtist = metaData[0];
         soundTitle = metaData[1];
         soundMillis = Long.parseLong(metaData[2]);
@@ -102,7 +106,12 @@ public class AlarmSoundEditActivity extends Activity{
                 startActivity(intent);
                 return true;
             case R.id.action_save_sound_config:
-                //TODO write meta data
+                AlarmSoundGson alsg = new AlarmSoundGson();
+                alsg.setStartTimeMillis(0);
+                alsg.setEndTimeMillis(soundMillis);
+                alsg.setPath(soundFilePath);
+                alsg.setPathHash(soundFilePath.hashCode());
+                FileUtil.writeSoundConfigurationFile(soundFilePath,alsg);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -124,6 +133,16 @@ public class AlarmSoundEditActivity extends Activity{
             if (D) {Log.d(DEBUG_TAG, "Building activity for: " + intentUri);}
         }
         return intentUri;
+    }
+
+    private void readConfig(){
+        AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(soundFilePath);
+        if(alsg.getPathHash() == 0){
+            return;
+        } else {
+            soundStartMillis = alsg.getStartTimeMillis();
+            soundEndMillis = alsg.getEndTimeMillis();
+        }
     }
 
     //================================================================================

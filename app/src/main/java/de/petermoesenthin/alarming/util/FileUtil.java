@@ -31,6 +31,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -226,8 +227,9 @@ public class FileUtil {
      * @param alsg the configuration in form of a AlarmSoundGson object
      */
     public static void writeSoundConfigurationFile(String soundFilePath, AlarmSoundGson alsg){
+        if (D) {Log.d(DEBUG_TAG, "Writing sound configuration file");}
         String configFilePath =
-                FilenameUtils.removeExtension(soundFilePath) + AUDIO_METADATA_FILE_EXTENSION;
+                getMetaFilePath(soundFilePath);
         File configFile = getFile(configFilePath);
         Gson gs = new Gson();
         String js = gs.toJson(alsg);
@@ -239,13 +241,29 @@ public class FileUtil {
     }
 
     /**
-     * Reads the
-     * @param soundFilePath
+     * Reads the configuration file for an alarm sound
+     * @param soundFilePath Path to the sound file since the configuration is next to it
      * @return
      */
     public static AlarmSoundGson readSoundConfigurationFile(String soundFilePath){
-        //TODO implement
-        return null;
+        if (D) {Log.d(DEBUG_TAG, "Reading sound configuration file");}
+        Gson gs = new Gson();
+        String metaFilePath = getMetaFilePath(soundFilePath);
+        File f = getFile(metaFilePath);
+        String js = "";
+        try {
+            js = FileUtils.readFileToString(f, "UTF-8");
+        }catch (FileNotFoundException e){
+            if (D)  Log.e(DEBUG_TAG, "Could not find configuration file",e);
+        }catch (IOException e) {
+            if (D)  Log.e(DEBUG_TAG, "Unable to read file",e);
+        }
+        return gs.fromJson(js,AlarmSoundGson.class);
+    }
+
+
+    public static String getMetaFilePath(String soundFilePath){
+        return FilenameUtils.removeExtension(soundFilePath) + AUDIO_METADATA_FILE_EXTENSION;
     }
 
     /**

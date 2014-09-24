@@ -18,17 +18,17 @@ package de.petermoesenthin.alarming.pref;
 
 public class AlarmSoundGson {
 
-    private String uri;
+    private String path;
     private long startTimeMillis;
     private long endTimeMillis;
-    private int lastHashFromUri = 0;
+    private int pathHash = 0;
 
-    public String getUri() {
-        return uri;
+    public String getPath() {
+        return path;
     }
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public long getStartTimeMillis() {
@@ -47,12 +47,12 @@ public class AlarmSoundGson {
         this.endTimeMillis = endTimeMillis;
     }
 
-    public int getLastHashFromUri() {
-        return lastHashFromUri;
+    public int getPathHash() {
+        return pathHash;
     }
 
-    public void setLastHashFromUri(int lastHashFromUri) {
-        this.lastHashFromUri = lastHashFromUri;
+    public void setPathHash(int pathHash) {
+        this.pathHash = pathHash;
     }
 
 }
