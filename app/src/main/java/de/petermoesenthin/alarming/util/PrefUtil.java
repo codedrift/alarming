@@ -37,7 +37,7 @@ public class PrefUtil {
     public static final boolean D = false;
 
     //================================================================================
-    // Insert
+    // Write
     //================================================================================
 
     public static void putString(Context context, String key, String value){
@@ -72,6 +72,14 @@ public class PrefUtil {
         ).commit();
     }
 
+    public static void putFloat(Context context, String key, float value){
+        getApplicationPrefs(context)
+                .edit().putFloat(
+                key,
+                value
+        ).commit();
+    }
+
     //================================================================================
     // Read
     //================================================================================
@@ -79,9 +87,11 @@ public class PrefUtil {
     public static String getString(Context context, String key, String defaultValue){
         return getApplicationPrefs(context).getString(key, defaultValue);
     }
+
     public static long getLong(Context context, String key, long defaultValue){
         return getApplicationPrefs(context).getLong(key, defaultValue);
     }
+
     public static boolean getBoolean(Context context, String key, boolean defaultValue){
         return getApplicationPrefs(context).getBoolean(key, defaultValue);
     }
@@ -90,9 +100,22 @@ public class PrefUtil {
         return getApplicationPrefs(context).getInt(key, defaultValue);
     }
 
+    public static float getFloat(Context context, String key, float defaultValue){
+        return getApplicationPrefs(context).getFloat(key, defaultValue);
+    }
+
     //================================================================================
     // Helper methods
     //================================================================================
+
+    /**
+     * Get the shared preferences that are used in this application
+     * @param context
+     * @return
+     */
+    public static SharedPreferences getApplicationPrefs(Context context){
+        return context.getSharedPreferences(PrefKey.PREF_FILE_NAME, Activity.MODE_PRIVATE);
+    }
 
     public static void updateAlarmSoundUris(Context context){
         File[] files = FileUtil.getAlarmDirectoryAudioFileList();
@@ -115,12 +138,10 @@ public class PrefUtil {
     public static String[] getAlarmSoundUris(Context context){
         String[] files;
         Gson gson = new Gson();
-        files = gson.fromJson(getString(context, PrefKey.ALARM_SOUND_URIS_GSON, null), String[].class);
+        files = gson.fromJson(
+                getString(context, PrefKey.ALARM_SOUND_URIS_GSON, null),
+                String[].class);
         return files;
-    }
-
-    public static SharedPreferences getApplicationPrefs(Context context){
-        return context.getSharedPreferences(PrefKey.PREF_FILE_NAME, Activity.MODE_PRIVATE);
     }
 
     public static void updateAlarmTime(Context context, int hour, int minute){
