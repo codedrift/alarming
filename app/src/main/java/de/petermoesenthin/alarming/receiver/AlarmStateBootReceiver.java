@@ -38,7 +38,7 @@ public class AlarmStateBootReceiver extends BroadcastReceiver {
             boolean alarmSet = PrefUtil.getBoolean(context, PrefKey.ALARM_SET, false);
             if(alarmSet){
                 Calendar calendar = Calendar.getInstance();
-                long alarmTimeMillis = PrefUtil.getLong(context,PrefKey.NEXT_ALARM_TIME_MILLIS);
+                long alarmTimeMillis = PrefUtil.getLong(context,PrefKey.NEXT_ALARM_TIME_MILLIS, -1);
                 calendar.setTimeInMillis(alarmTimeMillis);
                 AlarmUtil.setAlarm(context,calendar);
                 NotificationUtil.showAlarmSetNotification(context);
