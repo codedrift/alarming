@@ -36,12 +36,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import de.petermoesenthin.alarming.callbacks.OperationFinishedListener;
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 
 public class FileUtil {
 
     public static final String DEBUG_TAG = "FileUtil";
-    private static final boolean D = false;
+    private static final boolean D = true;
 
     public static final String APP_EXT_STORAGE_FOLDER = "alarming";
     public static final String AUDIO_METADATA_FILE_EXTENSION = ".alarmingmeta";
@@ -51,7 +52,8 @@ public class FileUtil {
      * @param context Application context
      * @param uri Uri of file to copy
      */
-    public static void saveFileToExtAppStorage(final Context context, final Uri uri){
+    public static void saveFileToExtAppStorage(final Context context, final Uri uri,
+                                               final OperationFinishedListener op){
         final File applicationDirectory = getApplicationDirectory();
         if(!applicationDirectory.exists()){
             applicationDirectory.mkdirs();
@@ -103,7 +105,9 @@ public class FileUtil {
                         }
                     }
                 }
-                PrefUtil.updateAlarmSoundUris(context);
+                if(op != null){
+                    op.onOperationFinished();
+                }
             }
         });
         copyThread.start();
@@ -197,13 +201,19 @@ public class FileUtil {
         return FileUtil.getApplicationDirectory().listFiles(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                boolean fileAccepted = false;
-                // Check if is hidden
-                fileAccepted = !f.isHidden();
-                // Check for mime type
-                String mime = getMimeType(f.getAbsolutePath());
-                if(!mime.startsWith("audio")){
-                    fileAccepted = true;
+                boolean fileAccepted = true;
+                // Early out if hidden
+                if(f.isHidden()){
+                    return false;
+                }
+                //Check for mime type
+                String mimeType;
+                mimeType = getMimeType(f.getPath());
+                if(mimeType == null){
+                    return false;
+                }
+                if(!mimeType.startsWith("audio")){
+                    fileAccepted = false;
                 }
                 return fileAccepted;
             }
@@ -239,11 +249,12 @@ public class FileUtil {
     }
 
     /**
-     * Returns a mime type for a file in given path
-     * @param url
-     * @return
+     * Returns a mime type for a file in given path.
+     * @param url Path to the file.
+     * @return Null if no extension is found.
      */
     public static String getMimeType(String url){
+        if (D) {Log.d(DEBUG_TAG, "Checking mime type for " + url);}
         String type = null;
         String extension = MimeTypeMap.getFileExtensionFromUrl(url);
         if (extension != null) {
