@@ -17,17 +17,27 @@ package de.petermoesenthin.alarming.ui;
 
 public class AlarmSoundListItem {
 
-    private String text;
+    private String artist;
+    private String title;
 
-    public AlarmSoundListItem(String text) {
-        this.text = text;
+    public AlarmSoundListItem(String artist, String title) {
+        this.artist = artist;
+        this.title = title;
     }
 
-    public String getText() {
-        return text;
+    public String getArtist() {
+        return artist;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title  = title;
     }
 }
