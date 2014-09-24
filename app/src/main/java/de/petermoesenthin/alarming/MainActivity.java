@@ -80,7 +80,6 @@ public class MainActivity extends FragmentActivity {
         }
 
         transactNewFragment(new SetAlarmFragment());
-        PrefUtil.updateAlarmSoundUris(this);
     }
 
     @Override
