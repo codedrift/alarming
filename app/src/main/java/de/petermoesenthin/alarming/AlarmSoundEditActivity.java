@@ -142,6 +142,9 @@ public class AlarmSoundEditActivity extends Activity{
     private void setUpRangeBar(){
         long duration = soundMillis / 1000;
         tickCount = NumberUtil.parseLongToCappedInt(duration);
+        if(tickCount < 2){
+            tickCount = 2;
+        }
         rangeBar_soundSelector.setTickCount(tickCount);
         rangeBar_soundSelector.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
