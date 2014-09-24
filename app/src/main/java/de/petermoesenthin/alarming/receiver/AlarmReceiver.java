@@ -32,6 +32,7 @@ import java.io.IOException;
 
 import de.petermoesenthin.alarming.AlarmReceiverActivity;
 import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.util.NotificationUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -54,6 +55,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
         PrefUtil.putBoolean(context, PrefKey.ALARM_SET, false);
+        NotificationUtil.clearAlarmNotifcation(context);
     }
 
 

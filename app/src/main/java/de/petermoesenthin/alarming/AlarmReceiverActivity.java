@@ -81,29 +81,6 @@ public class AlarmReceiverActivity extends Activity {
         }
         disableKeyguard();
         setAlarmVolume();
-        NotificationUtil.clearAlarmNotifcation(this);
-    }
-
-    private void disableKeyguard(){
-        mKeyGuardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-        mKeyguardLock = mKeyGuardManager.newKeyguardLock("Alarming");
-
-        if (mKeyGuardManager.inKeyguardRestrictedInputMode()){
-            mKeyguardLock.disableKeyguard();
-        }
-    }
-
-    private void setAlarmVolume(){
-        mAudioManager =
-                (AudioManager)this.getSystemService(Context.AUDIO_SERVICE);
-        mOriginalVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        float percent = 0.8f;
-        int targetVolume = (int) (maxVolume*percent);
-        mAudioManager.setStreamVolume (
-                AudioManager.STREAM_MUSIC,
-                targetVolume,
-                0);
     }
 
 
@@ -131,6 +108,32 @@ public class AlarmReceiverActivity extends Activity {
         alert.show();
     }
 
+    //================================================================================
+    // Methods
+    //================================================================================
+
+    private void disableKeyguard(){
+        mKeyGuardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        mKeyguardLock = mKeyGuardManager.newKeyguardLock("Alarming");
+
+        if (mKeyGuardManager.inKeyguardRestrictedInputMode()){
+            mKeyguardLock.disableKeyguard();
+        }
+    }
+
+    private void setAlarmVolume(){
+        mAudioManager =
+                (AudioManager)this.getSystemService(Context.AUDIO_SERVICE);
+        mOriginalVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        float percent = 0.8f;
+        int targetVolume = (int) (maxVolume*percent);
+        mAudioManager.setStreamVolume (
+                AudioManager.STREAM_MUSIC,
+                targetVolume,
+                0);
+    }
+
     /**
      * Does additional work to finish this activity
      */
@@ -142,10 +145,6 @@ public class AlarmReceiverActivity extends Activity {
         mKeyguardLock.reenableKeyguard();
         finish();
     }
-
-    //================================================================================
-    // Callbacks
-    //================================================================================
 
     private void playAlarmSound(){
         String[] uris = PrefUtil.getAlarmSoundUris(this);
