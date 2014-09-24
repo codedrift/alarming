@@ -149,10 +149,12 @@ public class AlarmReceiverActivity extends Activity {
 
     private void playAlarmSound(){
         String[] uris = PrefUtil.getAlarmSoundUris(this);
-        Random r = new Random();
         Uri dataSource;
         if(uris != null && uris.length  > 0) {
-            dataSource = Uri.parse(uris[r.nextInt(uris.length)]);
+            Random r = new Random();
+            int rand = r.nextInt(uris.length);
+            if (D) {Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #" + rand);}
+            dataSource = Uri.parse(uris[rand]);
         } else {
             if (D) {Log.d(DEBUG_TAG, "No uri availiable, playing default alarm sound");}
             // Play default
