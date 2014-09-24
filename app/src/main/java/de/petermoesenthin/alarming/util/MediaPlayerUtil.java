@@ -19,6 +19,8 @@ package de.petermoesenthin.alarming.util;
 import android.media.MediaMetadataRetriever;
 import android.util.Log;
 
+import org.apache.commons.io.FilenameUtils;
+
 public class MediaPlayerUtil {
 
     public static final String DEBUG_TAG = "MediaPlayerUtil";
@@ -28,7 +30,7 @@ public class MediaPlayerUtil {
     /**
      * Creates an array of basic information about an audio file obtained through the
      * MediaMetaDataRetriever.
-     * The set contains information as follows:
+     * The array contains information as follows:
      * [0] METADATA_KEY_ARTIST
      * [1] METADATA_KEY_TITLE
      * [2] METADATA_KEY_DURATION
@@ -46,10 +48,13 @@ public class MediaPlayerUtil {
                 mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
         metaData[2] =
                 mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        if (D) {Log.d(DEBUG_TAG, "Found:" +
-                " [0] " + metaData[0] +
-                " [1] " + metaData[1] +
-                " [2] " + metaData[2]);}
+        if(metaData[0] == null){
+            metaData[0] = "-";
+        }
+        if(metaData[1] == null){
+            String[] pathSep = filePath.split("/");
+            metaData[1] = pathSep[pathSep.length -1];
+        }
         return metaData;
     }
 
