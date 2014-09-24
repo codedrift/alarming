@@ -159,5 +159,6 @@ public class SetAlarmFragment extends Fragment implements
         textView_alarmTime.setText(alarmTime);
         mCalendarSet = AlarmUtil.getNextAlarmTimeAbsolute(hourOfDay,minute);
         PrefUtil.updateAlarmTime(getActivity(), hourOfDay, minute);
+        switch_alarm.setChecked(true);
     }
 }
