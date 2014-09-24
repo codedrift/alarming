@@ -61,13 +61,16 @@ public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
             convertView = layoutInflater
                     .inflate(R.layout.alarmsound_listitem, null);
             viewHolder = new ViewHolder();
-            viewHolder.itemText = (TextView) convertView
-                    .findViewById(R.id.listItem_textView_alarmsound);
+            viewHolder.itemTitle = (TextView) convertView
+                    .findViewById(R.id.listItem_textView_soundTitle);
+            viewHolder.itemArtist = (TextView) convertView
+                    .findViewById(R.id.listItem_textView_soundArtist);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.itemText.setText(listItem.getText());
+        viewHolder.itemTitle.setText(listItem.getTitle());
+        viewHolder.itemArtist.setText(listItem.getArtist());
 
         return convertView;
     }
@@ -78,6 +81,7 @@ public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
 
 
     private class ViewHolder {
-        TextView itemText;
+        TextView itemTitle;
+        TextView itemArtist;
     }
 }
