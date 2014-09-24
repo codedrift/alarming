@@ -146,9 +146,7 @@ public class SoundManagerFragment extends Fragment implements
                 if (D) {Log.d(DEBUG_TAG,"File chosen");}
                 //the selected audio file
                 Uri uri = data.getData();
-                String mimeType = FileUtil.getMimeType(uri.toString());
-                if (D)  Log.d(DEBUG_TAG, "MIME type of selected file is " + mimeType);
-                if(!mimeType.startsWith("audio")){
+                if(!fileOK(uri)){
                     showWrongFileTypeDialog();
                     return;
                 }
@@ -161,6 +159,24 @@ public class SoundManagerFragment extends Fragment implements
                 });
             }
         }
+    }
+
+    private boolean fileOK(Uri uri){
+        String mimeType;
+        mimeType = FileUtil.getMimeType(uri.toString());
+        if(mimeType == null){
+            return false;
+        }
+        if(!mimeType.startsWith("audio")){
+            return false;
+        }
+        try{
+            MediaPlayerUtil.getBasicMetaData(uri.getPath());
+        }catch (RuntimeException e){
+            if (D) {Log.e(DEBUG_TAG,"No activity for file intents availiable",e);}
+            return false;
+        }
+        return true;
     }
 
     //================================================================================
@@ -247,7 +263,7 @@ public class SoundManagerFragment extends Fragment implements
         try {
             startActivityForResult(audioIntent, 1);
         }catch (ActivityNotFoundException e){
-            if (D) {Log.e(DEBUG_TAG,"No activity for file intents availiable");}
+            if (D) {Log.e(DEBUG_TAG,"No activity for file intents availiable",e);}
         }
     }
 

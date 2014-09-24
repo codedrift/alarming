@@ -23,8 +23,8 @@
         <!-- fragments/SoundManagerFragment -->
         <string name="action_save_config">Save configuration</string>
         <string name="action_add_new_sound">Add new sound</string>
-        <string name="alertTitle_wrongFileType">Wrong file type!</string>
-        <string name="alert_wrongFileType">It appears that you opened an unsupported file type. Please select an audio file.</string>
+        <string name="alertTitle_wrongFileType">Wrong or corrupted file!</string>
+        <string name="alert_wrongFileType">It appears that you opened an unsupported or corrupted file. Please select an audio file.</string>
         <string-array name="sound_action_options">
             <item>Edit</item>
             <item>Delete</item>
