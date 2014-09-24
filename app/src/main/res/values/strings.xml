@@ -53,6 +53,8 @@
     <string name="textView_soundStart">Start</string>
     <string name="textView_soundEnd">End</string>
     <string name="textView_soundLength">Absolute length</string>
+    <string name="toast_config_saved">Configuration saved</string>
+
 
     <!-- Notifications -->
     <string name="notification_alarmActivated">Alarming activated</string>
