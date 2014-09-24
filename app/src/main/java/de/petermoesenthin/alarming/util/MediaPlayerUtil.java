@@ -36,7 +36,7 @@ public class MediaPlayerUtil {
      * @return
      */
     public static String[] getBasicMetaData(String filePath){
-        if (D) {Log.d(DEBUG_TAG, "Reading audio metadata");}
+        if (D) {Log.d(DEBUG_TAG, "Reading audio metadata for " + filePath);}
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(filePath);
         String[] metaData = new String[3];
