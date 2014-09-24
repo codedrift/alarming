@@ -260,6 +260,7 @@ public class FileUtil {
         if (extension != null) {
             MimeTypeMap mime = MimeTypeMap.getSingleton();
             type = mime.getMimeTypeFromExtension(extension);
+            if (D)  Log.d(DEBUG_TAG, "Found MIME of type " + type);
         }
         return type;
     }
