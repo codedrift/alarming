@@ -95,7 +95,7 @@ public class PrefUtil {
     //================================================================================
 
     public static void updateAlarmSoundUris(Context context){
-        File[] files = FileUtil.getAlarmDirectoryFileList();
+        File[] files = FileUtil.getAlarmDirectoryAudioFileList();
         if(D) { Log.d(DEBUG_TAG, files.length + " audio files found");}
         String[] fileUris;
         if (files == null || files.length == 0){
