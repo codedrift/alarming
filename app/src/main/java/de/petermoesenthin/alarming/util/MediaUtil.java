@@ -16,14 +16,22 @@
 
 package de.petermoesenthin.alarming.util;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.provider.Settings;
 import android.util.Log;
 
 import org.apache.commons.io.FilenameUtils;
 
-public class MediaPlayerUtil {
+import java.io.IOException;
+import java.util.Random;
 
-    public static final String DEBUG_TAG = "MediaPlayerUtil";
+public class MediaUtil {
+
+    public static final String DEBUG_TAG = "MediaUtil";
     private static final boolean D = true;
 
 
@@ -57,6 +65,29 @@ public class MediaPlayerUtil {
         }
         return metaData;
     }
+
+
+    private void playAlarmSound(Context context, Uri dataSource){
+        if (D) {Log.d(DEBUG_TAG, "Audio file uri: " + dataSource);}
+        MediaPlayer mediaPlayer;
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mediaPlayer.setDataSource(context, dataSource);
+        } catch (IOException e) {
+            Log.e(DEBUG_TAG, "Failed to access alarm sound uri", e);
+            return;
+        }
+        try {
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            Log.e(DEBUG_TAG, "Failed to prepare media player");
+            return;
+        }
+        mediaPlayer.start();
+    }
+
+
 
 
 
