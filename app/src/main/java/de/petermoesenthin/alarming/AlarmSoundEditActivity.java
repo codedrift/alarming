@@ -76,12 +76,14 @@ public class AlarmSoundEditActivity extends Activity{
         soundArtist = metaData[0];
         soundTitle = metaData[1];
         soundMillis = Long.parseLong(metaData[2]);
-
+        readConfig();
         setUpRangeBar();
 
         textView_soundTitle.setText(soundTitle);
         textView_soundArtist.setText(soundArtist);
         textView_soundLength.setText(StringUtil.getTimeFormattedFromMillis(soundMillis));
+        textView_soundStart.setText(StringUtil.getTimeFormattedFromMillis(soundStartMillis));
+        textView_soundEnd.setText(StringUtil.getTimeFormattedFromMillis(soundEndMillis));
     }
 
     @Override
@@ -106,12 +108,7 @@ public class AlarmSoundEditActivity extends Activity{
                 startActivity(intent);
                 return true;
             case R.id.action_save_sound_config:
-                AlarmSoundGson alsg = new AlarmSoundGson();
-                alsg.setStartTimeMillis(0);
-                alsg.setEndTimeMillis(soundMillis);
-                alsg.setPath(soundFilePath);
-                alsg.setPathHash(soundFilePath.hashCode());
-                FileUtil.writeSoundConfigurationFile(soundFilePath,alsg);
+                saveConfig();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -137,12 +134,22 @@ public class AlarmSoundEditActivity extends Activity{
 
     private void readConfig(){
         AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(soundFilePath);
-        if(alsg.getPathHash() == 0){
-            return;
+        if(alsg == null){
+            soundStartMillis = 0;
+            soundEndMillis = soundMillis;
         } else {
             soundStartMillis = alsg.getStartTimeMillis();
             soundEndMillis = alsg.getEndTimeMillis();
         }
+    }
+
+    private void saveConfig(){
+        AlarmSoundGson alsg = new AlarmSoundGson();
+        alsg.setStartTimeMillis(soundStartMillis);
+        alsg.setEndTimeMillis(soundEndMillis);
+        alsg.setPath(soundFilePath);
+        alsg.setPathHash(soundFilePath.hashCode());
+        FileUtil.writeSoundConfigurationFile(soundFilePath,alsg);
     }
 
     //================================================================================
@@ -164,12 +171,25 @@ public class AlarmSoundEditActivity extends Activity{
         if(tickCount < 2){
             tickCount = 2;
         }
+        int left = (int) soundStartMillis / 1000;
+        int right = (int) soundEndMillis / 1000;
+        if(left <= 0){
+            left = 0;
+        }
+        if(right >= tickCount -1){
+            right = tickCount -1;
+        }
         rangeBar_soundSelector.setTickCount(tickCount);
+        rangeBar_soundSelector.setLeft(left);
+        rangeBar_soundSelector.setRight(right);
+        rangeBar_soundSelector.setThumbIndices(left, right);
         rangeBar_soundSelector.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
-            public void onIndexChangeListener(RangeBar rangeBar, int i, int i2) {
-                textView_soundStart.setText("Start:" + StringUtil.getTimeFormattedFromSeconds(i));
-                textView_soundEnd.setText("End:" + StringUtil.getTimeFormattedFromSeconds(i2));
+            public void onIndexChangeListener(RangeBar rangeBar, int leftThumbSec, int rightThumbSec) {
+                soundStartMillis = leftThumbSec * 1000;
+                soundEndMillis = rightThumbSec  * 1000;
+                textView_soundStart.setText(StringUtil.getTimeFormattedFromSeconds(leftThumbSec));
+                textView_soundEnd.setText(StringUtil.getTimeFormattedFromSeconds(rightThumbSec));
             }
         });
     }

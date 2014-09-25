@@ -254,9 +254,11 @@ public class FileUtil {
         try {
             js = FileUtils.readFileToString(f, "UTF-8");
         }catch (FileNotFoundException e){
-            if (D)  Log.e(DEBUG_TAG, "Could not find configuration file",e);
+            if (D)  Log.e(DEBUG_TAG, "Could not find configuration file");
+            return null;
         }catch (IOException e) {
-            if (D)  Log.e(DEBUG_TAG, "Unable to read file",e);
+            if (D)  Log.e(DEBUG_TAG, "Unable to read file");
+            return null;
         }
         return gs.fromJson(js,AlarmSoundGson.class);
     }
