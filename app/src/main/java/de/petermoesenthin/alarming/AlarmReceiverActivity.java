@@ -43,9 +43,7 @@ public class AlarmReceiverActivity extends Activity {
     // Member
     //================================================================================
 
-    private AudioManager mAudioManager;
     private MediaPlayer mMediaPlayer;
-    private int mOriginalVolume;
 
     KeyguardManager mKeyGuardManager;
     KeyguardManager.KeyguardLock mKeyguardLock;
@@ -124,7 +122,7 @@ public class AlarmReceiverActivity extends Activity {
      * Does additional work to finish this activity
      */
     public void finishThis(){
-        MediaUtil.stopAudioPlayback();
+        MediaUtil.stopAudioPlayback(mMediaPlayer);
         MediaUtil.resetMediaVolume(this);
         mKeyguardLock.reenableKeyguard();
         finish();
@@ -143,6 +141,7 @@ public class AlarmReceiverActivity extends Activity {
             // Play default
             dataSource = Settings.System.DEFAULT_ALARM_ALERT_URI;
         }
-        MediaUtil.playAudio(this, dataSource);
+        mMediaPlayer = new MediaPlayer();
+        MediaUtil.playAudio(this, mMediaPlayer, dataSource);
     }
 }

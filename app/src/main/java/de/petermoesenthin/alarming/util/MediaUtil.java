@@ -32,8 +32,6 @@ public class MediaUtil {
     public static final String DEBUG_TAG = "MediaUtil";
     private static final boolean D = true;
 
-    private static final MediaPlayer mediaPlayer = new MediaPlayer();
-
 
     /**
      * Creates an array of basic information about an audio file obtained through the
@@ -73,8 +71,8 @@ public class MediaUtil {
      * @param context Application context
      * @param dataSource Audio file
      */
-    public static void playAudio(Context context, Uri dataSource){
-        if (D) {Log.d(DEBUG_TAG, "Audio file uri: " + dataSource);}
+    public static void playAudio(Context context, MediaPlayer mediaPlayer, Uri dataSource){
+        if (D) {Log.d(DEBUG_TAG, "Playing audio. File uri: " + dataSource);}
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mediaPlayer.setDataSource(context, dataSource);
@@ -91,7 +89,9 @@ public class MediaUtil {
         mediaPlayer.start();
     }
 
-    public static void stopAudioPlayback(){
+    public static void stopAudioPlayback(MediaPlayer mediaPlayer){
+        if (D) {Log.d(DEBUG_TAG,
+                "Stopping media playback for MediaPlayer " + mediaPlayer.hashCode());}
         mediaPlayer.stop();
         mediaPlayer.reset();
         mediaPlayer.release();
