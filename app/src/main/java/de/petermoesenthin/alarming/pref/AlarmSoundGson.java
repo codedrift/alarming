@@ -19,8 +19,8 @@ package de.petermoesenthin.alarming.pref;
 public class AlarmSoundGson {
 
     private String path;
-    private long startTimeMillis;
-    private long endTimeMillis;
+    private int startTimeMillis;
+    private int endTimeMillis;
     private int pathHash = 0;
 
     public String getPath() {
@@ -31,19 +31,19 @@ public class AlarmSoundGson {
         this.path = path;
     }
 
-    public long getStartTimeMillis() {
+    public int getStartTimeMillis() {
         return startTimeMillis;
     }
 
-    public void setStartTimeMillis(long startTimeMillis) {
+    public void setStartTimeMillis(int startTimeMillis) {
         this.startTimeMillis = startTimeMillis;
     }
 
-    public long getEndTimeMillis() {
+    public int getEndTimeMillis() {
         return endTimeMillis;
     }
 
-    public void setEndTimeMillis(long endTimeMillis) {
+    public void setEndTimeMillis(int endTimeMillis) {
         this.endTimeMillis = endTimeMillis;
     }
 

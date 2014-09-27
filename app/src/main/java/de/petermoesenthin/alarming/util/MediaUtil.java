@@ -25,6 +25,7 @@ import android.util.Log;
 
 import java.io.IOException;
 
+import de.petermoesenthin.alarming.callbacks.PositionReachedListener;
 import de.petermoesenthin.alarming.pref.PrefKey;
 
 public class MediaUtil {
@@ -71,8 +72,9 @@ public class MediaUtil {
      * @param context Application context
      * @param dataSource Audio file
      */
+    @Deprecated
     public static void playAudio(Context context, MediaPlayer mediaPlayer, Uri dataSource){
-        if (D) {Log.d(DEBUG_TAG, "Playing audio. File uri: " + dataSource);}
+        if (D) {Log.d(DEBUG_TAG, "Playing audio. File uri: " + dataSource + ".");}
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mediaPlayer.setDataSource(context, dataSource);
@@ -89,9 +91,71 @@ public class MediaUtil {
         mediaPlayer.start();
     }
 
+    public static void seekAndPlayAudio(Context context, MediaPlayer mediaPlayer, Uri dataSource, int startMillis){
+        final int playerHash = mediaPlayer.hashCode();
+        if (D) {Log.d(DEBUG_TAG, "Playing audio file " + dataSource + " with MediaPlayer " + playerHash  + ".");}
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mediaPlayer.setDataSource(context, dataSource);
+        } catch (IOException e) {
+            if (D) {Log.e(DEBUG_TAG, "Failed to access alarm sound uri for MediaPlayer " + playerHash + ".", e);}
+            return;
+        }
+        try {
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            if (D) {Log.e(DEBUG_TAG, "Failed to prepare MediaPlayer " + playerHash, e);}
+            return;
+        }
+        if(startMillis == 0){
+            mediaPlayer.start();
+            return;
+        }
+        mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+            @Override
+            public void onSeekComplete(MediaPlayer mediaPlayer) {
+                if (D) {Log.d(DEBUG_TAG, "Seek completed. Playing audio in MediaPlayer " + playerHash);}
+                mediaPlayer.start();
+            }
+        });
+        mediaPlayer.seekTo(startMillis);
+    }
+
+    public static void waitForReachedPosition(
+            final MediaPlayer mediaPlayer,
+            final int positionMillis,
+            final PositionReachedListener positionReachedListener){
+        final int playerHash = mediaPlayer.hashCode();
+        if (D) {Log.d(DEBUG_TAG, "Waiting for MediaPlayer "
+                + playerHash + " to reach position.");}
+        final Thread waitThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean positionReached = false;
+                while(!positionReached){
+                    // End loop if player has stopped
+                    if(!mediaPlayer.isPlaying()){
+                        if (D) {Log.d(DEBUG_TAG, "MediaPlayer " + playerHash
+                                + " has already stopped. Exiting thread.");}
+                        return;
+                    }
+                    int playerMillis = mediaPlayer.getCurrentPosition();
+                    if(playerMillis >= positionMillis){
+                        if (D) {Log.d(DEBUG_TAG, "MediaPlayer " + playerHash
+                                + " has reached position.");}
+                        positionReached = true;
+                        positionReachedListener.onPositionReached(mediaPlayer);
+                    }
+
+                }
+            }
+        });
+        waitThread.start();
+    }
+
     public static void stopAudioPlayback(MediaPlayer mediaPlayer){
         if (D) {Log.d(DEBUG_TAG,
-                "Stopping media playback for MediaPlayer " + mediaPlayer.hashCode());}
+                "Stopping media playback for MediaPlayer " + mediaPlayer.hashCode() + ".");}
         mediaPlayer.stop();
         mediaPlayer.reset();
         mediaPlayer.release();
@@ -103,9 +167,9 @@ public class MediaUtil {
      * @param context Application context
      */
     public static void setMediaVolume(Context context){
-        if (D) {Log.d(DEBUG_TAG, "Setting alarm sound volume");}
+        if (D) {Log.d(DEBUG_TAG, "Setting alarm sound volume to user defined value.");}
         saveStreamMusicVolume(context);
-        float percent = 0.8f;
+        float percent = PrefUtil.getFloat(context,PrefKey.AUDIO_VOLUME,0.8f);
         setStreamMusicVolume(context, percent);
     }
 
@@ -115,6 +179,7 @@ public class MediaUtil {
      * @param context Application context
      */
     public static void resetMediaVolume(Context context){
+        if (D) {Log.d(DEBUG_TAG, "Resetting media volume to original value.");}
         float percentage = PrefUtil.getFloat(context, PrefKey.AUDIO_ORIGINAL_VOLUME, 0f);
         setStreamMusicVolume(context, percentage);
     }
@@ -133,6 +198,7 @@ public class MediaUtil {
      * @param context Application context
      */
     public static void saveStreamMusicVolume(Context context){
+        if (D) {Log.d(DEBUG_TAG, "Saving current STREAM_MUSIC volume.");}
         int currentVolume  = getAudioManager(context).getStreamVolume(AudioManager.STREAM_MUSIC);
         float percentage = currentVolume / getAudioStreamMaxVolume(context);
         PrefUtil.putFloat(context, PrefKey.AUDIO_ORIGINAL_VOLUME, percentage);

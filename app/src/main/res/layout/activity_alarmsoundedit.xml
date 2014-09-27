@@ -96,6 +96,15 @@
         custom:thumbColorPressed="@color/yellow_darker"
         />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_play"
+        android:id="@+id/button_play_pause"
+        android:layout_below="@+id/rangebar_audiosection"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>
