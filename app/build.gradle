@@ -24,9 +24,10 @@ dependencies {
         fileTree(dir: 'libs', include: ['*.jar']),
             'com.google.code.gson:gson:2.2.4',
             'com.doomonafireball.betterpickers:library:1.5.2',
-            'com.android.support:support-v4:18.0.+',
+            //'com.android.support:support-v4:18.0.+',
             'commons-io:commons-io:2.4',
             'com.edmodo:rangebar:1.0.0',
-            'com.github.castorflex.smoothprogressbar:library:1.0.0'
+            'com.github.castorflex.smoothprogressbar:library:1.0.0',
+            'com.github.gabrielemariotti.cards:library:1.9.1'
     )
 }

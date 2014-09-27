@@ -18,11 +18,13 @@ package de.petermoesenthin.alarming.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +40,8 @@ import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.view.CardView;
 
 public class SetAlarmFragment extends Fragment implements
         TimePickerDialogFragment.TimePickerDialogHandler {
@@ -62,14 +66,20 @@ public class SetAlarmFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_setalarm, container, false);
-        textView_alarmTime = (TextView) rootView.findViewById(R.id.textView_alarmTime);
+
+        //Create the card
+        Card card = new Card(getActivity(),R.layout.card_alarmtime);
+        CardView cardView = (CardView) rootView.findViewById(R.id.alarmCard);
+        cardView.setCard(card);
+
+        textView_alarmTime = (TextView) cardView.findViewById(R.id.textView_alarmTime);
         textView_alarmTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTimePicker();
             }
         });
-        switch_alarm = (Switch) rootView.findViewById(R.id.switch_alarm);
+        switch_alarm = (Switch) cardView.findViewById(R.id.switch_alarm);
         setSwitchCheckedListener();
 
         return rootView;
