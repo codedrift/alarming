@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +51,7 @@ import de.petermoesenthin.alarming.ui.AlarmSoundListItem;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 
 public class SoundManagerFragment extends Fragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -64,6 +66,8 @@ public class SoundManagerFragment extends Fragment implements
     private ListView mListView;
     private AlertDialog mOptionsDialog;
     private int mListItemCount = 0;
+    private CircularProgressBar mProgressBar;
+    private Handler mHandler = new Handler();
 
     private AdapterView.OnItemClickListener mListClickListener =
             new AdapterView.OnItemClickListener(){
@@ -86,8 +90,9 @@ public class SoundManagerFragment extends Fragment implements
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_soundmanager, container, false);
         mListView = (ListView) rootView.findViewById(R.id.listView_alarmSounds);
+        mProgressBar =
+                (CircularProgressBar) rootView.findViewById(R.id.circleProgressBar_SoundList);
         setHasOptionsMenu(true);
-        setupListView();
         return rootView;
     }
 
@@ -102,7 +107,7 @@ public class SoundManagerFragment extends Fragment implements
         super.onResume();
         PrefUtil.getApplicationPrefs(getActivity())
                 .registerOnSharedPreferenceChangeListener(this);
-
+        setupListView();
     }
 
     @Override
@@ -131,7 +136,7 @@ public class SoundManagerFragment extends Fragment implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (D) {Log.d(DEBUG_TAG,"Preferences changed");}
-        updateListItems();
+        setupListView();
     }
 
     @Override
@@ -178,27 +183,6 @@ public class SoundManagerFragment extends Fragment implements
     //================================================================================
     // Methods
     //================================================================================
-
-    /**
-     * Update list item in the listview containing all alarm sounds
-     */
-    private void updateListItems(){
-        if (D) {Log.d(DEBUG_TAG,"Updating sound item list");}
-        List<AlarmSoundListItem> listItems = new ArrayList<AlarmSoundListItem>();
-        String[] uris = PrefUtil.getAlarmSoundUris(getActivity());
-        if(uris != null){
-            mListItemCount = uris.length;
-            for (String uri : uris) {
-                String[] metaData = MediaUtil.getBasicMetaData(uri);
-                listItems.add(new AlarmSoundListItem(metaData[0], metaData[1]));
-            }
-        }
-        mListView.setAdapter(new AlarmSoundListAdapter(getActivity(),
-                        R.layout.drawer_list_item,
-                        listItems
-                )
-        );
-    }
 
     /**
      * Show a dialog to interact with an audio file.
@@ -259,7 +243,7 @@ public class SoundManagerFragment extends Fragment implements
         try {
             startActivityForResult(audioIntent, 1);
         }catch (ActivityNotFoundException e){
-            if (D) {Log.e(DEBUG_TAG,"No activity for file intents availiable",e);}
+            if (D) {Log.e(DEBUG_TAG,"No activity for file intents available",e);}
         }
     }
 
@@ -289,9 +273,49 @@ public class SoundManagerFragment extends Fragment implements
      * Setup the listView containing all alarm sounds
      */
     private void setupListView(){
-        if (D) {Log.d(DEBUG_TAG,"Setting up ListView");}
-        mListView.setOnItemClickListener(mListClickListener);
-        updateListItems();
+        if (D) {Log.d(DEBUG_TAG,"Setting up sound listView");}
+        mListView.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        Thread listViewThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long threadStart = System.currentTimeMillis();
+                final List<AlarmSoundListItem> listItems = new ArrayList<AlarmSoundListItem>();
+                String[] uris = PrefUtil.getAlarmSoundUris(getActivity());
+                if(uris != null){
+                    mListItemCount = uris.length;
+                    for (String uri : uris) {
+                        String[] metaData = MediaUtil.getBasicMetaData(uri);
+                        listItems.add(new AlarmSoundListItem(metaData[0], metaData[1]));
+                    }
+                } else {
+                    mProgressBar.setVisibility(View.GONE);
+                    return;
+                }
+                mListView.setOnItemClickListener(mListClickListener);
+                long threadNow = System.currentTimeMillis();
+                if((threadNow - threadStart) < 1000){
+                    try {
+                        Thread.sleep(1000 - (threadNow - threadStart));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mListView.setAdapter(new AlarmSoundListAdapter(getActivity(),
+                                        R.layout.drawer_list_item,
+                                        listItems
+                                )
+                        );
+                        mProgressBar.setVisibility(View.GONE);
+                        mListView.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+        listViewThread.start();
     }
 }
 

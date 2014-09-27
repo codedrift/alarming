@@ -93,12 +93,14 @@ public class MediaUtil {
 
     public static void seekAndPlayAudio(Context context, MediaPlayer mediaPlayer, Uri dataSource, int startMillis){
         final int playerHash = mediaPlayer.hashCode();
-        if (D) {Log.d(DEBUG_TAG, "Playing audio file " + dataSource + " with MediaPlayer " + playerHash  + ".");}
+        if (D) {Log.d(DEBUG_TAG, "Playing audio file " + dataSource
+                + " with MediaPlayer " + playerHash  + ".");}
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mediaPlayer.setDataSource(context, dataSource);
         } catch (IOException e) {
-            if (D) {Log.e(DEBUG_TAG, "Failed to access alarm sound uri for MediaPlayer " + playerHash + ".", e);}
+            if (D) {Log.e(DEBUG_TAG, "Failed to access alarm sound uri for MediaPlayer "
+                    + playerHash + ".", e);}
             return;
         }
         try {
