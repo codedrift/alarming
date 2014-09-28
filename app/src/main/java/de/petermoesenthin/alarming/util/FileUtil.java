@@ -16,6 +16,7 @@
 
 package de.petermoesenthin.alarming.util;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
@@ -35,7 +36,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import de.petermoesenthin.alarming.callbacks.OperationFinishedListener;
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
@@ -270,17 +270,17 @@ public class FileUtil {
 
     /**
      * Returns a mime type for a file in given path.
-     * @param url Path to the file.
+     * @param path Path to the file.
      * @return Null if no extension is found.
      */
-    public static String getMimeType(String url){
-        if (D) {Log.d(DEBUG_TAG, "Checking mime type for " + url);}
+    public static String getMimeType(String path){
+        if (D) {Log.d(DEBUG_TAG, "Checking mime type for " + path);}
         String type = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
         if (extension != null) {
             MimeTypeMap mime = MimeTypeMap.getSingleton();
             type = mime.getMimeTypeFromExtension(extension);
-            if (D)  Log.d(DEBUG_TAG, "Found MIME of type " + type);
+            if (D)  Log.d(DEBUG_TAG, "MIME type is " + type  + " for " + path);
         }
         return type;
     }

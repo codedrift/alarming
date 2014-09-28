@@ -20,6 +20,7 @@ package de.petermoesenthin.alarming.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -93,6 +94,7 @@ public class SoundManagerFragment extends Fragment implements
         mProgressBar =
                 (CircularProgressBar) rootView.findViewById(R.id.circleProgressBar_SoundList);
         setHasOptionsMenu(true);
+        setupListView();
         return rootView;
     }
 
@@ -107,7 +109,6 @@ public class SoundManagerFragment extends Fragment implements
         super.onResume();
         PrefUtil.getApplicationPrefs(getActivity())
                 .registerOnSharedPreferenceChangeListener(this);
-        setupListView();
     }
 
     @Override
@@ -151,11 +152,20 @@ public class SoundManagerFragment extends Fragment implements
                     showWrongFileTypeDialog();
                     return;
                 }
+                mListView.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.VISIBLE);
                 FileUtil.saveFileToExtAppStorage(getActivity().getApplicationContext(), uri,
                         new OperationFinishedListener(){
                     @Override
                     public void onOperationFinished() {
                         PrefUtil.updateAlarmSoundUris(getActivity());
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mProgressBar.setVisibility(View.GONE);
+                                mListView.setVisibility(View.VISIBLE);
+                            }
+                        });
                     }
                 });
             }
@@ -166,15 +176,22 @@ public class SoundManagerFragment extends Fragment implements
         String mimeType;
         mimeType = FileUtil.getMimeType(uri.toString());
         if(mimeType == null){
-            return false;
+            if (D) {Log.d(DEBUG_TAG, "MimeTypeMap returned null for this file");}
+            ContentResolver cR = getActivity().getContentResolver();
+            mimeType = cR.getType(uri);
+            if(mimeType == null){
+                if (D) {Log.d(DEBUG_TAG, "ContentResolver returned null for this file");}
+                return false;
+            }
         }
+        if (D) {Log.d(DEBUG_TAG, "file ok says: " + mimeType);}
         if(!mimeType.startsWith("audio")){
             return false;
         }
         try{
             MediaUtil.getBasicMetaData(uri.getPath());
         }catch (RuntimeException e){
-            if (D) {Log.e(DEBUG_TAG,"No activity for file intents availiable",e);}
+            if (D) {Log.e(DEBUG_TAG,"Cannot read file",e);}
             return false;
         }
         return true;
@@ -279,7 +296,6 @@ public class SoundManagerFragment extends Fragment implements
         Thread listViewThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                long threadStart = System.currentTimeMillis();
                 final List<AlarmSoundListItem> listItems = new ArrayList<AlarmSoundListItem>();
                 String[] uris = PrefUtil.getAlarmSoundUris(getActivity());
                 if(uris != null){
@@ -293,14 +309,6 @@ public class SoundManagerFragment extends Fragment implements
                     return;
                 }
                 mListView.setOnItemClickListener(mListClickListener);
-                long threadNow = System.currentTimeMillis();
-                if((threadNow - threadStart) < 1000){
-                    try {
-                        Thread.sleep(1000 - (threadNow - threadStart));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
