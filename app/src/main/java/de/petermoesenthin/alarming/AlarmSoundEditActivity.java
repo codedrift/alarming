@@ -33,11 +33,10 @@ import android.widget.Toast;
 
 import com.edmodo.rangebar.RangeBar;
 
-import de.petermoesenthin.alarming.callbacks.PositionReachedListener;
+import de.petermoesenthin.alarming.callbacks.OnPlaybackChangedListener;
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
-import de.petermoesenthin.alarming.util.NumberUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
 
@@ -51,9 +50,6 @@ public class AlarmSoundEditActivity extends Activity{
     private static final boolean D = true;
 
     private String soundFilePath;
-    private int tickCount;
-    private String soundArtist;
-    private String soundTitle;
     private int soundMillis;
     private int soundStartMillis;
     private int soundEndMillis;
@@ -68,7 +64,7 @@ public class AlarmSoundEditActivity extends Activity{
 
     private Handler mHandler = new Handler();
 
-    private MediaPlayer mMediaPlayer;
+    private MediaPlayer mMediaPlayer = new MediaPlayer();
 
     //================================================================================
     // Lifecycle
@@ -85,8 +81,8 @@ public class AlarmSoundEditActivity extends Activity{
         // call after ui setup to load all variables
         soundFilePath = readIntentUri();
         String[] metaData = MediaUtil.getBasicMetaData(soundFilePath);
-        soundArtist = metaData[0];
-        soundTitle = metaData[1];
+        String soundArtist = metaData[0];
+        String soundTitle = metaData[1];
         soundMillis = Integer.parseInt(metaData[2]);
         readConfig();
         setUpRangeBar();
@@ -100,33 +96,10 @@ public class AlarmSoundEditActivity extends Activity{
         button_playPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mMediaPlayer == null){
-                    button_playPause.setText(R.string.button_stop);
-                    mMediaPlayer = new MediaPlayer();
-                    Uri soundUri = Uri.parse(soundFilePath);
-                    MediaUtil.seekAndPlayAudio(getApplicationContext(),
-                            mMediaPlayer,
-                            soundUri,
-                            soundStartMillis);
-                    MediaUtil.waitForReachedPosition(mMediaPlayer, soundEndMillis,
-                            new PositionReachedListener() {
-                        @Override
-                        public void onPositionReached(MediaPlayer mediaPlayer) {
-                            MediaUtil.stopAudioPlayback(mMediaPlayer);
-                            mMediaPlayer = null;
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    button_playPause.setText(R.string.button_play);
-                                }
-                            });
-
-                        }
-                    });
+                if(mMediaPlayer.isPlaying()){
+                    stopAudio();
                 } else {
-                    MediaUtil.stopAudioPlayback(mMediaPlayer);
-                    mMediaPlayer = null;
-                    button_playPause.setText(R.string.button_play);
+                    playAudio();
                 }
             }
         });
@@ -199,6 +172,31 @@ public class AlarmSoundEditActivity extends Activity{
         Toast.makeText(this,R.string.toast_config_saved,Toast.LENGTH_SHORT).show();
     }
 
+    private void playAudio(){
+        setPlayButton(true);
+        Uri soundUri = Uri.parse(soundFilePath);
+        MediaUtil.playAudio(getApplicationContext(), mMediaPlayer, soundUri, soundStartMillis,
+                soundEndMillis, new OnPlaybackChangedListener() {
+
+                    @Override
+                    public void onEndPositionReached(MediaPlayer mediaPlayer) {
+                        MediaUtil.clearMediaPlayer(mMediaPlayer);
+                        setPlayButton(false);
+                    }
+
+                    @Override
+                    public void onPlaybackInterrupted(MediaPlayer mediaPlayer) {
+                        MediaUtil.clearMediaPlayer(mMediaPlayer);
+                        setPlayButton(false);
+                    }
+                });
+    }
+
+    private void stopAudio(){
+        MediaUtil.clearMediaPlayer(mMediaPlayer);
+        setPlayButton(false);
+    }
+
     //================================================================================
     // UI
     //================================================================================
@@ -213,9 +211,26 @@ public class AlarmSoundEditActivity extends Activity{
         button_playPause = (Button) findViewById(R.id.button_play_pause);
     }
 
+    private void setPlayButton(boolean play){
+        if(play){
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    button_playPause.setText(R.string.button_stop);
+                }
+            });
+        }else {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    button_playPause.setText(R.string.button_play);
+                }
+            });
+        }
+    }
+
     private void setUpRangeBar(){
-        int durationSecs = soundMillis / 1000;
-        tickCount = durationSecs;
+        int tickCount = soundMillis / 1000;
         if(tickCount < 2){
             tickCount = 2;
         }
