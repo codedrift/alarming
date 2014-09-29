@@ -15,7 +15,7 @@
  */
 package de.petermoesenthin.alarming.callbacks;
 
-public interface OperationFinishedListener {
+public interface OnCopyFinishedListener {
 
     void onOperationFinished();
 }

@@ -17,7 +17,7 @@ package de.petermoesenthin.alarming.callbacks;
 
 import android.media.MediaPlayer;
 
-public interface PositionReachedListener {
+public interface OnPlaybackChangedListener {
 
     /**
      * Gets called when the MediaPlayer has reached the desired position
