@@ -46,7 +46,7 @@ public class FileUtil {
     private static final boolean D = true;
 
     public static final String APP_EXT_STORAGE_FOLDER = "alarming";
-    public static final String AUDIO_METADATA_FILE_EXTENSION = ".alarmingmeta";
+    public static final String AUDIO_METADATA_FILE_EXTENSION = "alarmingmeta";
 
     /**
      * Copies a file to the Alarming directory in the external storage
@@ -198,25 +198,19 @@ public class FileUtil {
      *  Returns a file list of all non-hidden audio files in the application directory.
      * @return
      */
-    public static File[] getAlarmDirectoryAudioFileList(){
+    public static File[] getAlarmDirectoryAudioFileList(final Context context){
         return FileUtil.getApplicationDirectory().listFiles(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                boolean fileAccepted = true;
                 // Early out if hidden
                 if(f.isHidden()){
                     return false;
                 }
-                //Check for mime type
-                String mimeType;
-                mimeType = getMimeType(f.getPath());
-                if(mimeType == null){
+                String extension = FilenameUtils.getExtension(f.getPath());
+                if(extension.equals(AUDIO_METADATA_FILE_EXTENSION)){
                     return false;
                 }
-                if(!mimeType.startsWith("audio")){
-                    fileAccepted = false;
-                }
-                return fileAccepted;
+                return fileIsOK(context, f.getPath());
             }
         });
     }
@@ -265,24 +259,56 @@ public class FileUtil {
 
 
     public static String getMetaFilePath(String soundFilePath){
-        return FilenameUtils.removeExtension(soundFilePath) + AUDIO_METADATA_FILE_EXTENSION;
+        return FilenameUtils.removeExtension(soundFilePath) + "." +  AUDIO_METADATA_FILE_EXTENSION;
+    }
+
+
+    /**
+     * Checks if a file is ok for the application to use
+     * @param context
+     * @param path
+     * @return
+     */
+    public static boolean fileIsOK(Context context, String path){
+        String mimeType;
+        mimeType = FileUtil.getMimeType(context, path);
+        if(mimeType == null){
+            if (D)  Log.d(DEBUG_TAG, "No MIME type found. Returning.");
+            return false;
+        }
+        if(!mimeType.startsWith("audio")){
+            if (D)  Log.d(DEBUG_TAG, "FileCheck: MIME type does not match requirements");
+            return false;
+        }
+        try{
+            MediaUtil.getBasicMetaData(path);
+        }catch (RuntimeException e){
+            if (D) {Log.e(DEBUG_TAG,"Cannot read file");}
+            return false;
+        }
+        return true;
     }
 
     /**
      * Returns a mime type for a file in given path.
      * @param path Path to the file.
-     * @return Null if no extension is found.
+     * @return Null if no MIME type is found.
      */
-    public static String getMimeType(String path){
+    public static String getMimeType(Context context, String path){
         if (D) {Log.d(DEBUG_TAG, "Checking mime type for " + path);}
-        String type = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
+        String mimeType = null;
+        String extension = FilenameUtils.getExtension(path);
         if (extension != null) {
             MimeTypeMap mime = MimeTypeMap.getSingleton();
-            type = mime.getMimeTypeFromExtension(extension);
-            if (D)  Log.d(DEBUG_TAG, "MIME type is " + type  + " for " + path);
+            mimeType = mime.getMimeTypeFromExtension(extension);
+            if (D)  Log.d(DEBUG_TAG, "MimeTypeMap found " + mimeType + " for extension " + extension);
         }
-        return type;
+        if (mimeType == null){
+            ContentResolver contentResolver = context.getContentResolver();
+            mimeType = contentResolver.getType(Uri.parse(path));
+            if (D)  Log.d(DEBUG_TAG, "ContentResolver found " + mimeType + ".");
+        }
+        return mimeType;
     }
 
 }
