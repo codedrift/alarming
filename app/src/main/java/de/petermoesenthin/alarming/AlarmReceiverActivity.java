@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,9 +30,13 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import java.util.Random;
 
+import de.petermoesenthin.alarming.callbacks.OnPlaybackChangedListener;
+import de.petermoesenthin.alarming.pref.AlarmSoundGson;
+import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
@@ -43,13 +46,16 @@ public class AlarmReceiverActivity extends Activity {
     // Member
     //================================================================================
 
-    private MediaPlayer mMediaPlayer;
+    private MediaPlayer mMediaPlayer = new MediaPlayer();
 
     KeyguardManager mKeyGuardManager;
     KeyguardManager.KeyguardLock mKeyguardLock;
 
     public static final String DEBUG_TAG = "AlarmReceiverActivity";
     public static final boolean D = true;
+
+    private Button button_snooze;
+    private Button button_dismiss;
 
     //================================================================================
     // Lifecycle
@@ -68,6 +74,7 @@ public class AlarmReceiverActivity extends Activity {
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
+        setContentView(R.layout.activity_alarmreciver);
 
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -77,32 +84,27 @@ public class AlarmReceiverActivity extends Activity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
         disableKeyguard();
+        button_dismiss = (Button) findViewById(R.id.button_dismiss);
+        button_snooze = (Button) findViewById(R.id.button_snooze);
     }
 
 
     @Override
     public void onAttachedToWindow() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Wake up butthead!").setCancelable(
-                false).setPositiveButton("Shut up!",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        finishThis();
-                    }
-                }
-        ).setNegativeButton("5min more",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        finishThis();
-                    }
-                }
-        );
-        AlertDialog alert = builder.create();
-        MediaUtil.setMediaVolume(this);
+        MediaUtil.loadMediaVolumeFromPreference(this);
         playAlarmSound();
-        alert.show();
+        button_dismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishThis();
+            }
+        });
+        button_snooze.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishThis();
+            }
+        });
     }
 
     //================================================================================
@@ -122,7 +124,7 @@ public class AlarmReceiverActivity extends Activity {
      * Does additional work to finish this activity
      */
     public void finishThis(){
-        MediaUtil.stopAudioPlayback(mMediaPlayer);
+        MediaUtil.clearMediaPlayer(mMediaPlayer);
         MediaUtil.resetMediaVolume(this);
         mKeyguardLock.reenableKeyguard();
         finish();
@@ -141,7 +143,25 @@ public class AlarmReceiverActivity extends Activity {
             // Play default
             dataSource = Settings.System.DEFAULT_ALARM_ALERT_URI;
         }
-        mMediaPlayer = new MediaPlayer();
-        MediaUtil.playAudio(this, mMediaPlayer, dataSource);
+
+        boolean loop  = true;
+        int startMillis = 0;
+        int endMillis = 0;
+        AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(dataSource.getPath());
+        startMillis = alsg.getStartTimeMillis();
+        endMillis = alsg.getEndTimeMillis();
+        MediaUtil.playAudio(this, mMediaPlayer, dataSource, startMillis, endMillis,
+                new OnPlaybackChangedListener() {
+
+            @Override
+            public void onEndPositionReached(MediaPlayer mediaPlayer) {
+                finishThis();
+            }
+
+            @Override
+            public void onPlaybackInterrupted(MediaPlayer mediaPlayer) {
+                finishThis();
+            }
+        });
     }
 }
