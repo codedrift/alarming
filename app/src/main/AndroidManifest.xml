@@ -29,7 +29,7 @@
             android:clearTaskOnLaunch="true"
             android:excludeFromRecents="true"
             android:noHistory="true"
-            android:theme="@style/TransparentTheme" >
+            android:theme="@style/AlarmReceiverTheme" >
         </activity>
         <activity android:name=".SettingsActivity" >
         </activity>

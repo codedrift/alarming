@@ -5,7 +5,7 @@
         <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
 
-    <style name="TransparentTheme" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen">
+    <style name="AlarmReceiverTheme" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen">
     </style>
 
     <!-- ActionBar styles -->
