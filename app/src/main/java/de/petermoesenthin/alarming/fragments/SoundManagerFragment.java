@@ -20,7 +20,6 @@ package de.petermoesenthin.alarming.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,7 +47,7 @@ import java.util.List;
 import de.petermoesenthin.alarming.AlarmSoundEditActivity;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmSoundListAdapter;
-import de.petermoesenthin.alarming.callbacks.OperationFinishedListener;
+import de.petermoesenthin.alarming.callbacks.OnCopyFinishedListener;
 import de.petermoesenthin.alarming.ui.AlarmSoundListItem;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
@@ -158,7 +157,7 @@ public class SoundManagerFragment extends Fragment implements
                 mListView.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.VISIBLE);
                 FileUtil.saveFileToExtAppStorage(fragmentContext.getApplicationContext(), uri,
-                        new OperationFinishedListener(){
+                        new OnCopyFinishedListener(){
                     @Override
                     public void onOperationFinished() {
                         PrefUtil.updateAlarmSoundUris(fragmentContext);
