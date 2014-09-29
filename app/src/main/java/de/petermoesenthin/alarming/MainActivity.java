@@ -39,7 +39,6 @@ import de.petermoesenthin.alarming.adapter.DrawerItemArrayAdapter;
 import de.petermoesenthin.alarming.fragments.SetAlarmFragment;
 import de.petermoesenthin.alarming.fragments.SoundManagerFragment;
 import de.petermoesenthin.alarming.ui.DrawerItem;
-import de.petermoesenthin.alarming.util.PrefUtil;
 
 
 public class MainActivity extends FragmentActivity {
@@ -78,7 +77,6 @@ public class MainActivity extends FragmentActivity {
             getActionBar().setDisplayHomeAsUpEnabled(true);
             getActionBar().setHomeButtonEnabled(true);
         }
-
         transactNewFragment(new SetAlarmFragment());
     }
 
@@ -100,6 +98,9 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    /**
+     * Sets up everything needed for the navigation drawer
+     */
     private void setUpNavigationDrawer(){
         if(D) {Log.d(DEBUG_TAG, "Setting up navigation drawer");}
         mDrawerTitles = getResources()
@@ -153,7 +154,8 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void showAboutActivity() {
-        Toast.makeText(this,"Coming soon!",Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(this, AboutActivity.class);
+        startActivity(i);
     }
 
     private void showSettingsActivity() {

@@ -9,26 +9,28 @@
     <string name="textView_drawer_about">About</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+
     <string-array name="nav_drawer_titles">
         <item>Alarm</item>
         <item>Audio</item>
     </string-array>
 
-        <!-- fragments/SetAlarmFragment -->
-        <string name="textView_alarmTime">--:--</string>
-        <string name="switch_alarm_on">ON</string>
-        <string name="switch_alarm_off">OFF</string>
-        <string name="toast_alarmTimeNotSet">Could not set Alarm! No time set.</string>
+    <!-- fragments/SetAlarmFragment -->
+    <string name="textView_alarmTime">--:--</string>
+    <string name="switch_alarm_on">ON</string>
+    <string name="switch_alarm_off">OFF</string>
+    <string name="toast_alarmTimeNotSet">Could not set Alarm! No time set.</string>
 
-        <!-- fragments/SoundManagerFragment -->
-        <string name="action_save_config">Save configuration</string>
-        <string name="action_add_new_sound">Add new sound</string>
-        <string name="alertTitle_wrongFileType">Wrong or corrupted file!</string>
-        <string name="alert_wrongFileType">It appears that you opened an unsupported or corrupted file. Please select an audio file.</string>
-        <string-array name="sound_action_options">
-            <item>Edit</item>
-            <item>Delete</item>
-        </string-array>
+    <!-- fragments/SoundManagerFragment -->
+    <string name="action_save_config">Save configuration</string>
+    <string name="action_add_new_sound">Add new sound</string>
+    <string name="alertTitle_wrongFileType">Wrong or corrupted file!</string>
+    <string name="alert_wrongFileType">It appears that you opened an unsupported or corrupted file. Please select an audio file.</string>
+
+    <string-array name="sound_action_options">
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
 
     <!-- .AlarmReceiverAcitivity -->
     <string name="button_snooze">Snooze</string>
@@ -37,15 +39,13 @@
     <string name="textView_volume">Volume</string>
     <string name="zero_Percent">0%</string>
 
-        <!-- fragments/SettingsFragment -->
-        <string name="preference_category_general">General</string>
-        <string name="preference_show_notification_title">Show Notification</string>
-        <string name="preference_show_notification_summary">Show a notification when an alarm is scheduled</string>
-        <string name="preference_category_media_playback">Media Playback</string>
-        <string name="preference_alarm_sound_volume_title">Alarm sound volume</string>
-        <string name="preference_alarm_sound_volume_summary">Set the volume level for alarms</string>
-
-
+    <!-- fragments/SettingsFragment -->
+    <string name="preference_category_general">General</string>
+    <string name="preference_show_notification_title">Show Notification</string>
+    <string name="preference_show_notification_summary">Show a notification when an alarm is scheduled</string>
+    <string name="preference_category_media_playback">Media Playback</string>
+    <string name="preference_alarm_sound_volume_title">Alarm sound volume</string>
+    <string name="preference_alarm_sound_volume_summary">Set the volume level for alarms</string>
 
     <!-- .AlarmSoundEditActivity -->
     <string name="textView_soundTitle">Title</string>
@@ -57,10 +57,11 @@
     <string name="button_play">Play</string>
     <string name="button_stop">Stop</string>
 
-
     <!-- Notifications -->
     <string name="notification_alarmActivated">Alarming activated</string>
     <string name="notification_timeSetTo">Time set to</string>
-
+    <string name="title_activity_about">AboutActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
