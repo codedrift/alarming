@@ -37,7 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.petermoesenthin.alarming.callbacks.OperationFinishedListener;
+import de.petermoesenthin.alarming.callbacks.OnCopyFinishedListener;
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 
 public class FileUtil {
@@ -54,7 +54,7 @@ public class FileUtil {
      * @param uri Uri of file to copy
      */
     public static void saveFileToExtAppStorage(final Context context, final Uri uri,
-                                               final OperationFinishedListener op){
+                                               final OnCopyFinishedListener op){
         final File applicationDirectory = getApplicationDirectory();
         if(!applicationDirectory.exists()){
             applicationDirectory.mkdirs();
