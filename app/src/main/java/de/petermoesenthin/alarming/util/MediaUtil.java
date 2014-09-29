@@ -25,7 +25,7 @@ import android.util.Log;
 
 import java.io.IOException;
 
-import de.petermoesenthin.alarming.callbacks.PositionReachedListener;
+import de.petermoesenthin.alarming.callbacks.OnPlaybackChangedListener;
 import de.petermoesenthin.alarming.pref.PrefKey;
 
 public class MediaUtil {
@@ -43,7 +43,7 @@ public class MediaUtil {
      * [1] METADATA_KEY_TITLE
      * [2] METADATA_KEY_DURATION
      * @param filePath path to the file
-     * @return
+     * @return String array with metadata.
      */
     public static String[] getBasicMetaData(String filePath){
         if (D) {Log.d(DEBUG_TAG, "Reading audio metadata for " + filePath);}
@@ -66,96 +66,125 @@ public class MediaUtil {
         return metaData;
     }
 
-
     /**
-     * Play the audio file at the specified source
-     * @param context Application context
-     * @param dataSource Audio file
+     * Plays an audio source from the specified start time to the specified end time.
+     *
+     * @param context Application context.
+     * @param mediaPlayer The MediaPLayer instance that will playback the audio.
+     * @param dataSource The path to the audio file.
+     * @param startMillis If set to 0 MediaPlayer will play from the beginning.
+     * @param endMillis If set to 0 MediaPlayer will play until the end.
+     * @param playbackChangedListener Interface to indicate playback changes to the caller.
      */
-    @Deprecated
-    public static void playAudio(Context context, MediaPlayer mediaPlayer, Uri dataSource){
-        if (D) {Log.d(DEBUG_TAG, "Playing audio. File uri: " + dataSource + ".");}
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(context, dataSource);
-        } catch (IOException e) {
-            if (D) {Log.e(DEBUG_TAG, "Failed to access alarm sound uri", e);}
-            return;
-        }
-        try {
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            if (D) {Log.e(DEBUG_TAG, "Failed to prepare media player", e);}
-            return;
-        }
-        mediaPlayer.start();
-    }
+    public static void playAudio(Context context, MediaPlayer mediaPlayer, Uri dataSource,
+                                 int startMillis, int endMillis,
+                                 final OnPlaybackChangedListener playbackChangedListener){
 
-    public static void seekAndPlayAudio(Context context, MediaPlayer mediaPlayer, Uri dataSource, int startMillis){
         final int playerHash = mediaPlayer.hashCode();
+        final PositionCheckThread positionCheckThread =
+                new PositionCheckThread(mediaPlayer, playbackChangedListener, endMillis);
+
         if (D) {Log.d(DEBUG_TAG, "Playing audio file " + dataSource
                 + " with MediaPlayer " + playerHash  + ".");}
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                playbackChangedListener.onEndPositionReached(mediaPlayer);
+            }
+        });
         try {
             mediaPlayer.setDataSource(context, dataSource);
         } catch (IOException e) {
-            if (D) {Log.e(DEBUG_TAG, "Failed to access alarm sound uri for MediaPlayer "
-                    + playerHash + ".", e);}
+            if (D) {Log.e(DEBUG_TAG, "Failed to set sound uri for MediaPlayer "
+                    + playerHash + ".");}
             return;
         }
         try {
             mediaPlayer.prepare();
         } catch (IOException e) {
-            if (D) {Log.e(DEBUG_TAG, "Failed to prepare MediaPlayer " + playerHash, e);}
+            if (D) {Log.e(DEBUG_TAG, "Failed to prepare MediaPlayer " + playerHash
+                    + ". Returning.");}
             return;
         }
         if(startMillis == 0){
+            if (D) {Log.d(DEBUG_TAG, "No start time specified for MediaPlayer "
+                    + playerHash  + ". Starting playback.");}
             mediaPlayer.start();
+            positionCheckThread.start();
             return;
         }
         mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
             @Override
             public void onSeekComplete(MediaPlayer mediaPlayer) {
-                if (D) {Log.d(DEBUG_TAG, "Seek completed. Playing audio in MediaPlayer " + playerHash);}
+                if (D) {Log.d(DEBUG_TAG, "Seek completed. Starting playback for MediaPlayer "
+                        + playerHash);}
                 mediaPlayer.start();
+                positionCheckThread.start();
             }
         });
         mediaPlayer.seekTo(startMillis);
     }
 
-    public static void waitForReachedPosition(
-            final MediaPlayer mediaPlayer,
-            final int positionMillis,
-            final PositionReachedListener positionReachedListener){
-        final int playerHash = mediaPlayer.hashCode();
-        if (D) {Log.d(DEBUG_TAG, "Waiting for MediaPlayer "
-                + playerHash + " to reach position.");}
-        final Thread waitThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean positionReached = false;
-                while(!positionReached){
-                    // End loop if player has stopped
-                    if(!mediaPlayer.isPlaying()){
-                        if (D) {Log.d(DEBUG_TAG, "MediaPlayer " + playerHash
-                                + " has already stopped. Exiting thread.");}
-                        return;
-                    }
-                    int playerMillis = mediaPlayer.getCurrentPosition();
-                    if(playerMillis >= positionMillis){
-                        if (D) {Log.d(DEBUG_TAG, "MediaPlayer " + playerHash
-                                + " has reached position.");}
-                        positionReached = true;
-                        positionReachedListener.onPositionReached(mediaPlayer);
-                    }
+    /**
+     * Thread to check if a MediaPlayer has reached its end position
+     */
+    public static class PositionCheckThread extends Thread {
 
+        private OnPlaybackChangedListener mPlaybackChangedListener;
+        private MediaPlayer mMediaPlayer;
+        private int playerHash;
+        private int positionMillis;
+        public boolean isChecking = true;
+
+        private static final int YIELD_MILLIS = 10;
+
+
+        public PositionCheckThread(MediaPlayer mediaPlayer,
+                                   OnPlaybackChangedListener playbackChangedListener,
+                                   int positionMillis){
+            this.mPlaybackChangedListener = playbackChangedListener;
+            this.mMediaPlayer = mediaPlayer;
+            this.playerHash = mediaPlayer.hashCode();
+            this.positionMillis = positionMillis;
+        }
+
+        public void run() {
+            // Early out if no end position is specified
+            if (positionMillis == 0){
+                isChecking = false;
+            }
+            // Check loop
+            while(isChecking){
+                if(!mMediaPlayer.isPlaying()){
+                    if (D) {Log.d(DEBUG_TAG, "MediaPlayer " + playerHash
+                            + " is not running. Stopping check.");}
+                    mPlaybackChangedListener.onPlaybackInterrupted(mMediaPlayer);
+                    isChecking = false;
+                }
+                int playerMillis = mMediaPlayer.getCurrentPosition();
+                if(playerMillis >= positionMillis){
+                    if (D) {Log.d(DEBUG_TAG, "MediaPlayer " + playerHash
+                            + " has reached position. Stopping check.");}
+                    mPlaybackChangedListener.onEndPositionReached(mMediaPlayer);
+                    isChecking = false;
+                }
+                try {
+                    Thread.sleep(YIELD_MILLIS);
+                } catch (InterruptedException e) {
+                    if (D) {Log.e(DEBUG_TAG, "Failed to sleep in PositionCheckThread. " +
+                            "Thread has been interrupted. Stopping check.");}
+                    mPlaybackChangedListener.onPlaybackInterrupted(mMediaPlayer);
                 }
             }
-        });
-        waitThread.start();
+        }
     }
 
-    public static void stopAudioPlayback(MediaPlayer mediaPlayer){
+    /**
+     * Clears the MediaPlayer instance.
+     * @param mediaPlayer Instance to be cleared.
+     */
+    public static void clearMediaPlayer(MediaPlayer mediaPlayer){
         if (D) {Log.d(DEBUG_TAG,
                 "Stopping media playback for MediaPlayer " + mediaPlayer.hashCode() + ".");}
         mediaPlayer.stop();
@@ -165,10 +194,10 @@ public class MediaUtil {
 
 
     /**
-     * Sets STREAM_MUSIC to the user specified volume that will be used to play alarm sounds
-     * @param context Application context
+     * Sets STREAM_MUSIC to the user specified volume that will be used to play alarm sounds.
+     * @param context Application context.
      */
-    public static void setMediaVolume(Context context){
+    public static void loadMediaVolumeFromPreference(Context context){
         if (D) {Log.d(DEBUG_TAG, "Setting alarm sound volume to user defined value.");}
         saveStreamMusicVolume(context);
         float percent = PrefUtil.getFloat(context,PrefKey.AUDIO_VOLUME,0.8f);
@@ -177,8 +206,8 @@ public class MediaUtil {
 
 
     /**
-     * Sets STREAM_MUSIC volume back to the previously set amount (user defined)
-     * @param context Application context
+     * Sets STREAM_MUSIC volume back to the previously set amount (user defined).
+     * @param context Application context.
      */
     public static void resetMediaVolume(Context context){
         if (D) {Log.d(DEBUG_TAG, "Resetting media volume to original value.");}
@@ -187,8 +216,8 @@ public class MediaUtil {
     }
 
     /**
-     * @param context Application context
-     * @return AudioManger system service
+     * @param context Application context.
+     * @return AudioManger system service.
      */
     public static AudioManager getAudioManager(Context context){
         return (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
@@ -196,8 +225,8 @@ public class MediaUtil {
 
 
     /**
-     * Saves the current volume percentage of STREAM_MUSIC
-     * @param context Application context
+     * Saves the current volume percentage of STREAM_MUSIC.
+     * @param context Application context.
      */
     public static void saveStreamMusicVolume(Context context){
         if (D) {Log.d(DEBUG_TAG, "Saving current STREAM_MUSIC volume.");}
@@ -208,9 +237,9 @@ public class MediaUtil {
 
 
     /**
-     * Sets STREAM_MUSIC volume to the given percentage
-     * @param context Application context
-     * @param percentage percentage to set the volume to
+     * Sets STREAM_MUSIC volume to the given percentage.
+     * @param context Application context.
+     * @param percentage percentage to set the volume to.
      */
     public static void setStreamMusicVolume(Context context, float percentage){
         int targetVolume = (int) (getAudioStreamMaxVolume(context) * percentage);
@@ -222,8 +251,8 @@ public class MediaUtil {
 
     /**
      *
-     * @param context Application context
-     * @return Maximum value for STREAM_MUSIC volume
+     * @param context Application context.
+     * @return Maximum value for STREAM_MUSIC volume.
      */
     public static int getAudioStreamMaxVolume(Context context){
         return getAudioManager(context).getStreamMaxVolume(AudioManager.STREAM_MUSIC);
