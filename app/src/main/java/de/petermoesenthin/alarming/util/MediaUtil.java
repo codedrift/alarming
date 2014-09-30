@@ -156,11 +156,12 @@ public class MediaUtil {
             }
             // Check loop
             while(isChecking){
-                if(!mMediaPlayer.isPlaying()){
+                if(!isMediaPlayerPlaying(mMediaPlayer)){
                     if (D) {Log.d(DEBUG_TAG, "MediaPlayer " + playerHash
                             + " is not running. Stopping check.");}
                     mPlaybackChangedListener.onPlaybackInterrupted(mMediaPlayer);
                     isChecking = false;
+                    return;
                 }
                 int playerMillis = mMediaPlayer.getCurrentPosition();
                 if(playerMillis >= positionMillis){
@@ -168,6 +169,7 @@ public class MediaUtil {
                             + " has reached position. Stopping check.");}
                     mPlaybackChangedListener.onEndPositionReached(mMediaPlayer);
                     isChecking = false;
+                    return;
                 }
                 try {
                     Thread.sleep(YIELD_MILLIS);
@@ -175,9 +177,22 @@ public class MediaUtil {
                     if (D) {Log.e(DEBUG_TAG, "Failed to sleep in PositionCheckThread. " +
                             "Thread has been interrupted. Stopping check.");}
                     mPlaybackChangedListener.onPlaybackInterrupted(mMediaPlayer);
+                    return;
                 }
             }
         }
+    }
+
+    public static boolean isMediaPlayerPlaying(MediaPlayer mediaPlayer){
+        boolean isPlaying;
+        try{
+            isPlaying = mediaPlayer.isPlaying();
+        } catch (Exception e){
+            Log.e(DEBUG_TAG, "Could not determine if MediaPlayer " + mediaPlayer.hashCode()
+                    + " is playing. Assuming it is not.");
+            return false;
+        }
+        return isPlaying;
     }
 
     /**
@@ -185,11 +200,15 @@ public class MediaUtil {
      * @param mediaPlayer Instance to be cleared.
      */
     public static void clearMediaPlayer(MediaPlayer mediaPlayer){
-        if (D) {Log.d(DEBUG_TAG,
-                "Stopping media playback for MediaPlayer " + mediaPlayer.hashCode() + ".");}
-        mediaPlayer.stop();
-        mediaPlayer.reset();
-        mediaPlayer.release();
+        try {
+            if (D) {Log.d(DEBUG_TAG,
+                    "Clearing MediaPlayer " + mediaPlayer.hashCode() + ".");}
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+            mediaPlayer.release();
+        } catch (Exception e){
+            Log.e(DEBUG_TAG, "Unable to stop MediaPlayer. It might have already stopped");
+        }
     }
 
 
@@ -200,7 +219,7 @@ public class MediaUtil {
     public static void loadMediaVolumeFromPreference(Context context){
         if (D) {Log.d(DEBUG_TAG, "Setting alarm sound volume to user defined value.");}
         saveStreamMusicVolume(context);
-        float percent = PrefUtil.getFloat(context,PrefKey.AUDIO_VOLUME,0.8f);
+        float percent = PrefUtil.getFloat(context, PrefKey.AUDIO_VOLUME, 0.8f);
         setStreamMusicVolume(context, percent);
     }
 
