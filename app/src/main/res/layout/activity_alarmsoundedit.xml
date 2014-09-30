@@ -96,15 +96,35 @@
         custom:thumbColorPressed="@color/yellow_darker"
         />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_play"
-        android:id="@+id/button_play_pause"
         android:layout_below="@+id/rangebar_audiosection"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:background="@color/veryLightGray">
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/button_play"
+            android:id="@+id/button_play_pause"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_currentPosition"
+            android:text="@string/textView_alarmTime"
+            android:textSize="35sp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            />
+
+        </RelativeLayout>
 
 
 </RelativeLayout>

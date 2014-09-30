@@ -60,11 +60,15 @@ public class AlarmSoundEditActivity extends Activity{
     private RangeBar rangeBar_soundSelector;
     private TextView textView_soundStart;
     private TextView textView_soundEnd;
+    private TextView textView_currentPosition;
     private Button button_playPause;
+    private boolean audioPlaying = false;
 
     private Handler mHandler = new Handler();
 
-    private MediaPlayer mMediaPlayer = new MediaPlayer();
+    private MediaPlayer mMediaPlayer;
+
+    private Thread playerPositionUpdateThread;
 
     //================================================================================
     // Lifecycle
@@ -92,17 +96,24 @@ public class AlarmSoundEditActivity extends Activity{
         textView_soundLength.setText(StringUtil.getTimeFormattedFromMillis(soundMillis));
         textView_soundStart.setText(StringUtil.getTimeFormattedFromMillis(soundStartMillis));
         textView_soundEnd.setText(StringUtil.getTimeFormattedFromMillis(soundEndMillis));
+        textView_currentPosition.setText(StringUtil.getTimeFormattedFromMillis(soundStartMillis));
 
         button_playPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mMediaPlayer.isPlaying()){
+                if(audioPlaying){
                     stopAudio();
                 } else {
                     playAudio();
                 }
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MediaUtil.clearMediaPlayer(mMediaPlayer);
     }
 
     @Override
@@ -152,6 +163,7 @@ public class AlarmSoundEditActivity extends Activity{
     }
 
     private void readConfig(){
+        if (D) {Log.d(DEBUG_TAG, "Reading configuration.");}
         AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(soundFilePath);
         if(alsg == null){
             soundStartMillis = 0;
@@ -163,6 +175,7 @@ public class AlarmSoundEditActivity extends Activity{
     }
 
     private void saveConfig(){
+        if (D) {Log.d(DEBUG_TAG, "Saving configuration.");}
         AlarmSoundGson alsg = new AlarmSoundGson();
         alsg.setStartTimeMillis(soundStartMillis);
         alsg.setEndTimeMillis(soundEndMillis);
@@ -173,6 +186,8 @@ public class AlarmSoundEditActivity extends Activity{
     }
 
     private void playAudio(){
+        if (D) {Log.d(DEBUG_TAG, "Playing audio section");}
+        mMediaPlayer = new MediaPlayer();
         setPlayButton(true);
         Uri soundUri = Uri.parse(soundFilePath);
         MediaUtil.playAudio(getApplicationContext(), mMediaPlayer, soundUri, soundStartMillis,
@@ -181,21 +196,50 @@ public class AlarmSoundEditActivity extends Activity{
                     @Override
                     public void onEndPositionReached(MediaPlayer mediaPlayer) {
                         MediaUtil.clearMediaPlayer(mMediaPlayer);
-                        setPlayButton(false);
+                        resetUIPlaybackPosition();
                     }
 
                     @Override
                     public void onPlaybackInterrupted(MediaPlayer mediaPlayer) {
                         MediaUtil.clearMediaPlayer(mMediaPlayer);
                         setPlayButton(false);
+                        resetUIPlaybackPosition();
                     }
                 });
+        playerPositionUpdateThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(audioPlaying) {
+                    final int currentMillis = mMediaPlayer.getCurrentPosition();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(currentMillis > 0) {
+                                textView_currentPosition.setText(
+                                        StringUtil.getTimeFormattedFromMillis(currentMillis));
+                            }
+                        }
+                    });
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        Log.e(DEBUG_TAG, "Update thread for current position has been interrupted.");
+                    }
+                }
+            }
+        });
+        playerPositionUpdateThread.start();
     }
 
     private void stopAudio(){
+        if (D) {Log.d(DEBUG_TAG, "Stopping audio playback.");}
+        playerPositionUpdateThread.interrupt();
+        playerPositionUpdateThread = null;
         MediaUtil.clearMediaPlayer(mMediaPlayer);
         setPlayButton(false);
+        resetUIPlaybackPosition();
     }
+
 
     //================================================================================
     // UI
@@ -207,12 +251,24 @@ public class AlarmSoundEditActivity extends Activity{
         textView_soundLength = (TextView) findViewById(R.id.textView_soundLength);
         textView_soundStart = (TextView) findViewById(R.id.textView_startTime);
         textView_soundEnd = (TextView) findViewById(R.id.textView_endTime);
+        textView_currentPosition = (TextView) findViewById(R.id.textView_currentPosition);
         rangeBar_soundSelector = (RangeBar) findViewById(R.id.rangebar_audiosection);
         button_playPause = (Button) findViewById(R.id.button_play_pause);
     }
 
-    private void setPlayButton(boolean play){
-        if(play){
+    private void resetUIPlaybackPosition(){
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                textView_currentPosition.setText(
+                        StringUtil.getTimeFormattedFromMillis(soundStartMillis));
+            }
+        });
+    }
+
+    private void setPlayButton(boolean playing){
+        audioPlaying = playing;
+        if(playing){
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -254,6 +310,8 @@ public class AlarmSoundEditActivity extends Activity{
                 soundEndMillis = rightThumbSec  * 1000;
                 textView_soundStart.setText(StringUtil.getTimeFormattedFromSeconds(leftThumbSec));
                 textView_soundEnd.setText(StringUtil.getTimeFormattedFromSeconds(rightThumbSec));
+                textView_currentPosition.setText(
+                        StringUtil.getTimeFormattedFromSeconds(leftThumbSec));
             }
         });
     }
