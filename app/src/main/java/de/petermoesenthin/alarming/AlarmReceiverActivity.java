@@ -139,7 +139,7 @@ public class AlarmReceiverActivity extends Activity {
             if (D) {Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #" + rand);}
             dataSource = Uri.parse(uris[rand]);
         } else {
-            if (D) {Log.d(DEBUG_TAG, "No uri availiable, playing default alarm sound");}
+            if (D) {Log.d(DEBUG_TAG, "No uri available, playing default alarm sound");}
             // Play default
             dataSource = Settings.System.DEFAULT_ALARM_ALERT_URI;
         }
@@ -150,6 +150,7 @@ public class AlarmReceiverActivity extends Activity {
         AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(dataSource.getPath());
         startMillis = alsg.getStartTimeMillis();
         endMillis = alsg.getEndTimeMillis();
+        MediaUtil.loadMediaVolumeFromPreference(this);
         MediaUtil.playAudio(this, mMediaPlayer, dataSource, startMillis, endMillis,
                 new OnPlaybackChangedListener() {
 
@@ -162,6 +163,6 @@ public class AlarmReceiverActivity extends Activity {
             public void onPlaybackInterrupted(MediaPlayer mediaPlayer) {
                 finishThis();
             }
-        });
+            });
     }
 }
