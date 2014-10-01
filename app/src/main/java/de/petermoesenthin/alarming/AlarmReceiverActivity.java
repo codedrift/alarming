@@ -17,10 +17,8 @@
 package de.petermoesenthin.alarming;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
@@ -91,7 +89,6 @@ public class AlarmReceiverActivity extends Activity {
 
     @Override
     public void onAttachedToWindow() {
-        MediaUtil.loadMediaVolumeFromPreference(this);
         playAlarmSound();
         button_dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +111,6 @@ public class AlarmReceiverActivity extends Activity {
     private void disableKeyguard(){
         mKeyGuardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         mKeyguardLock = mKeyGuardManager.newKeyguardLock("Alarming");
-
         if (mKeyGuardManager.inKeyguardRestrictedInputMode()){
             mKeyguardLock.disableKeyguard();
         }
@@ -125,32 +121,38 @@ public class AlarmReceiverActivity extends Activity {
      */
     public void finishThis(){
         MediaUtil.clearMediaPlayer(mMediaPlayer);
-        MediaUtil.resetMediaVolume(this);
+        MediaUtil.resetSystemMediaVolume(this);
         mKeyguardLock.reenableKeyguard();
         finish();
     }
 
     private void playAlarmSound(){
+        MediaUtil.saveSystemMediaVolume(this);
+        MediaUtil.setAlarmVolumeFromPreference(this);
         String[] uris = PrefUtil.getAlarmSoundUris(this);
-        Uri dataSource;
+        Uri dataSource = null;
+        boolean fileOK = false;
+        boolean loop  = true;
+        int startMillis = 0;
+        int endMillis = 0;
         if(uris != null && uris.length  > 0) {
             Random r = new Random();
             int rand = r.nextInt(uris.length);
             if (D) {Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #" + rand);}
             dataSource = Uri.parse(uris[rand]);
-        } else {
+            fileOK = FileUtil.fileIsOK(this, dataSource.getPath());
+            AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(dataSource.getPath());
+            if(alsg != null){
+                startMillis = alsg.getStartTimeMillis();
+                endMillis = alsg.getEndTimeMillis();
+            }
+        }
+        if(!fileOK) {
             if (D) {Log.d(DEBUG_TAG, "No uri available, playing default alarm sound");}
             // Play default
             dataSource = Settings.System.DEFAULT_ALARM_ALERT_URI;
         }
 
-        boolean loop  = true;
-        int startMillis = 0;
-        int endMillis = 0;
-        AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(dataSource.getPath());
-        startMillis = alsg.getStartTimeMillis();
-        endMillis = alsg.getEndTimeMillis();
-        MediaUtil.loadMediaVolumeFromPreference(this);
         MediaUtil.playAudio(this, mMediaPlayer, dataSource, startMillis, endMillis,
                 new OnPlaybackChangedListener() {
 
