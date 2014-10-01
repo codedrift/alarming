@@ -24,7 +24,7 @@ public class PrefKey {
     public static final String ALARM_GSON = "alarm_gson";
     public static final String NEXT_ALARM_TIME_MILLIS = "alarm_time_millis";
 
-    public static final String AUDIO_VOLUME = "audio_volume";
+    public static final String ALARM_SOUND_VOLUME = "alarm_sound_volume";
     public static final String AUDIO_ORIGINAL_VOLUME = "audio_original_volume";
 
     public static final String ALARM_SOUND_URIS_GSON = "alarm_sound_uris_gson";

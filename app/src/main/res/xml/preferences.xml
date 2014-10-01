@@ -22,7 +22,8 @@
             android:key="alarm_sound_volume"
             android:title="@string/preference_alarm_sound_volume_title"
             android:summary="@string/preference_alarm_sound_volume_summary"
-            android:defaultValue="0.8f"
+            android:inputType="number"
+            android:defaultValue="81"
             />
 
     </PreferenceCategory>
