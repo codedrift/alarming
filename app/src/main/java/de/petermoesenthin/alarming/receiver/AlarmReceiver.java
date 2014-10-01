@@ -51,11 +51,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent){
         if (D) {Log.d(DEBUG_TAG,"Received alarm intent");}
+        PrefUtil.putBoolean(context, PrefKey.ALARM_SET, false);
+        NotificationUtil.clearAlarmNotifcation(context);
         Intent i = new Intent(context, AlarmReceiverActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
-        PrefUtil.putBoolean(context, PrefKey.ALARM_SET, false);
-        NotificationUtil.clearAlarmNotifcation(context);
     }
 
 
