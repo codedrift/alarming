@@ -216,11 +216,13 @@ public class MediaUtil {
      * Sets STREAM_MUSIC to the user specified volume that will be used to play alarm sounds.
      * @param context Application context.
      */
-    public static void loadMediaVolumeFromPreference(Context context){
-        if (D) {Log.d(DEBUG_TAG, "Setting alarm sound volume to user defined value.");}
-        saveStreamMusicVolume(context);
-        float percent = PrefUtil.getFloat(context, PrefKey.AUDIO_VOLUME, 0.8f);
-        setStreamMusicVolume(context, percent);
+    public static void setAlarmVolumeFromPreference(Context context){
+        int percent = PrefUtil.getInt(context, PrefKey.ALARM_SOUND_VOLUME, 25);
+        int maxVolume = getAudioStreamMaxVolume(context);
+        int volume = Math.round(((float) percent / 100) * maxVolume);
+        if (D) {Log.d(DEBUG_TAG, "Setting STREAM_MUSIC volume (loaded from preference) to " + volume
+        + " PERCENT=" + percent);}
+        setStreamMusicVolume(context, volume);
     }
 
 
@@ -228,10 +230,10 @@ public class MediaUtil {
      * Sets STREAM_MUSIC volume back to the previously set amount (user defined).
      * @param context Application context.
      */
-    public static void resetMediaVolume(Context context){
-        if (D) {Log.d(DEBUG_TAG, "Resetting media volume to original value.");}
-        float percentage = PrefUtil.getFloat(context, PrefKey.AUDIO_ORIGINAL_VOLUME, 0f);
-        setStreamMusicVolume(context, percentage);
+    public static void resetSystemMediaVolume(Context context){
+        int originalVolume = PrefUtil.getInt(context, PrefKey.AUDIO_ORIGINAL_VOLUME, 0);
+        if (D) {Log.d(DEBUG_TAG, "Resetting system STREAM_MUSIC volume to " + originalVolume);}
+        setStreamMusicVolume(context, originalVolume);
     }
 
     /**
@@ -247,24 +249,21 @@ public class MediaUtil {
      * Saves the current volume percentage of STREAM_MUSIC.
      * @param context Application context.
      */
-    public static void saveStreamMusicVolume(Context context){
-        if (D) {Log.d(DEBUG_TAG, "Saving current STREAM_MUSIC volume.");}
+    public static void saveSystemMediaVolume(Context context){
         int currentVolume  = getAudioManager(context).getStreamVolume(AudioManager.STREAM_MUSIC);
-        float percentage = currentVolume / getAudioStreamMaxVolume(context);
-        PrefUtil.putFloat(context, PrefKey.AUDIO_ORIGINAL_VOLUME, percentage);
+        if (D) {Log.d(DEBUG_TAG, "Saving system STREAM_MUSIC volume. Found " + currentVolume);}
+        PrefUtil.putInt(context, PrefKey.AUDIO_ORIGINAL_VOLUME, currentVolume);
     }
 
-
     /**
-     * Sets STREAM_MUSIC volume to the given percentage.
+     * Sets STREAM_MUSIC volume to the given value.
      * @param context Application context.
-     * @param percentage percentage to set the volume to.
+     * @param volume Value to set the volume to.
      */
-    public static void setStreamMusicVolume(Context context, float percentage){
-        int targetVolume = (int) (getAudioStreamMaxVolume(context) * percentage);
+    public static void setStreamMusicVolume(Context context, int volume){
         getAudioManager(context).setStreamVolume(
                 AudioManager.STREAM_MUSIC,
-                targetVolume,
+                volume,
                 0);
     }
 
