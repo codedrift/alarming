@@ -28,6 +28,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import de.psdev.licensesdialog.LicensesDialog;
+
 
 public class AboutActivity extends Activity {
 
@@ -75,10 +77,14 @@ public class AboutActivity extends Activity {
         alert.show();
     }
 
+    private void showLicensesDialog(){
+        new LicensesDialog.Builder(this).setNotices(R.raw.notices).build().show();
+    }
+
     private void setUpListView(){
         if (D) {Log.d(DEBUG_TAG, "Setting up listView");}
         final String[] aboutTitles = getResources().getStringArray(R.array.about_actions);
-        mListView.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,
+        mListView.setAdapter(new ArrayAdapter<String>(this, R.layout.listitem_about,
                 aboutTitles));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -90,7 +96,7 @@ public class AboutActivity extends Activity {
                         break;
                     // Licenses
                     case 1:
-                        showInfoDialog(aboutTitles[1], R.string.licenses);
+                        showLicensesDialog();
                         break;
                 }
             }
