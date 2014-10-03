@@ -144,17 +144,20 @@ public class PrefUtil {
         return files;
     }
 
-    public static void updateAlarmTime(Context context, int hour, int minute){
+    public static void setAlarmGson(Context context, AlarmGson alg){
         Gson gson = new Gson();
-        AlarmGson alg = new AlarmGson(hour,minute);
-        String urisJson = gson.toJson(alg);
-        PrefUtil.putString(context, PrefKey.ALARM_GSON, urisJson);
+        String js = gson.toJson(alg);
+        PrefUtil.putString(context, PrefKey.ALARM_GSON, js);
     }
 
-    public static AlarmGson getAlarmTimeGson(Context context){
+    public static AlarmGson getAlarmGson(Context context){
         Gson gson = new Gson();
         AlarmGson alg;
-        alg = gson.fromJson(getString(context, PrefKey.ALARM_GSON, null), AlarmGson.class);
+        String js = getString(context, PrefKey.ALARM_GSON, null);
+        alg = gson.fromJson(js, AlarmGson.class);
+        if(alg == null){
+            alg = new AlarmGson();
+        }
         return alg;
     }
 
