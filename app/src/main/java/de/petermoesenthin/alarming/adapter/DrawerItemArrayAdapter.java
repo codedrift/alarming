@@ -62,7 +62,7 @@ public class DrawerItemArrayAdapter extends ArrayAdapter<DrawerItem> {
                 context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.drawer_list_item,
+            convertView = layoutInflater.inflate(R.layout.listitem_drawer,
                     null);
             viewHolder = new ViewHolder();
             viewHolder.itemImage = (ImageView) convertView.findViewById(
