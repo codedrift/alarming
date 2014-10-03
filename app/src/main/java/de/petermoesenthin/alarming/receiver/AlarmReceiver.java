@@ -31,6 +31,7 @@ import android.widget.Toast;
 import java.io.IOException;
 
 import de.petermoesenthin.alarming.AlarmReceiverActivity;
+import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.util.NotificationUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
@@ -50,9 +51,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent){
-        if (D) {Log.d(DEBUG_TAG,"Received alarm intent");}
-        PrefUtil.putBoolean(context, PrefKey.ALARM_SET, false);
-        NotificationUtil.clearAlarmNotifcation(context);
+        if (D) {Log.d(DEBUG_TAG,"Received alarm intent.");}
         Intent i = new Intent(context, AlarmReceiverActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
