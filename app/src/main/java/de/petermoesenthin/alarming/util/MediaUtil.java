@@ -217,7 +217,7 @@ public class MediaUtil {
      * @param context Application context.
      */
     public static void setAlarmVolumeFromPreference(Context context){
-        int percent = PrefUtil.getInt(context, PrefKey.ALARM_SOUND_VOLUME, 25);
+        int percent = PrefUtil.getInt(context, PrefKey.ALARM_SOUND_VOLUME, 80);
         int maxVolume = getAudioStreamMaxVolume(context);
         int volume = Math.round(((float) percent / 100) * maxVolume);
         if (D) {Log.d(DEBUG_TAG, "Setting STREAM_MUSIC volume (loaded from preference) to " + volume
