@@ -21,10 +21,13 @@ public class AlarmGson {
 
     private int hour;
     private int minute;
+    private boolean alarmSet = false;
 
     public AlarmGson(int hour, int minute){
         this.hour = hour;
         this.minute = minute;
+    }
+    public AlarmGson(){
     }
 
     public int getHour() {
@@ -41,6 +44,14 @@ public class AlarmGson {
 
     public void setMinute(int minute) {
         this.minute = minute;
+    }
+
+    public boolean isAlarmSet() {
+        return alarmSet;
+    }
+
+    public void setAlarmSet(boolean alarmSet) {
+        this.alarmSet = alarmSet;
     }
 
 }

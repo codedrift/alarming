@@ -23,6 +23,8 @@ public class AlarmSoundGson {
     private int endTimeMillis;
     private int pathHash = 0;
 
+    private boolean looping;
+
     public String getPath() {
         return path;
     }
@@ -54,5 +56,14 @@ public class AlarmSoundGson {
     public void setPathHash(int pathHash) {
         this.pathHash = pathHash;
     }
+
+    public boolean isLooping() {
+        return looping;
+    }
+
+    public void setLooping(boolean looping) {
+        this.looping = looping;
+    }
+
 
 }
