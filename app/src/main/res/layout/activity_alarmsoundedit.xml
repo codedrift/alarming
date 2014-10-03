@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
@@ -12,7 +26,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="18sp"
+        android:textStyle="bold"
         android:text="@string/textView_soundTitle"
         android:id="@+id/textView_soundTitle"
         android:layout_alignParentTop="true"
@@ -28,8 +43,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/textView_soundArtist"
+        android:textSize="16sp"
         android:id="@+id/textView_soundArtist"
         android:layout_below="@+id/textView_soundTitle"
         android:layout_alignLeft="@+id/textView_soundTitle"
@@ -38,16 +53,6 @@
         android:paddingStart="5dp"
         android:paddingRight="5dp"
         android:paddingEnd="5dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/textView_soundLength"
-        android:id="@+id/textView_soundLength"
-        android:layout_alignBottom="@+id/textView_soundArtist"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
     <!-- ######### Divider ######### -->
 
@@ -102,7 +107,7 @@
         android:layout_below="@+id/rangebar_audiosection"
         android:layout_marginTop="10dp"
         android:padding="5dp"
-        android:background="@color/veryLightGray">
+        android:background="#ffe6e6e6">
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="100dp"
