@@ -41,8 +41,10 @@
     <!-- fragments/SoundManagerFragment -->
     <string name="action_save_config">Save configuration</string>
     <string name="action_add_new_sound">Add new sound</string>
-    <string name="alertTitle_wrongFileType">Wrong or corrupted file!</string>
-    <string name="alert_wrongFileType">It appears that you opened an unsupported or corrupted file. Please select an audio file.</string>
+    <string name="alertTitle_wrongFileType">Can\'t read file!</string>
+    <string name="alert_wrongFileType">It appears that you opened an unsupported or corrupted file. Select a different file.</string>
+    <string name="alertTitle_delete_file">Delete file</string>
+    <string name="alert_delete_file">Are you sure that you want to delete this file? The configuration will stay saved.</string>
 
     <string-array name="sound_action_options">
         <item>Edit</item>
@@ -64,12 +66,12 @@
 
     <string name="settings_category_general">General</string>
     <string name="settings_show_notification_title">Show Notification</string>
-    <string name="settings_show_notification_summary">Show a notification when an alarm is scheduled.</string>
+    <string name="settings_show_notification_summary">Show a notification when an alarm is scheduled</string>
 
     <string name="settings_category_media_playback">Media Playback</string>
     <string name="settings_alarm_sound_volume_title">Alarm sound volume</string>
-    <string name="settings_dialog_inner_title">Setting volume to %1$s</string>
-    <string name="settings_alarm_sound_volume_summary">Set the volume level for alarms.</string>
+    <string name="settings_dialog_inner_title">Set the volume to %1$s</string>
+    <string name="settings_alarm_sound_volume_summary">Set the volume level for alarms</string>
 
     <!-- .AlarmSoundEditActivity -->
     <string name="activity_title_alarmSoundEdit">Edit audio file</string>

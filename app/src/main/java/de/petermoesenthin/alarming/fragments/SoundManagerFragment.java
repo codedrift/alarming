@@ -209,9 +209,7 @@ public class SoundManagerFragment extends Fragment implements
                         break;
                     case 1:
                         if (D) {Log.d(DEBUG_TAG, "Deleting sound file");}
-                        FileUtil.deleteFile(
-                                PrefUtil.getAlarmSoundUris(fragmentContext)[itemPosition]);
-                        PrefUtil.updateAlarmSoundUris(fragmentContext);
+                        showDeleteFileDialog(itemPosition);
                         break;
                 }
                 if (mOptionsDialog != null) {
@@ -249,8 +247,35 @@ public class SoundManagerFragment extends Fragment implements
         AlertDialog.Builder builder = new AlertDialog.Builder(fragmentContext);
         builder.setTitle(R.string.alertTitle_wrongFileType).setMessage(R.string.alert_wrongFileType)
                 .setCancelable(false)
-                .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.dialog_button_ok,
+                        new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void showDeleteFileDialog(final int itemPosition){
+        if (D) {Log.d(DEBUG_TAG,"Showing delete file type dialog");}
+        AlertDialog.Builder builder = new AlertDialog.Builder(fragmentContext);
+        builder.setTitle(R.string.alertTitle_delete_file).setMessage(R.string.alert_delete_file)
+                .setCancelable(true)
+                .setNegativeButton(R.string.dialog_button_cancel,
+                        new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.dialog_button_ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                FileUtil.deleteFile(
+                                        PrefUtil.getAlarmSoundUris(fragmentContext)[itemPosition]);
+                                PrefUtil.updateAlarmSoundUris(fragmentContext);
                                 dialog.dismiss();
                             }
                         }
