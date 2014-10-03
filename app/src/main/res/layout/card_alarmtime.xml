@@ -49,4 +49,12 @@
         android:layout_alignBottom="@+id/textView_alarmTime"
         android:layout_centerHorizontal="true" />
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView_alarmTime"
+        android:id="@+id/checkBox_vibrate"
+        android:layout_margin="10dp"
+        android:text="@string/checkbox_vibrate"/>
+
 </RelativeLayout>

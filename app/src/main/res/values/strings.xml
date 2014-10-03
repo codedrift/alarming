@@ -34,8 +34,7 @@
 
     <!-- fragments/SetAlarmFragment -->
     <string name="textView_alarmTime">--:--</string>
-    <string name="switch_alarm_on">ON</string>
-    <string name="switch_alarm_off">OFF</string>
+    <string name="checkbox_vibrate">Vibrate</string>
     <string name="toast_alarmTimeNotSet">Could not set Alarm! No time set.</string>
 
     <!-- fragments/SoundManagerFragment -->

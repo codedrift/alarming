@@ -25,6 +25,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -55,6 +56,8 @@ public class AlarmReceiverActivity extends Activity {
     private PowerManager.WakeLock mWakeLock;
 
     private boolean loopAudio;
+
+    private Vibrator mVibrator;
 
     public static final String DEBUG_TAG = "AlarmReceiverActivity";
     public static final boolean D = true;
@@ -112,6 +115,10 @@ public class AlarmReceiverActivity extends Activity {
         acquireWakeLock();
         disableKeyguard();
         playAlarmSound();
+        AlarmGson alg = PrefUtil.getAlarmGson(this);
+        if(alg.vibrate()){
+            startVibration();
+        }
     }
 
     @Override
@@ -125,6 +132,8 @@ public class AlarmReceiverActivity extends Activity {
     public void finishThis(){
         // Clear alarm
         clearAlarmSet();
+        // Stop vibration
+        stopVibration();
         // Media player
         MediaUtil.clearMediaPlayer(mMediaPlayer);
         MediaUtil.resetSystemMediaVolume(this);
@@ -173,6 +182,25 @@ public class AlarmReceiverActivity extends Activity {
     private void releaseWakeLock(){
         if(mWakeLock.isHeld()){
             mWakeLock.release();
+        }
+    }
+
+    private void startVibration(){
+        if (D) {Log.d(DEBUG_TAG, "Starting vibration.");}
+        mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        // Start without a delay
+        // Vibrate for 100 milliseconds
+        // Sleep for 1000 milliseconds
+        long[] pattern = {0, 500, 500};
+        if(mVibrator.hasVibrator()){
+            mVibrator.vibrate(pattern, 0);
+        }
+    }
+
+    private void stopVibration(){
+        if (D) {Log.d(DEBUG_TAG, "Stopping vibration.");}
+        if(mVibrator != null){
+            mVibrator.cancel();
         }
     }
 

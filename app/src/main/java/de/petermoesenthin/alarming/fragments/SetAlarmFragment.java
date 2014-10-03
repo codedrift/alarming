@@ -62,6 +62,7 @@ public class SetAlarmFragment extends Fragment implements
 
     private TextView textView_alarmTime;
     private CircleButton circleButton;
+    private CheckBox checkBox_vibrate;
 
     //================================================================================
     // Lifecycle
@@ -70,7 +71,6 @@ public class SetAlarmFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(D) {Log.d(DEBUG_TAG,"onCreateView()");}
         fragmentContext = getActivity();
         View rootView = inflater.inflate(R.layout.fragment_setalarm, container, false);
         // Card view
@@ -100,21 +100,20 @@ public class SetAlarmFragment extends Fragment implements
             }
         });
 
-        Button alarmTest = (Button) rootView.findViewById(R.id.testlalarm);
-        alarmTest.setOnClickListener(new View.OnClickListener() {
+        checkBox_vibrate = (CheckBox) cardView.findViewById(R.id.checkBox_vibrate);
+        checkBox_vibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                testAlarm();
+                AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
+                boolean vibrate = alg.vibrate();
+                alg.setVibrate(!vibrate);
+                checkBox_vibrate.setChecked(!vibrate);
+                PrefUtil.setAlarmGson(fragmentContext, alg);
             }
         });
 
-        return rootView;
-    }
 
-    private void testAlarm(){
-        Intent i = new Intent(fragmentContext, AlarmReceiverActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
+        return rootView;
     }
 
     @Override
@@ -138,6 +137,7 @@ public class SetAlarmFragment extends Fragment implements
             String alarmFormatted = StringUtil.getAlarmTimeFormatted(alg.getHour(),alg.getMinute());
             textView_alarmTime.setText(alarmFormatted);
             setCircleButtonActive(alg.isAlarmSet());
+            checkBox_vibrate.setChecked(alg.vibrate());
         } else {
             if(D) {Log.d(DEBUG_TAG,"No alarm state found.");}
         }
