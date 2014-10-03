@@ -81,6 +81,7 @@ public class AlarmSoundEditActivity extends Activity{
         this.getActionBar().setHomeButtonEnabled(true);
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
         loadUiResources();
+        setTitle(R.string.activity_title_alarmSoundEdit);
 
         // call after ui setup to load all variables
         soundFilePath = readIntentUri();
