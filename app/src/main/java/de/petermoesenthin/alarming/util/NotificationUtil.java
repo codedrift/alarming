@@ -50,7 +50,7 @@ public class NotificationUtil {
         }
 
         //Build and show Notification
-        AlarmGson alg = PrefUtil.getAlarmTimeGson(context);
+        AlarmGson alg = PrefUtil.getAlarmGson(context);
         String alarmFormatted = StringUtil.getAlarmTimeFormatted(alg.getHour(),alg.getMinute());
         NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_alarmclock_light)
