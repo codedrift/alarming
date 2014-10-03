@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <TextView
         android:layout_width="wrap_content"
@@ -10,6 +25,7 @@
         android:id="@+id/textView_alarmTime"
         android:text="@string/textView_alarmTime"
         android:clickable="true"
+        android:background="@drawable/selector_basic"
         android:focusable="true"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
@@ -17,18 +33,20 @@
         android:textSize="60sp"
         />
 
-
-    <Switch
-        android:id="@+id/switch_alarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textOn="@string/switch_alarm_on"
-        android:textOff="@string/switch_alarm_off"
-        android:layout_toRightOf="@id/textView_alarmTime"
-        android:layout_alignBaseline="@id/textView_alarmTime"
+    <at.markushi.ui.CircleButton
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/button_alarm_set"
+        android:layout_width="64dip"
+        android:layout_height="64dip"
+        android:src="@drawable/ic_alarmclock_light_no_bells"
+        app:cb_color="@color/veryLightGray"
+        app:cb_pressedRingWidth="8dip"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        />
+        android:layout_alignBottom="@+id/textView_alarmTime"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
