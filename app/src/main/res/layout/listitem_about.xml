@@ -14,13 +14,13 @@
      limitations under the License.
 -->
 
-<resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">15dp</dimen>
-    <dimen name="activity_vertical_margin">10dp</dimen>
-
-    <dimen name="textSize_drawerItem">24sp</dimen>
-    <dimen name="textSize_drawerAdditionalItem">18sp</dimen>
-    <dimen name="textSize_drawerItemSelected">22sp</dimen>
-    <dimen name="seperator_container_margin">10dp</dimen>
-</resources>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:gravity="center_vertical"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:minHeight="48dp"
+    />
