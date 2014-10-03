@@ -21,6 +21,7 @@ import android.content.Intent;
 
 import java.util.Calendar;
 
+import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.NotificationUtil;
@@ -35,13 +36,14 @@ public class AlarmStateBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            boolean alarmSet = PrefUtil.getBoolean(context, PrefKey.ALARM_SET, false);
-            if(alarmSet){
-                Calendar calendar = Calendar.getInstance();
-                long alarmTimeMillis = PrefUtil.getLong(context,PrefKey.NEXT_ALARM_TIME_MILLIS, -1);
-                calendar.setTimeInMillis(alarmTimeMillis);
-                AlarmUtil.setAlarm(context,calendar);
-                NotificationUtil.showAlarmSetNotification(context);
+            AlarmGson alg = PrefUtil.getAlarmGson(context);
+            if(alg != null){
+                if(alg.isAlarmSet()){
+                    Calendar calendar = AlarmUtil
+                            .getNextAlarmTimeAbsolute(alg.getHour(),alg.getMinute());
+                    AlarmUtil.setAlarm(context,calendar);
+                    NotificationUtil.showAlarmSetNotification(context);
+                }
             }
         }
     }
