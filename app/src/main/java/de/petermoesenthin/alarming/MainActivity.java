@@ -30,7 +30,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,9 @@ import java.util.List;
 import de.petermoesenthin.alarming.adapter.DrawerItemArrayAdapter;
 import de.petermoesenthin.alarming.fragments.SetAlarmFragment;
 import de.petermoesenthin.alarming.fragments.SoundManagerFragment;
+import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.ui.DrawerItem;
+import de.petermoesenthin.alarming.util.PrefUtil;
 
 
 public class MainActivity extends FragmentActivity {
@@ -78,6 +79,16 @@ public class MainActivity extends FragmentActivity {
             getActionBar().setHomeButtonEnabled(true);
         }
         transactNewFragment(new SetAlarmFragment());
+        checkFirstStart();
+    }
+
+    private void checkFirstStart() {
+        boolean firstStart = PrefUtil.getBoolean(this, PrefKey.APP_FIRST_START, true);
+        if(firstStart){
+            if(D) {Log.d(DEBUG_TAG, "First start detected.");}
+            PrefUtil.updateAlarmSoundUris(this);
+            PrefUtil.putBoolean(this, PrefKey.APP_FIRST_START, false);
+        }
     }
 
     @Override
@@ -102,7 +113,7 @@ public class MainActivity extends FragmentActivity {
      * Sets up everything needed for the navigation drawer
      */
     private void setUpNavigationDrawer(){
-        if(D) {Log.d(DEBUG_TAG, "Setting up navigation drawer");}
+        if(D) {Log.d(DEBUG_TAG, "Setting up navigation drawer.");}
         mDrawerTitles = getResources()
                 .getStringArray(R.array.nav_drawer_titles);
         mDrawerListView = (ListView) findViewById(R.id.drawer_listView);
@@ -128,7 +139,7 @@ public class MainActivity extends FragmentActivity {
             mDrawerItemList.add(drawerItem);
         }
         mDrawerListView.setAdapter(new DrawerItemArrayAdapter(this,
-                R.layout.drawer_list_item,
+                R.layout.listitem_drawer,
                 mDrawerItemList));
         DrawerItemClickListener drawerItemClickListener =
                 new DrawerItemClickListener();
@@ -170,7 +181,7 @@ public class MainActivity extends FragmentActivity {
      * @param fragment
      */
     public void transactNewFragment(Fragment fragment){
-        if(D) {Log.d(DEBUG_TAG, "Transacting a new fragment");}
+        if(D) {Log.d(DEBUG_TAG, "Transacting new fragment " + fragment.getClass().getName());}
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, fragment)
                 .commit();
