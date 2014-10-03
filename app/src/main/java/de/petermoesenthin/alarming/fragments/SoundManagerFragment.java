@@ -249,7 +249,7 @@ public class SoundManagerFragment extends Fragment implements
         AlertDialog.Builder builder = new AlertDialog.Builder(fragmentContext);
         builder.setTitle(R.string.alertTitle_wrongFileType).setMessage(R.string.alert_wrongFileType)
                 .setCancelable(false)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.dismiss();
                             }
@@ -290,7 +290,7 @@ public class SoundManagerFragment extends Fragment implements
                     @Override
                     public void run() {
                         mListView.setAdapter(new AlarmSoundListAdapter(fragmentContext,
-                                        R.layout.drawer_list_item,
+                                        R.layout.listitem_drawer,
                                         listItems
                                 )
                         );
