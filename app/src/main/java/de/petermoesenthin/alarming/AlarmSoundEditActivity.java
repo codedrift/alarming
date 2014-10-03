@@ -56,7 +56,6 @@ public class AlarmSoundEditActivity extends Activity{
 
     private TextView textView_soundTitle;
     private TextView textView_soundArtist;
-    private TextView textView_soundLength;
     private RangeBar rangeBar_soundSelector;
     private TextView textView_soundStart;
     private TextView textView_soundEnd;
@@ -94,7 +93,6 @@ public class AlarmSoundEditActivity extends Activity{
 
         textView_soundTitle.setText(soundTitle);
         textView_soundArtist.setText(soundArtist);
-        textView_soundLength.setText(StringUtil.getTimeFormattedFromMillis(soundMillis));
         textView_soundStart.setText(StringUtil.getTimeFormattedFromMillis(soundStartMillis));
         textView_soundEnd.setText(StringUtil.getTimeFormattedFromMillis(soundEndMillis));
         textView_currentPosition.setText(StringUtil.getTimeFormattedFromMillis(soundStartMillis));
@@ -211,7 +209,7 @@ public class AlarmSoundEditActivity extends Activity{
             @Override
             public void run() {
                 while(audioPlaying) {
-                    final int currentMillis = mMediaPlayer.getCurrentPosition();
+                    final int currentMillis = MediaUtil.getMediaPlayerPosition(mMediaPlayer);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -224,7 +222,8 @@ public class AlarmSoundEditActivity extends Activity{
                     try {
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
-                        Log.e(DEBUG_TAG, "Update thread for current position has been interrupted.");
+                        Log.e(DEBUG_TAG,
+                                "Update thread for current position has been interrupted.");
                     }
                 }
             }
@@ -249,7 +248,6 @@ public class AlarmSoundEditActivity extends Activity{
     private void loadUiResources(){
         textView_soundTitle = (TextView) findViewById(R.id.textView_soundTitle);
         textView_soundArtist = (TextView) findViewById(R.id.textView_soundArtist);
-        textView_soundLength = (TextView) findViewById(R.id.textView_soundLength);
         textView_soundStart = (TextView) findViewById(R.id.textView_startTime);
         textView_soundEnd = (TextView) findViewById(R.id.textView_endTime);
         textView_currentPosition = (TextView) findViewById(R.id.textView_currentPosition);
@@ -287,6 +285,7 @@ public class AlarmSoundEditActivity extends Activity{
     }
 
     private void setUpRangeBar(){
+        if (D) {Log.d(DEBUG_TAG, "Setting up RangeBar.");}
         int tickCount = soundMillis / 1000;
         if(tickCount < 2){
             tickCount = 2;
@@ -300,15 +299,13 @@ public class AlarmSoundEditActivity extends Activity{
             right = tickCount -1;
         }
         rangeBar_soundSelector.setTickCount(tickCount);
-        rangeBar_soundSelector.setLeft(left);
-        rangeBar_soundSelector.setRight(right);
         rangeBar_soundSelector.setThumbIndices(left, right);
         rangeBar_soundSelector.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onIndexChangeListener(
                     RangeBar rangeBar, int leftThumbSec, int rightThumbSec) {
                 soundStartMillis = leftThumbSec * 1000;
-                soundEndMillis = rightThumbSec  * 1000;
+                soundEndMillis = rightThumbSec * 1000;
                 textView_soundStart.setText(StringUtil.getTimeFormattedFromSeconds(leftThumbSec));
                 textView_soundEnd.setText(StringUtil.getTimeFormattedFromSeconds(rightThumbSec));
                 textView_currentPosition.setText(

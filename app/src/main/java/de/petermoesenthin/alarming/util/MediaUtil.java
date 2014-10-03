@@ -188,11 +188,20 @@ public class MediaUtil {
         try{
             isPlaying = mediaPlayer.isPlaying();
         } catch (Exception e){
-            Log.e(DEBUG_TAG, "Could not determine if MediaPlayer " + mediaPlayer.hashCode()
-                    + " is playing. Assuming it is not.");
+            Log.e(DEBUG_TAG, "Could not determine if MediaPlayer is playing. Assuming it is not.");
             return false;
         }
         return isPlaying;
+    }
+
+    public static int getMediaPlayerPosition(MediaPlayer mediaPlayer){
+        int currentMillis = 0;
+        try {
+            currentMillis = mediaPlayer.getCurrentPosition();
+        } catch (Exception e) {
+            Log.e(DEBUG_TAG, "Could not get current position.");
+        }
+        return currentMillis;
     }
 
     /**
