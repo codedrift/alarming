@@ -92,6 +92,8 @@ public class SettingsActivity extends Activity {
                                 PrefKey.SHOW_ALARM_NOTIFICATION, isChecked);
                     }
                 });
+        boolean showNotification = PrefUtil.getBoolean(this, PrefKey.SHOW_ALARM_NOTIFICATION, true);
+        checkBox_showNotification.setChecked(showNotification);
         linearLayout_setAlarmVolume = (LinearLayout) findViewById(R.id.linearLayout_setAlarmVolume);
         linearLayout_setAlarmVolume.setOnClickListener(new View.OnClickListener() {
             @Override
