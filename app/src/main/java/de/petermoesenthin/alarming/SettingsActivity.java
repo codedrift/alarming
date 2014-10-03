@@ -16,13 +16,33 @@
 package de.petermoesenthin.alarming;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
-import de.petermoesenthin.alarming.fragments.SettingsFragment;
+import org.w3c.dom.Text;
+
+import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.util.PrefUtil;
+
 
 public class SettingsActivity extends Activity {
+
+    public static final String DEBUG_TAG = "SettingsActivity";
+    public static final boolean D = true;
+
+    private CheckBox checkBox_showNotification;
+    private LinearLayout linearLayout_setAlarmVolume;
 
     //==========================================================================
     // Lifecycle
@@ -31,12 +51,11 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Display the fragment as the main content.
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment()).commit();
+        setContentView(R.layout.activity_settings);
         this.getActionBar().setHomeButtonEnabled(true);
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle(R.string.activity_title_settings);
+        setUpUi();
     }
 
     //==========================================================================
@@ -55,6 +74,81 @@ public class SettingsActivity extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    //==========================================================================
+    // Ui
+    //==========================================================================
+
+    private void setUpUi(){
+        checkBox_showNotification = (CheckBox) findViewById(R.id.checkBox_setting_notification);
+        checkBox_showNotification.setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        Log.d(DEBUG_TAG, "Setting " + PrefKey.SHOW_ALARM_NOTIFICATION + " to " +
+                                isChecked);
+                        PrefUtil.putBoolean(getApplicationContext(),
+                                PrefKey.SHOW_ALARM_NOTIFICATION, isChecked);
+                    }
+                });
+        linearLayout_setAlarmVolume = (LinearLayout) findViewById(R.id.linearLayout_setAlarmVolume);
+        linearLayout_setAlarmVolume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showVolumeSetDialog();
+            }
+        });
+    }
+
+    private void showVolumeSetDialog(){
+        AlertDialog.Builder builder;
+        AlertDialog alertDialog;
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.dialog_setting_media_volume,
+                null);
+        int volume = PrefUtil.getInt(this,PrefKey.ALARM_SOUND_VOLUME, 80);
+        final SeekBar seekBar_volume = (SeekBar) layout.findViewById(R.id.seekBar_audioVolume);
+        final TextView textView_current_volume = (TextView)
+                layout.findViewById(R.id.textView_settings_dialog_inner_title);
+        final String textView_dialog_inner_title =
+                getResources().getString(R.string.settings_dialog_inner_title);
+        String formatted = String.format(textView_dialog_inner_title, volume + "%");
+        textView_current_volume.setText(formatted);
+        seekBar_volume.setMax(100);
+        seekBar_volume.setProgress(volume);
+        seekBar_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                String formatted = String.format(textView_dialog_inner_title, i + "%");
+                textView_current_volume.setText(formatted);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Nothing
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Nothing
+            }
+        });
+        builder = new AlertDialog.Builder(this);
+        builder.setView(layout);
+        builder.setCancelable(true);
+        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                int newVolume = seekBar_volume.getProgress();
+                if (D) {Log.d(DEBUG_TAG, "Setting " + PrefKey.ALARM_SOUND_VOLUME + " to "
+                        + newVolume);}
+                PrefUtil.putInt(getApplicationContext(), PrefKey.ALARM_SOUND_VOLUME, newVolume);
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialog = builder.create();
+        alertDialog.show();
     }
 
 }
