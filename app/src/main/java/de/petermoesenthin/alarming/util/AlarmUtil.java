@@ -29,13 +29,13 @@ import de.petermoesenthin.alarming.receiver.AlarmReceiver;
 public class AlarmUtil {
 
     public static final String DEBUG_TAG = "AlarmUtil";
-    private static final boolean D = false;
+    private static final boolean D = true;
 
     public static final int ALARM_ID = 6661;
 
 
     public static void setAlarm(Context context, Calendar calendar){
-        if(D) {Log.d(DEBUG_TAG, "Activating Alarming: Time=" + calendar.getTime());}
+        if(D) {Log.d(DEBUG_TAG, "Activating Alarming: Time=" + calendar.getTime() + ".");}
         Calendar now = Calendar.getInstance();
         if(now.after(calendar)){
             if(D) {Log.d(DEBUG_TAG, "Alarm was not set. Cannot set alarm in the past.");}
@@ -53,7 +53,7 @@ public class AlarmUtil {
     }
 
     public static void deactivateAlarm(Context context){
-        if(D) {Log.d(DEBUG_TAG,"Canceling alarm");}
+        if(D) {Log.d(DEBUG_TAG,"Canceling alarm.");}
         PendingIntent.getBroadcast(context, ALARM_ID, getAlarmIntent(context),
                 PendingIntent.FLAG_CANCEL_CURRENT);
         NotificationUtil.clearAlarmNotifcation(context);
@@ -73,7 +73,7 @@ public class AlarmUtil {
         cal.set(Calendar.MILLISECOND, 0);
 
         if(cal.compareTo(calNow) <= 0){
-            //Todays time passed, count to tomorrow
+            //Today's time passed, count to tomorrow
             cal.add(Calendar.DATE, 1);
         }
         return cal;
