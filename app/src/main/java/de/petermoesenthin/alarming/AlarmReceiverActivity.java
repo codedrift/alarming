@@ -24,6 +24,7 @@ import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -33,9 +34,11 @@ import android.widget.Button;
 import java.util.Random;
 
 import de.petermoesenthin.alarming.callbacks.OnPlaybackChangedListener;
+import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
+import de.petermoesenthin.alarming.util.NotificationUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
 public class AlarmReceiverActivity extends Activity {
@@ -46,8 +49,12 @@ public class AlarmReceiverActivity extends Activity {
 
     private MediaPlayer mMediaPlayer = new MediaPlayer();
 
-    KeyguardManager mKeyGuardManager;
-    KeyguardManager.KeyguardLock mKeyguardLock;
+    private KeyguardManager mKeyGuardManager;
+    private KeyguardManager.KeyguardLock mKeyguardLock;
+
+    private PowerManager.WakeLock mWakeLock;
+
+    private boolean loopAudio;
 
     public static final String DEBUG_TAG = "AlarmReceiverActivity";
     public static final boolean D = true;
@@ -81,90 +88,152 @@ public class AlarmReceiverActivity extends Activity {
         else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
-        disableKeyguard();
         button_dismiss = (Button) findViewById(R.id.button_dismiss);
+        button_dismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (D) {Log.d(DEBUG_TAG, "Alarm has been dismissed.");}
+                finishThis();
+            }
+        });
         button_snooze = (Button) findViewById(R.id.button_snooze);
+        button_snooze.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (D) {Log.d(DEBUG_TAG, "Alarm has been snoozed. ya biscuit.");}
+                finishThis();
+            }
+        });
     }
 
 
     @Override
     public void onAttachedToWindow() {
+        acquireWakeLock();
+        disableKeyguard();
         playAlarmSound();
-        button_dismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finishThis();
-            }
-        });
-        button_snooze.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finishThis();
-            }
-        });
     }
 
-    //================================================================================
-    // Methods
-    //================================================================================
-
-    private void disableKeyguard(){
-        mKeyGuardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-        mKeyguardLock = mKeyGuardManager.newKeyguardLock("Alarming");
-        if (mKeyGuardManager.inKeyguardRestrictedInputMode()){
-            mKeyguardLock.disableKeyguard();
-        }
+    @Override
+    public void onResume(){
+        super.onResume();
     }
 
     /**
      * Does additional work to finish this activity
      */
     public void finishThis(){
+        // Clear alarm
+        clearAlarmSet();
+        // Media player
         MediaUtil.clearMediaPlayer(mMediaPlayer);
         MediaUtil.resetSystemMediaVolume(this);
-        mKeyguardLock.reenableKeyguard();
+        // System
+        reenableKeyGuard();
+        releaseWakeLock();
+        // Finish Activity
+        if (D) {Log.d(DEBUG_TAG, "Finishing Activity.");}
         finish();
     }
 
+    //================================================================================
+    // Methods
+    //================================================================================
+
+    /**
+     * Disables the keyguard.
+     */
+    private void disableKeyguard(){
+        mKeyGuardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        mKeyguardLock = mKeyGuardManager.newKeyguardLock("Alarming_Keyguard");
+        if (mKeyGuardManager.inKeyguardRestrictedInputMode()){
+            mKeyguardLock.disableKeyguard();
+        }
+    }
+
+    private void reenableKeyGuard(){
+        if(mKeyguardLock != null){
+            mKeyguardLock.reenableKeyguard();
+        }
+    }
+
+    /**
+     * Sets and acquires a wakelock for this activity.
+     */
+    private void acquireWakeLock(){
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWakeLock = powerManager.newWakeLock(
+                (PowerManager.SCREEN_BRIGHT_WAKE_LOCK
+                        | PowerManager.FULL_WAKE_LOCK
+                        | PowerManager.ACQUIRE_CAUSES_WAKEUP),
+                "Alarming_WakeLock");
+        mWakeLock.acquire();
+    }
+
+    private void releaseWakeLock(){
+        if(mWakeLock.isHeld()){
+            mWakeLock.release();
+        }
+    }
+
+    private void clearAlarmSet(){
+        NotificationUtil.clearAlarmNotifcation(this);
+        AlarmGson alg = PrefUtil.getAlarmGson(this);
+        alg.setAlarmSet(false);
+        PrefUtil.setAlarmGson(this, alg);
+    }
+
+    /**
+     * Prepares alarm sound playback
+     */
     private void playAlarmSound(){
         MediaUtil.saveSystemMediaVolume(this);
         MediaUtil.setAlarmVolumeFromPreference(this);
         String[] uris = PrefUtil.getAlarmSoundUris(this);
         Uri dataSource = null;
         boolean fileOK = false;
-        boolean loop  = true;
         int startMillis = 0;
         int endMillis = 0;
         if(uris != null && uris.length  > 0) {
             Random r = new Random();
             int rand = r.nextInt(uris.length);
-            if (D) {Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #" + rand);}
+            if (D) {Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #" + rand + ".");}
             dataSource = Uri.parse(uris[rand]);
             fileOK = FileUtil.fileIsOK(this, dataSource.getPath());
             AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(dataSource.getPath());
             if(alsg != null){
                 startMillis = alsg.getStartTimeMillis();
                 endMillis = alsg.getEndTimeMillis();
+                loopAudio = alsg.isLooping();
             }
         }
         if(!fileOK) {
-            if (D) {Log.d(DEBUG_TAG, "No uri available, playing default alarm sound");}
+            if (D) {Log.d(DEBUG_TAG, "No uri available, playing default alarm sound.");}
             // Play default
             dataSource = Settings.System.DEFAULT_ALARM_ALERT_URI;
         }
+        startMediaPlayer(dataSource, startMillis, endMillis);
+    }
 
+    private void startMediaPlayer(final Uri dataSource, final int startMillis, final int endMillis){
+        if (D) {Log.d(DEBUG_TAG, "Starting media player.");}
         MediaUtil.playAudio(this, mMediaPlayer, dataSource, startMillis, endMillis,
                 new OnPlaybackChangedListener() {
+                    @Override
+                    public void onEndPositionReached(MediaPlayer mediaPlayer) {
+                        if(loopAudio){
+                            MediaUtil.clearMediaPlayer(mediaPlayer);
+                            startMediaPlayer(dataSource, startMillis, endMillis);
+                        } else {
+                            finishThis();
+                        }
+                    }
 
-            @Override
-            public void onEndPositionReached(MediaPlayer mediaPlayer) {
-                finishThis();
-            }
-
-            @Override
-            public void onPlaybackInterrupted(MediaPlayer mediaPlayer) {
-                finishThis();
-            }
-            });
+                    @Override
+                    public void onPlaybackInterrupted(MediaPlayer mediaPlayer) {
+                        finishThis();
+                    }
+                });
     }
+
 }
