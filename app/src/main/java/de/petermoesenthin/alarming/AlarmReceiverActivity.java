@@ -32,11 +32,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import java.util.Calendar;
 import java.util.Random;
 
 import de.petermoesenthin.alarming.callbacks.OnPlaybackChangedListener;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
+import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.NotificationUtil;
@@ -82,7 +85,7 @@ public class AlarmReceiverActivity extends Activity {
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
-        setContentView(R.layout.activity_alarmreciver);
+        setContentView(R.layout.activity_alarm_reciver);
 
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -96,14 +99,20 @@ public class AlarmReceiverActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (D) {Log.d(DEBUG_TAG, "Alarm has been dismissed.");}
+                clearAlarmSet();
                 finishThis();
             }
         });
+        int snoozeTime  = PrefUtil.getInt(this, PrefKey.SNOOZE_TIME, 10);
+        String text_snooze = getResources().getString(R.string.button_snooze);
+        String formatted = String.format(text_snooze, snoozeTime);
         button_snooze = (Button) findViewById(R.id.button_snooze);
+        button_snooze.setText(formatted);
         button_snooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (D) {Log.d(DEBUG_TAG, "Alarm has been snoozed. ya biscuit.");}
+                setSnooze();
                 finishThis();
             }
         });
@@ -130,15 +139,13 @@ public class AlarmReceiverActivity extends Activity {
      * Does additional work to finish this activity
      */
     public void finishThis(){
-        // Clear alarm
-        clearAlarmSet();
         // Stop vibration
         stopVibration();
         // Media player
         MediaUtil.clearMediaPlayer(mMediaPlayer);
         MediaUtil.resetSystemMediaVolume(this);
         // System
-        reenableKeyGuard();
+        reEnableKeyGuard();
         releaseWakeLock();
         // Finish Activity
         if (D) {Log.d(DEBUG_TAG, "Finishing Activity.");}
@@ -160,7 +167,7 @@ public class AlarmReceiverActivity extends Activity {
         }
     }
 
-    private void reenableKeyGuard(){
+    private void reEnableKeyGuard(){
         if(mKeyguardLock != null){
             mKeyguardLock.reenableKeyguard();
         }
@@ -205,10 +212,22 @@ public class AlarmReceiverActivity extends Activity {
     }
 
     private void clearAlarmSet(){
+        // Clear any pending notifications
         NotificationUtil.clearAlarmNotifcation(this);
+        NotificationUtil.clearSnoozeNotification(this);
+        // Unset alarm from preferences
         AlarmGson alg = PrefUtil.getAlarmGson(this);
         alg.setAlarmSet(false);
         PrefUtil.setAlarmGson(this, alg);
+    }
+
+    private void setSnooze(){
+        clearAlarmSet();
+        int snoozeTime  = PrefUtil.getInt(this, PrefKey.SNOOZE_TIME, 10);
+        Calendar snoozetime = Calendar.getInstance();
+        snoozetime.setTimeInMillis(System.currentTimeMillis());
+        snoozetime.add(Calendar.MINUTE, snoozeTime);
+        AlarmUtil.setSnooze(this, snoozetime);
     }
 
     /**
@@ -225,7 +244,8 @@ public class AlarmReceiverActivity extends Activity {
         if(uris != null && uris.length  > 0) {
             Random r = new Random();
             int rand = r.nextInt(uris.length);
-            if (D) {Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #" + rand + ".");}
+            if (D) {Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #"
+                    + rand + ".");}
             dataSource = Uri.parse(uris[rand]);
             fileOK = FileUtil.fileIsOK(this, dataSource.getPath());
             AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(dataSource.getPath());
@@ -253,13 +273,13 @@ public class AlarmReceiverActivity extends Activity {
                             MediaUtil.clearMediaPlayer(mediaPlayer);
                             startMediaPlayer(dataSource, startMillis, endMillis);
                         } else {
-                            finishThis();
+                            setSnooze();
                         }
                     }
 
                     @Override
                     public void onPlaybackInterrupted(MediaPlayer mediaPlayer) {
-                        finishThis();
+                        setSnooze();
                     }
                 });
     }

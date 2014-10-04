@@ -76,7 +76,7 @@ public class AlarmSoundEditActivity extends Activity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // UI
-        setContentView(R.layout.activity_alarmsoundedit);
+        setContentView(R.layout.activity_alarm_sound_edit);
         this.getActionBar().setHomeButtonEnabled(true);
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
         loadUiResources();
@@ -300,6 +300,8 @@ public class AlarmSoundEditActivity extends Activity{
         }
         rangeBar_soundSelector.setTickCount(tickCount);
         rangeBar_soundSelector.setThumbIndices(left, right);
+        rangeBar_soundSelector.setLeft(left);
+        rangeBar_soundSelector.setRight(right);
         rangeBar_soundSelector.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onIndexChangeListener(

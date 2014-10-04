@@ -22,8 +22,7 @@ public class AlarmSoundGson {
     private int startTimeMillis;
     private int endTimeMillis;
     private int pathHash = 0;
-
-    private boolean looping;
+    private boolean looping = true;
 
     public String getPath() {
         return path;

@@ -21,16 +21,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.util.PrefUtil;
@@ -43,6 +43,7 @@ public class SettingsActivity extends Activity {
 
     private CheckBox checkBox_showNotification;
     private LinearLayout linearLayout_setAlarmVolume;
+    private LinearLayout linearLayout_setSnoozeTime;
 
     //==========================================================================
     // Lifecycle
@@ -101,6 +102,47 @@ public class SettingsActivity extends Activity {
                 showVolumeSetDialog();
             }
         });
+
+        linearLayout_setSnoozeTime = (LinearLayout) findViewById(R.id.linearLayout_setSnoozeTime);
+        linearLayout_setSnoozeTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showSetSnoozeTimeDialog();
+            }
+        });
+    }
+
+    private void showSetSnoozeTimeDialog() {
+        AlertDialog.Builder builder;
+        AlertDialog alertDialog;
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.dialog_set_snooze_time,
+                null);
+        int snoozeTime = PrefUtil.getInt(this, PrefKey.SNOOZE_TIME, 10);
+        final EditText editText_snoozeTime = (EditText) layout.findViewById(R.id
+                .editText_snoozeTime);
+        editText_snoozeTime.setText(String.valueOf(snoozeTime));
+        builder = new AlertDialog.Builder(this);
+        builder.setView(layout);
+        builder.setCancelable(true);
+        builder.setNegativeButton(R.string.dialog_button_cancel,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String text = editText_snoozeTime.getText().toString();
+                int number = Integer.parseInt(text);
+                PrefUtil.putInt(getApplicationContext(), PrefKey.SNOOZE_TIME, Math.abs(number));
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void showVolumeSetDialog(){
@@ -113,16 +155,16 @@ public class SettingsActivity extends Activity {
         final SeekBar seekBar_volume = (SeekBar) layout.findViewById(R.id.seekBar_audioVolume);
         final TextView textView_current_volume = (TextView)
                 layout.findViewById(R.id.textView_settings_dialog_inner_title);
-        final String textView_dialog_inner_title =
-                getResources().getString(R.string.settings_dialog_inner_title);
-        String formatted = String.format(textView_dialog_inner_title, volume + "%");
+        final String dialog_inner_title =
+                getResources().getString(R.string.settings_dialog_alarm_sound_volume_inner_title);
+        String formatted = String.format(dialog_inner_title, volume + "%");
         textView_current_volume.setText(formatted);
         seekBar_volume.setMax(100);
         seekBar_volume.setProgress(volume);
         seekBar_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                String formatted = String.format(textView_dialog_inner_title, i + "%");
+                String formatted = String.format(dialog_inner_title, i + "%");
                 textView_current_volume.setText(formatted);
             }
 
@@ -139,6 +181,13 @@ public class SettingsActivity extends Activity {
         builder = new AlertDialog.Builder(this);
         builder.setView(layout);
         builder.setCancelable(true);
+        builder.setNegativeButton(R.string.dialog_button_cancel,
+                new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
         builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

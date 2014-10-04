@@ -17,18 +17,13 @@
 package de.petermoesenthin.alarming.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.timepicker.TimePickerBuilder;
@@ -37,7 +32,6 @@ import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment;
 import java.util.Calendar;
 
 import at.markushi.ui.CircleButton;
-import de.petermoesenthin.alarming.AlarmReceiverActivity;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.util.AlarmUtil;
@@ -74,7 +68,7 @@ public class SetAlarmFragment extends Fragment implements
         fragmentContext = getActivity();
         View rootView = inflater.inflate(R.layout.fragment_setalarm, container, false);
         // Card view
-        Card card = new Card(fragmentContext, R.layout.card_alarmtime);
+        Card card = new Card(fragmentContext, R.layout.card_alarm_time);
         CardView cardView = (CardView) rootView.findViewById(R.id.alarmCard);
         cardView.setCard(card);
         textView_alarmTime = (TextView) cardView.findViewById(R.id.textView_alarmTime);

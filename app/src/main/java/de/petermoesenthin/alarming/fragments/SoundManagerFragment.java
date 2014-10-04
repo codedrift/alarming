@@ -186,7 +186,7 @@ public class SoundManagerFragment extends Fragment implements
         if (D) {Log.d(DEBUG_TAG,"Showing item options dialog");}
         AlertDialog.Builder builder = new AlertDialog.Builder(fragmentContext);
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.dialog_alarmsoundoptions, null);
+        final View dialogView = inflater.inflate(R.layout.dialog_alarm_sound_options, null);
         ListView optionsListView =
                 (ListView) dialogView.findViewById(R.id.listView_alarmSoundOptions);
         String[] options =

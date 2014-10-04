@@ -25,11 +25,13 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/settings_dialog_alarm_sound_volume_inner_title"
+        android:text="@string/settings_dialog_snooze_time_inner_title"
         android:id="@+id/textView_settings_dialog_inner_title"/>
-    <SeekBar
+
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/seekBar_audioVolume"/>
+        android:inputType="number"
+        android:id="@+id/editText_snoozeTime"/>
 
 </LinearLayout>

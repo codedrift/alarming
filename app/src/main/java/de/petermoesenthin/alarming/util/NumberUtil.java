@@ -23,7 +23,6 @@ public class NumberUtil {
     public static final String DEBUG_TAG = "NumberUtil";
     private static final boolean D = false;
 
-
     /**
      * Parses a long number to an integer and caps it to MIN/MAX Integer values
      * @param number
@@ -41,6 +40,4 @@ public class NumberUtil {
             return (int) number;
         }
     }
-
-
 }
