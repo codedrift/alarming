@@ -22,7 +22,6 @@ import android.content.Intent;
 import java.util.Calendar;
 
 import de.petermoesenthin.alarming.pref.AlarmGson;
-import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.NotificationUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;

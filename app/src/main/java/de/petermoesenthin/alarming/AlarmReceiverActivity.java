@@ -23,7 +23,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Vibrator;
@@ -37,7 +36,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Random;
 
-import de.petermoesenthin.alarming.callbacks.OnPlaybackChangedListener;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
@@ -202,10 +200,9 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         mWakeLock = powerManager.newWakeLock(
                 (PowerManager.SCREEN_BRIGHT_WAKE_LOCK
                         | PowerManager.FULL_WAKE_LOCK
-                        | PowerManager.ACQUIRE_CAUSES_WAKEUP
-                        | PowerManager.PARTIAL_WAKE_LOCK),
+                        | PowerManager.ACQUIRE_CAUSES_WAKEUP),
                 "Alarming_WakeLock");
-        mWakeLock.acquire(1000);
+        mWakeLock.acquire();
     }
 
     private void releaseWakeLock(){

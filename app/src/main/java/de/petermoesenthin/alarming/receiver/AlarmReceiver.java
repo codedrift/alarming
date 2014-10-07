@@ -16,25 +16,12 @@
 
 package de.petermoesenthin.alarming.receiver;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
-
-import java.io.IOException;
 
 import de.petermoesenthin.alarming.AlarmReceiverActivity;
-import de.petermoesenthin.alarming.pref.AlarmGson;
-import de.petermoesenthin.alarming.pref.PrefKey;
-import de.petermoesenthin.alarming.util.NotificationUtil;
-import de.petermoesenthin.alarming.util.PrefUtil;
 
 public class AlarmReceiver extends BroadcastReceiver {
 

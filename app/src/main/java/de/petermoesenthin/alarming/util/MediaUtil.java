@@ -19,13 +19,8 @@ package de.petermoesenthin.alarming.util;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.util.Log;
 
-import java.io.IOException;
-
-import de.petermoesenthin.alarming.callbacks.OnPlaybackChangedListener;
 import de.petermoesenthin.alarming.pref.PrefKey;
 
 public class MediaUtil {

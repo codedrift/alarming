@@ -112,7 +112,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="@string/button_play_pause"
+            android:text="@string/button_play"
             android:id="@+id/button_play_pause"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"

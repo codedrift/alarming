@@ -315,7 +315,7 @@ public class SoundManagerFragment extends Fragment implements
                     @Override
                     public void run() {
                         mListView.setAdapter(new AlarmSoundListAdapter(fragmentContext,
-                                        R.layout.listItem_drawer,
+                                        R.layout.listitem_drawer,
                                         listItems
                                 )
                         );

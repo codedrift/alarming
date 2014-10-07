@@ -15,8 +15,6 @@
  */
 package de.petermoesenthin.alarming.pref;
 
-import de.petermoesenthin.alarming.util.StringUtil;
-
 public class AlarmGson {
 
     private int hour;

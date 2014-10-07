@@ -59,7 +59,7 @@ public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
 
         if (convertView == null) {
             convertView = layoutInflater
-                    .inflate(R.layout.listItem_alarm_sound, null);
+                    .inflate(R.layout.listitem_alarm_sound, null);
             viewHolder = new ViewHolder();
             viewHolder.itemTitle = (TextView) convertView
                     .findViewById(R.id.listItem_textView_soundTitle);

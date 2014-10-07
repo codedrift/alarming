@@ -41,9 +41,10 @@ public class AboutActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        this.getActionBar().setHomeButtonEnabled(true);
-        this.getActionBar().setDisplayHomeAsUpEnabled(true);
-
+        if(getActionBar() != null) {
+            this.getActionBar().setHomeButtonEnabled(true);
+            this.getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         mListView = (ListView) findViewById(R.id.listView_about);
         setUpListView();
     }
@@ -85,7 +86,7 @@ public class AboutActivity extends Activity {
     private void setUpListView(){
         if (D) {Log.d(DEBUG_TAG, "Setting up listView");}
         final String[] aboutTitles = getResources().getStringArray(R.array.about_actions);
-        mListView.setAdapter(new ArrayAdapter<String>(this, R.layout.listItem_about,
+        mListView.setAdapter(new ArrayAdapter<String>(this, R.layout.listitem_about,
                 aboutTitles));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

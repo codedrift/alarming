@@ -91,7 +91,8 @@
     <string name="textView_soundEnd">End</string>
     <string name="textView_soundLength">Absolute length</string>
     <string name="toast_config_saved">Configuration saved</string>
-    <string name="button_play_pause">Play</string>
+    <string name="button_play">Play</string>
+    <string name="button_pause">Pause</string>
     <string name="button_stop">Stop</string>
 
     <!-- Notifications -->

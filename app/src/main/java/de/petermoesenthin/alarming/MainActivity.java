@@ -139,7 +139,7 @@ public class MainActivity extends FragmentActivity {
             mDrawerItemList.add(drawerItem);
         }
         mDrawerListView.setAdapter(new DrawerItemArrayAdapter(this,
-                R.layout.listItem_drawer,
+                R.layout.listitem_drawer,
                 mDrawerItemList));
         DrawerItemClickListener drawerItemClickListener =
                 new DrawerItemClickListener();
@@ -181,7 +181,7 @@ public class MainActivity extends FragmentActivity {
      * @param fragment
      */
     public void transactNewFragment(Fragment fragment){
-        if(D) {Log.d(DEBUG_TAG, "Transacting new fragment " + fragment.getClass().getName());}
+        if(D) {Log.d(DEBUG_TAG, "Transacting new fragment.");}
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, fragment)
                 .commit();
