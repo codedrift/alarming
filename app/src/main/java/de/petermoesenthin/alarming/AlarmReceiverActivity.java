@@ -279,13 +279,13 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         }
         if(!fileOK) {
             if (D) {Log.d(DEBUG_TAG, "No uri available, playing default alarm sound.");}
-            // Play default
+            // Play default alarm sound
             dataSource = Settings.System.DEFAULT_ALARM_ALERT_URI.getPath();
         }
-        startMediaPlayer(dataSource);
+        startMediaPlayer();
     }
 
-    private void startMediaPlayer(final String dataSource){
+    private void startMediaPlayer(){
         if (D) {Log.d(DEBUG_TAG, "Starting media player.");}
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);

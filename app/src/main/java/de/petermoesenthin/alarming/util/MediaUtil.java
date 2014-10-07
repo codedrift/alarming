@@ -68,7 +68,7 @@ public class MediaUtil {
 
 
     /**
-     * Sets STREAM_MUSIC to the user specified volume that will be used to play alarm sounds.
+     * Sets STREAM_ALARM to the user specified volume that will be used to play alarm sounds.
      * @param context Application context.
      */
     public static void setAlarmVolumeFromPreference(Context context){
@@ -82,7 +82,7 @@ public class MediaUtil {
 
 
     /**
-     * Sets STREAM_MUSIC volume back to the previously set amount (user defined).
+     * Sets STREAM_ALARM volume back to the previously set amount (user defined).
      * @param context Application context.
      */
     public static void resetSystemMediaVolume(Context context){
@@ -101,23 +101,23 @@ public class MediaUtil {
 
 
     /**
-     * Saves the current volume percentage of STREAM_MUSIC.
+     * Saves the current volume percentage of STREAM_ALARM.
      * @param context Application context.
      */
     public static void saveSystemMediaVolume(Context context){
-        int currentVolume  = getAudioManager(context).getStreamVolume(AudioManager.STREAM_MUSIC);
+        int currentVolume  = getAudioManager(context).getStreamVolume(AudioManager.STREAM_ALARM);
         if (D) {Log.d(DEBUG_TAG, "Saving system STREAM_MUSIC volume. Found " + currentVolume);}
         PrefUtil.putInt(context, PrefKey.AUDIO_ORIGINAL_VOLUME, currentVolume);
     }
 
     /**
-     * Sets STREAM_MUSIC volume to the given value.
+     * Sets STREAM_ALARM volume to the given value.
      * @param context Application context.
      * @param volume Value to set the volume to.
      */
     public static void setStreamMusicVolume(Context context, int volume){
         getAudioManager(context).setStreamVolume(
-                AudioManager.STREAM_MUSIC,
+                AudioManager.STREAM_ALARM,
                 volume,
                 0);
     }
@@ -125,10 +125,10 @@ public class MediaUtil {
     /**
      *
      * @param context Application context.
-     * @return Maximum value for STREAM_MUSIC volume.
+     * @return Maximum value for STREAM_ALARM volume.
      */
     public static int getAudioStreamMaxVolume(Context context){
-        return getAudioManager(context).getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        return getAudioManager(context).getStreamMaxVolume(AudioManager.STREAM_ALARM);
     }
 
 }

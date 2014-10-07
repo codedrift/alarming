@@ -29,7 +29,6 @@ import de.petermoesenthin.alarming.MainActivity;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
-import de.petermoesenthin.alarming.receiver.SnoozeDismissReceiver;
 
 public class NotificationUtil {
 
@@ -67,7 +66,7 @@ public class NotificationUtil {
                 PendingIntent.FLAG_UPDATE_CURRENT);
         //Build and show Notification
         AlarmGson alg = PrefUtil.getAlarmGson(context);
-        String alarmFormatted = StringUtil.getAlarmTimeFormatted(alg.getHour(), alg.getMinute());
+        String alarmFormatted = StringUtil.getTimeFormatted(alg.getHour(), alg.getMinute());
         NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_alarmclock_light)
                 .setOngoing(true)
@@ -93,7 +92,7 @@ public class NotificationUtil {
         PendingIntent pIntent = PendingIntent.getBroadcast(context, INTENT_SNOOZE_DISMISS_ID,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        String alarmFormatted = StringUtil.getAlarmTimeFormatted(hour, minute);
+        String alarmFormatted = StringUtil.getTimeFormatted(hour, minute);
         NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_alarmclock_light)
                 .setOngoing(true)

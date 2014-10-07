@@ -139,7 +139,7 @@ public class MainActivity extends FragmentActivity {
             mDrawerItemList.add(drawerItem);
         }
         mDrawerListView.setAdapter(new DrawerItemArrayAdapter(this,
-                R.layout.listitem_drawer,
+                R.layout.listItem_drawer,
                 mDrawerItemList));
         DrawerItemClickListener drawerItemClickListener =
                 new DrawerItemClickListener();

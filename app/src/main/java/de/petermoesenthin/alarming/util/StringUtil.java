@@ -15,6 +15,10 @@
  */
 package de.petermoesenthin.alarming.util;
 
+import android.content.Context;
+
+import java.util.Calendar;
+
 public class StringUtil {
 
 	public static String getZeroPaddedString(int number) {
@@ -31,11 +35,16 @@ public class StringUtil {
             return "0" + String.valueOf(number);
     }
 
-    public static String getAlarmTimeFormatted(int hourOfDay, int minute){
+    public static String getTimeFormatted(int hourOfDay, int minute){
         String alarmTimeFormatted = "";
         alarmTimeFormatted += getZeroPaddedString(hourOfDay)
                 + ":" + getZeroPaddedString(minute);
         return alarmTimeFormatted;
+    }
+
+    public static String getSystemFormatTime(Context context, int hour, int minute){
+        Calendar c = AlarmUtil.getNextAlarmTimeAbsolute(hour, minute);
+        return android.text.format.DateFormat.getTimeFormat(context).format(c.getTime());
     }
 
     /**

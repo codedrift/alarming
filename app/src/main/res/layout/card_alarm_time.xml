@@ -17,7 +17,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="10dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,10 +28,19 @@
         android:clickable="true"
         android:background="@drawable/selector_basic"
         android:focusable="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
         android:textSize="60sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_am_pm"
+        android:textSize="12sp"
+        android:text="@string/textView_am_pm"
+        android:visibility="invisible"
+        android:layout_alignTop="@id/textView_alarmTime"
+        android:layout_toRightOf="@id/textView_alarmTime"
+        android:layout_toEndOf="@id/textView_alarmTime"
         />
 
     <at.markushi.ui.CircleButton

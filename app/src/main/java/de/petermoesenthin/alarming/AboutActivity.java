@@ -85,7 +85,7 @@ public class AboutActivity extends Activity {
     private void setUpListView(){
         if (D) {Log.d(DEBUG_TAG, "Setting up listView");}
         final String[] aboutTitles = getResources().getStringArray(R.array.about_actions);
-        mListView.setAdapter(new ArrayAdapter<String>(this, R.layout.listitem_about,
+        mListView.setAdapter(new ArrayAdapter<String>(this, R.layout.listItem_about,
                 aboutTitles));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

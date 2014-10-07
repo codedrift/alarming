@@ -36,6 +36,7 @@
     <string name="textView_alarmTime">--:--</string>
     <string name="checkbox_vibrate">Vibrate</string>
     <string name="toast_alarmTimeNotSet">Could not set Alarm! No time set.</string>
+    <string name="textView_am_pm">-</string>
 
     <!-- fragments/SoundManagerFragment -->
     <string name="action_save_config">Save configuration</string>
@@ -90,7 +91,7 @@
     <string name="textView_soundEnd">End</string>
     <string name="textView_soundLength">Absolute length</string>
     <string name="toast_config_saved">Configuration saved</string>
-    <string name="button_play">Play</string>
+    <string name="button_play_pause">Play</string>
     <string name="button_stop">Stop</string>
 
     <!-- Notifications -->

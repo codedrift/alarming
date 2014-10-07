@@ -91,7 +91,7 @@ public class SoundManagerFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragmentContext = container.getContext();
-        View rootView = inflater.inflate(R.layout.fragment_soundmanager, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_sound_manager, container, false);
         mListView = (ListView) rootView.findViewById(R.id.listView_alarmSounds);
         mProgressBar =
                 (CircularProgressBar) rootView.findViewById(R.id.circleProgressBar_SoundList);
@@ -315,7 +315,7 @@ public class SoundManagerFragment extends Fragment implements
                     @Override
                     public void run() {
                         mListView.setAdapter(new AlarmSoundListAdapter(fragmentContext,
-                                        R.layout.listitem_drawer,
+                                        R.layout.listItem_drawer,
                                         listItems
                                 )
                         );

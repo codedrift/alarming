@@ -17,6 +17,7 @@
 package de.petermoesenthin.alarming.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,23 +35,23 @@ import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment;
 import java.util.Calendar;
 
 import at.markushi.ui.CircleButton;
+import de.petermoesenthin.alarming.AlarmReceiverActivity;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.pref.AlarmGson;
+import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.util.AlarmUtil;
-import de.petermoesenthin.alarming.util.NotificationUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.view.CardView;
 
 public class SetAlarmFragment extends Fragment implements
-        TimePickerDialogFragment.TimePickerDialogHandler {
+        TimePickerDialogFragment.TimePickerDialogHandler,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     //================================================================================
     // Members
     //================================================================================
-
-    private Calendar mCalendarSet = null;
 
     public static final String DEBUG_TAG = "SetAlarmFragment";
     private static final boolean D = true;
@@ -58,6 +59,7 @@ public class SetAlarmFragment extends Fragment implements
     private Context fragmentContext;
 
     private TextView textView_alarmTime;
+    private TextView textView_am_pm;
     private CircleButton circleButton;
     private CheckBox checkBox_vibrate;
 
@@ -81,6 +83,7 @@ public class SetAlarmFragment extends Fragment implements
                 showTimePicker();
             }
         });
+        textView_am_pm = (TextView) cardView.findViewById(R.id.textView_am_pm);
 
         circleButton = (CircleButton) cardView.findViewById(R.id.button_alarm_set);
         circleButton.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +116,9 @@ public class SetAlarmFragment extends Fragment implements
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NotificationUtil.showSnoozeNotification(fragmentContext, 6, 55);
+                Intent i = new Intent(getActivity(), AlarmReceiverActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
             }
         });
 
@@ -139,12 +144,13 @@ public class SetAlarmFragment extends Fragment implements
         AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
         if(alg != null){
             if(D) {Log.d(DEBUG_TAG,"Alarm state found. Preparing views.");}
-            /*
-            String alarmFormatted = StringUtil.getAlarmTimeFormatted(alg.getHour(),
+            String alarmFormatted = StringUtil.getSystemFormatTime(fragmentContext, alg.getHour(),
                     alg.getMinute());
-                    */
-            String alarmFormatted = getSystemFormatTime(alg.getHour(), alg.getMinute());
-            textView_alarmTime.setText(alarmFormatted);
+            String[] timeSplit = alarmFormatted.split(" ");
+            textView_alarmTime.setText(timeSplit[0]);
+            if(timeSplit.length > 1){
+                textView_am_pm.setText(timeSplit[1]);
+            }
             setCircleButtonActive(alg.isAlarmSet());
             checkBox_vibrate.setChecked(alg.vibrate());
         } else {
@@ -156,8 +162,8 @@ public class SetAlarmFragment extends Fragment implements
         AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
         alg.setAlarmSet(true);
         PrefUtil.setAlarmGson(fragmentContext, alg);
-        mCalendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
-        AlarmUtil.setAlarm(fragmentContext, mCalendarSet);
+        Calendar calendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
+        AlarmUtil.setAlarm(fragmentContext, calendarSet);
         setCircleButtonActive(true);
     }
 
@@ -167,11 +173,6 @@ public class SetAlarmFragment extends Fragment implements
         PrefUtil.setAlarmGson(fragmentContext, alg);
         AlarmUtil.deactivateAlarm(fragmentContext);
         setCircleButtonActive(false);
-    }
-
-    private String getSystemFormatTime(int hour, int minute){
-        Calendar c = AlarmUtil.getNextAlarmTimeAbsolute(hour, minute);
-        return android.text.format.DateFormat.getTimeFormat(fragmentContext).format(c.getTime());
     }
 
     //================================================================================
@@ -208,7 +209,7 @@ public class SetAlarmFragment extends Fragment implements
     @Override
     public void onDialogTimeSet(int reference, int hourOfDay, int minute) {
         if(D) {Log.d(DEBUG_TAG,"Time picker finished. Setting alarm time.");}
-        String alarmTimeFormatted = StringUtil.getAlarmTimeFormatted(hourOfDay, minute);
+        String alarmTimeFormatted = StringUtil.getTimeFormatted(hourOfDay, minute);
         textView_alarmTime.setText(alarmTimeFormatted);
         AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
         alg.setHour(hourOfDay);
@@ -217,4 +218,10 @@ public class SetAlarmFragment extends Fragment implements
         activateAlarm();
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(PrefKey.ALARM_GSON)){
+            loadAlarmState();
+        }
+    }
 }
