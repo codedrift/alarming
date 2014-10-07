@@ -99,6 +99,7 @@
     <!-- <string name="action_settings">Settings</string> -->
 
     <string name="notification_snoozeActivated">Alarm snoozed</string>
+    <string name="notification_cancelSnooze">Cancel</string>
 
     <string name="about_this_app">Alarming will help you get out of bed with a smile :)
         Wake up to your favorite music and choose exactly what part of a song will play.

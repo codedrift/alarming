@@ -42,11 +42,22 @@
 
         <!-- ########## Receiver ########## -->
         <receiver android:name=".receiver.AlarmReceiver" />
-        <receiver android:name=".receiver.AlarmStateBootReceiver" >
+        <receiver android:name=".receiver.AlarmStateBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".receiver.SnoozeDismissReceiver" android:enabled="true">
+            <intent-filter>
+                <action android:name="de.petermoesenthin.alarming.ACTION_DISMISS_SNOOZE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receiver.AlarmDismissReceiver" android:enabled="true">
+            <intent-filter>
+                <action android:name="de.petermoesenthin.alarming.ACTION_DISMISS_ALARM" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
-
 </manifest>

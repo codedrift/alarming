@@ -183,7 +183,7 @@ public class AlarmReceiverActivity extends Activity {
                         | PowerManager.FULL_WAKE_LOCK
                         | PowerManager.ACQUIRE_CAUSES_WAKEUP),
                 "Alarming_WakeLock");
-        mWakeLock.acquire();
+        mWakeLock.acquire(1000);
     }
 
     private void releaseWakeLock(){
@@ -268,18 +268,25 @@ public class AlarmReceiverActivity extends Activity {
         MediaUtil.playAudio(this, mMediaPlayer, dataSource, startMillis, endMillis,
                 new OnPlaybackChangedListener() {
                     @Override
-                    public void onEndPositionReached(MediaPlayer mediaPlayer) {
+                    public void onPositionReached(MediaPlayer mediaPlayer) {
                         if(loopAudio){
-                            MediaUtil.clearMediaPlayer(mediaPlayer);
+                            mMediaPlayer = null;
+                            mMediaPlayer = new MediaPlayer();
                             startMediaPlayer(dataSource, startMillis, endMillis);
-                        } else {
-                            setSnooze();
+                        }
+                    }
+
+                    @Override
+                    public void onFullPlaybackCompleted(MediaPlayer mediaPlayer) {
+                        if(loopAudio){
+                            mMediaPlayer = null;
+                            mMediaPlayer = new MediaPlayer();
+                            startMediaPlayer(dataSource, startMillis, endMillis);
                         }
                     }
 
                     @Override
                     public void onPlaybackInterrupted(MediaPlayer mediaPlayer) {
-                        setSnooze();
                     }
                 });
     }

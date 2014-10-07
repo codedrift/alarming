@@ -90,7 +90,8 @@ public class MediaUtil {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                playbackChangedListener.onEndPositionReached(mediaPlayer);
+                playbackChangedListener.onFullPlaybackCompleted(mediaPlayer);
+                positionCheckThread.interrupt();
             }
         });
         try {
@@ -167,7 +168,7 @@ public class MediaUtil {
                 if(playerMillis >= positionMillis){
                     if (D) {Log.d(DEBUG_TAG, "MediaPlayer " + playerHash
                             + " has reached position. Stopping check.");}
-                    mPlaybackChangedListener.onEndPositionReached(mMediaPlayer);
+                    mPlaybackChangedListener.onPositionReached(mMediaPlayer);
                     isChecking = false;
                     return;
                 }

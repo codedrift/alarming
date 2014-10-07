@@ -53,7 +53,7 @@ public class AlarmUtil {
             if(D) {Log.d(DEBUG_TAG, "Snooze was not set. Cannot set snooze in the past.");}
         }else {
             setRTCWakeup(context, calendar, SNOOZE_ID);
-            NotificationUtil.setSnoozeNotification(context, calendar.get(Calendar.HOUR_OF_DAY),
+            NotificationUtil.showSnoozeNotification(context, calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE));
         }
     }

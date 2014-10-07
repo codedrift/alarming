@@ -23,7 +23,13 @@ public interface OnPlaybackChangedListener {
      * Gets called when the MediaPlayer has reached the desired position
      * @param mediaPlayer
      */
-    void onEndPositionReached(MediaPlayer mediaPlayer);
+    void onPositionReached(MediaPlayer mediaPlayer);
+
+    /**
+     * Gets called when the MediaPlayer has finished a full playback
+     * @param mediaPlayer
+     */
+    void onFullPlaybackCompleted(MediaPlayer mediaPlayer);
 
     /**
      * Gets called when the playback has been interrupted

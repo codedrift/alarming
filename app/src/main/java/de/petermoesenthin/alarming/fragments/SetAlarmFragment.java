@@ -17,12 +17,14 @@
 package de.petermoesenthin.alarming.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -35,6 +37,7 @@ import at.markushi.ui.CircleButton;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.util.AlarmUtil;
+import de.petermoesenthin.alarming.util.NotificationUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
 import it.gmariotti.cardslib.library.internal.Card;
@@ -106,6 +109,14 @@ public class SetAlarmFragment extends Fragment implements
             }
         });
 
+        Button test = (Button) rootView.findViewById(R.id.buttonTest);
+        test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NotificationUtil.showSnoozeNotification(fragmentContext, 6, 55);
+            }
+        });
+
 
         return rootView;
     }
@@ -128,7 +139,11 @@ public class SetAlarmFragment extends Fragment implements
         AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
         if(alg != null){
             if(D) {Log.d(DEBUG_TAG,"Alarm state found. Preparing views.");}
-            String alarmFormatted = StringUtil.getAlarmTimeFormatted(alg.getHour(),alg.getMinute());
+            /*
+            String alarmFormatted = StringUtil.getAlarmTimeFormatted(alg.getHour(),
+                    alg.getMinute());
+                    */
+            String alarmFormatted = getSystemFormatTime(alg.getHour(), alg.getMinute());
             textView_alarmTime.setText(alarmFormatted);
             setCircleButtonActive(alg.isAlarmSet());
             checkBox_vibrate.setChecked(alg.vibrate());
@@ -152,6 +167,11 @@ public class SetAlarmFragment extends Fragment implements
         PrefUtil.setAlarmGson(fragmentContext, alg);
         AlarmUtil.deactivateAlarm(fragmentContext);
         setCircleButtonActive(false);
+    }
+
+    private String getSystemFormatTime(int hour, int minute){
+        Calendar c = AlarmUtil.getNextAlarmTimeAbsolute(hour, minute);
+        return android.text.format.DateFormat.getTimeFormat(fragmentContext).format(c.getTime());
     }
 
     //================================================================================
@@ -196,4 +216,5 @@ public class SetAlarmFragment extends Fragment implements
         PrefUtil.setAlarmGson(fragmentContext, alg);
         activateAlarm();
     }
+
 }

@@ -39,6 +39,7 @@ import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
+import de.petermoesenthin.alarming.util.XMediaPlayer;
 
 public class AlarmSoundEditActivity extends Activity{
 
@@ -65,7 +66,7 @@ public class AlarmSoundEditActivity extends Activity{
 
     private Handler mHandler = new Handler();
 
-    private MediaPlayer mMediaPlayer;
+    private XMediaPlayer xMediaPlayer = XMediaPlayer.getInstance();
 
     private Thread playerPositionUpdateThread;
 
@@ -90,7 +91,6 @@ public class AlarmSoundEditActivity extends Activity{
         soundMillis = Integer.parseInt(metaData[2]);
         readConfig();
         setUpRangeBar();
-
         textView_soundTitle.setText(soundTitle);
         textView_soundArtist.setText(soundArtist);
         textView_soundStart.setText(StringUtil.getTimeFormattedFromMillis(soundStartMillis));
@@ -101,7 +101,7 @@ public class AlarmSoundEditActivity extends Activity{
             @Override
             public void onClick(View view) {
                 if(audioPlaying){
-                    stopAudio();
+                    pauseAudio();
                 } else {
                     playAudio();
                 }
@@ -112,7 +112,22 @@ public class AlarmSoundEditActivity extends Activity{
     @Override
     protected void onPause() {
         super.onPause();
-        MediaUtil.clearMediaPlayer(mMediaPlayer);
+        xMediaPlayer.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Uri soundUri = Uri.parse(soundFilePath);
+        xMediaPlayer.setUp(this, soundUri);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        xMediaPlayer.stop();
+        xMediaPlayer.reset();
+        xMediaPlayer.release();
     }
 
     @Override
@@ -185,31 +200,34 @@ public class AlarmSoundEditActivity extends Activity{
     }
 
     private void playAudio(){
-        if (D) {Log.d(DEBUG_TAG, "Playing audio section");}
-        mMediaPlayer = new MediaPlayer();
+        if (D) {Log.d(DEBUG_TAG, "Playing audio");}
         setPlayButton(true);
-        Uri soundUri = Uri.parse(soundFilePath);
-        MediaUtil.playAudio(getApplicationContext(), mMediaPlayer, soundUri, soundStartMillis,
-                soundEndMillis, new OnPlaybackChangedListener() {
-
-                    @Override
-                    public void onEndPositionReached(MediaPlayer mediaPlayer) {
-                        MediaUtil.clearMediaPlayer(mMediaPlayer);
-                        resetUIPlaybackPosition();
-                    }
-
-                    @Override
-                    public void onPlaybackInterrupted(MediaPlayer mediaPlayer) {
-                        MediaUtil.clearMediaPlayer(mMediaPlayer);
-                        setPlayButton(false);
-                        resetUIPlaybackPosition();
-                    }
-                });
+        xMediaPlayer.setOnXPrepareListener(new XMediaPlayer.OnXPrepareListener() {
+            @Override
+            public void onPrepared() {
+                xMediaPlayer.seek();
+            }
+        });
+        xMediaPlayer.setOnXSeekCompleteListener(new XMediaPlayer.OnXSeekCompleteListener() {
+            @Override
+            public void onSeekComplete() {
+                xMediaPlayer.start();
+                playerPositionUpdateThread.start();
+            }
+        });
+        xMediaPlayer.setOnXReachPositionListener(new XMediaPlayer.OnXReachPositionListener() {
+            @Override
+            public void onPositionReached() {
+                xMediaPlayer.pause();
+                setPlayButton(false);
+            }
+        });
+        xMediaPlayer.prepare();
         playerPositionUpdateThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while(audioPlaying) {
-                    final int currentMillis = MediaUtil.getMediaPlayerPosition(mMediaPlayer);
+                    final int currentMillis = xMediaPlayer.getCurrentPosition();
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -228,14 +246,13 @@ public class AlarmSoundEditActivity extends Activity{
                 }
             }
         });
-        playerPositionUpdateThread.start();
     }
 
-    private void stopAudio(){
-        if (D) {Log.d(DEBUG_TAG, "Stopping audio playback.");}
+    private void pauseAudio(){
+        if (D) {Log.d(DEBUG_TAG, "Pausing audio.");}
         playerPositionUpdateThread.interrupt();
         playerPositionUpdateThread = null;
-        MediaUtil.clearMediaPlayer(mMediaPlayer);
+        xMediaPlayer.pause();
         setPlayButton(false);
         resetUIPlaybackPosition();
     }
