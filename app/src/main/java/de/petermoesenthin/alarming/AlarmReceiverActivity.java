@@ -21,6 +21,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -45,20 +47,22 @@ import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.NotificationUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
-public class AlarmReceiverActivity extends Activity {
+public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPreparedListener,
+        MediaPlayer.OnSeekCompleteListener{
 
     //================================================================================
     // Member
     //================================================================================
 
-    private MediaPlayer mMediaPlayer = new MediaPlayer();
+    private MediaPlayer mMediaPlayer;
+    private int startMillis;
+    private int endMillis;
+    private String dataSource;
+    private boolean loopAudio;
 
     private KeyguardManager mKeyGuardManager;
     private KeyguardManager.KeyguardLock mKeyguardLock;
-
     private PowerManager.WakeLock mWakeLock;
-
-    private boolean loopAudio;
 
     private Vibrator mVibrator;
 
@@ -135,14 +139,31 @@ public class AlarmReceiverActivity extends Activity {
         super.onResume();
     }
 
+    @Override
+    public void onStop(){
+        super.onStop();
+        if(mMediaPlayer != null){
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(mMediaPlayer != null){
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
+    }
+
     /**
      * Does additional work to finish this activity
      */
     public void finishThis(){
         // Stop vibration
         stopVibration();
-        // Media player
-        MediaUtil.clearMediaPlayer(mMediaPlayer);
+        // Media volume
         MediaUtil.resetSystemMediaVolume(this);
         // System
         reEnableKeyGuard();
@@ -181,7 +202,8 @@ public class AlarmReceiverActivity extends Activity {
         mWakeLock = powerManager.newWakeLock(
                 (PowerManager.SCREEN_BRIGHT_WAKE_LOCK
                         | PowerManager.FULL_WAKE_LOCK
-                        | PowerManager.ACQUIRE_CAUSES_WAKEUP),
+                        | PowerManager.ACQUIRE_CAUSES_WAKEUP
+                        | PowerManager.PARTIAL_WAKE_LOCK),
                 "Alarming_WakeLock");
         mWakeLock.acquire(1000);
     }
@@ -237,58 +259,53 @@ public class AlarmReceiverActivity extends Activity {
         MediaUtil.saveSystemMediaVolume(this);
         MediaUtil.setAlarmVolumeFromPreference(this);
         String[] uris = PrefUtil.getAlarmSoundUris(this);
-        Uri dataSource = null;
         boolean fileOK = false;
-        int startMillis = 0;
-        int endMillis = 0;
         if(uris != null && uris.length  > 0) {
             Random r = new Random();
             int rand = r.nextInt(uris.length);
             if (D) {Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #"
                     + rand + ".");}
-            dataSource = Uri.parse(uris[rand]);
-            fileOK = FileUtil.fileIsOK(this, dataSource.getPath());
-            AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(dataSource.getPath());
+            dataSource = uris[rand];
+            fileOK = FileUtil.fileIsOK(this, dataSource);
+            AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(dataSource);
             if(alsg != null){
                 startMillis = alsg.getStartTimeMillis();
                 endMillis = alsg.getEndTimeMillis();
                 loopAudio = alsg.isLooping();
+            } else{
+                startMillis = 0;
+                endMillis = 0;
             }
         }
         if(!fileOK) {
             if (D) {Log.d(DEBUG_TAG, "No uri available, playing default alarm sound.");}
             // Play default
-            dataSource = Settings.System.DEFAULT_ALARM_ALERT_URI;
+            dataSource = Settings.System.DEFAULT_ALARM_ALERT_URI.getPath();
         }
-        startMediaPlayer(dataSource, startMillis, endMillis);
+        startMediaPlayer(dataSource);
     }
 
-    private void startMediaPlayer(final Uri dataSource, final int startMillis, final int endMillis){
+    private void startMediaPlayer(final String dataSource){
         if (D) {Log.d(DEBUG_TAG, "Starting media player.");}
-        MediaUtil.playAudio(this, mMediaPlayer, dataSource, startMillis, endMillis,
-                new OnPlaybackChangedListener() {
-                    @Override
-                    public void onPositionReached(MediaPlayer mediaPlayer) {
-                        if(loopAudio){
-                            mMediaPlayer = null;
-                            mMediaPlayer = new MediaPlayer();
-                            startMediaPlayer(dataSource, startMillis, endMillis);
-                        }
-                    }
-
-                    @Override
-                    public void onFullPlaybackCompleted(MediaPlayer mediaPlayer) {
-                        if(loopAudio){
-                            mMediaPlayer = null;
-                            mMediaPlayer = new MediaPlayer();
-                            startMediaPlayer(dataSource, startMillis, endMillis);
-                        }
-                    }
-
-                    @Override
-                    public void onPlaybackInterrupted(MediaPlayer mediaPlayer) {
-                    }
-                });
+        mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+        try {
+            mMediaPlayer.setDataSource(dataSource);
+        } catch (IOException e) {
+            if(D) {Log.d(DEBUG_TAG, "Unable to set data source");}
+        }
+        mMediaPlayer.setOnPreparedListener(this);
+        mMediaPlayer.setOnSeekCompleteListener(this);
+        mMediaPlayer.prepareAsync();
     }
 
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        mMediaPlayer.seekTo(startMillis);
+    }
+
+    @Override
+    public void onSeekComplete(MediaPlayer mediaPlayer) {
+        mMediaPlayer.start();
+    }
 }

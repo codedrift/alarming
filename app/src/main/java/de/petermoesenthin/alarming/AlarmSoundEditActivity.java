@@ -18,8 +18,8 @@ package de.petermoesenthin.alarming;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -33,15 +33,15 @@ import android.widget.Toast;
 
 import com.edmodo.rangebar.RangeBar;
 
-import de.petermoesenthin.alarming.callbacks.OnPlaybackChangedListener;
+import java.io.IOException;
+
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
-import de.petermoesenthin.alarming.util.XMediaPlayer;
 
-public class AlarmSoundEditActivity extends Activity{
+public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPreparedListener{
 
     //================================================================================
     // Members
@@ -66,7 +66,7 @@ public class AlarmSoundEditActivity extends Activity{
 
     private Handler mHandler = new Handler();
 
-    private XMediaPlayer xMediaPlayer = XMediaPlayer.getInstance();
+    private MediaPlayer mMediaPlayer;
 
     private Thread playerPositionUpdateThread;
 
@@ -107,32 +107,48 @@ public class AlarmSoundEditActivity extends Activity{
                 }
             }
         });
+        button_playPause.setActivated(false);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        xMediaPlayer.pause();
+        if(mMediaPlayer != null){
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Uri soundUri = Uri.parse(soundFilePath);
-        xMediaPlayer.setUp(this, soundUri);
+        mMediaPlayer = new MediaPlayer();
+        //mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+
+        // TODO remove test case
+        // TEST
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+        try {
+            mMediaPlayer.setDataSource(soundFilePath);
+        } catch (IOException e) {
+            if(D) {Log.d(DEBUG_TAG, "Unable to set data source");}
+        }
+        mMediaPlayer.setOnPreparedListener(this);
+        mMediaPlayer.prepareAsync();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        xMediaPlayer.stop();
-        xMediaPlayer.reset();
-        xMediaPlayer.release();
+        if(mMediaPlayer != null){
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_alarmsoundedit, menu);
         return super.onCreateOptionsMenu(menu);
@@ -202,38 +218,24 @@ public class AlarmSoundEditActivity extends Activity{
     private void playAudio(){
         if (D) {Log.d(DEBUG_TAG, "Playing audio");}
         setPlayButton(true);
-        xMediaPlayer.setOnXPrepareListener(new XMediaPlayer.OnXPrepareListener() {
-            @Override
-            public void onPrepared() {
-                xMediaPlayer.seek();
-            }
-        });
-        xMediaPlayer.setOnXSeekCompleteListener(new XMediaPlayer.OnXSeekCompleteListener() {
-            @Override
-            public void onSeekComplete() {
-                xMediaPlayer.start();
-                playerPositionUpdateThread.start();
-            }
-        });
-        xMediaPlayer.setOnXReachPositionListener(new XMediaPlayer.OnXReachPositionListener() {
-            @Override
-            public void onPositionReached() {
-                xMediaPlayer.pause();
-                setPlayButton(false);
-            }
-        });
-        xMediaPlayer.prepare();
         playerPositionUpdateThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                int currentPlayerMillis = 0;
                 while(audioPlaying) {
-                    final int currentMillis = xMediaPlayer.getCurrentPosition();
+                    try {
+                        currentPlayerMillis = mMediaPlayer.getCurrentPosition();
+                    } catch (IllegalStateException e){
+                        if (D) {Log.d(DEBUG_TAG, "Unable to update .");}
+                        return;
+                    }
+                    final int updateMillis = currentPlayerMillis;
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if(currentMillis > 0) {
+                            if(updateMillis > 0) {
                                 textView_currentPosition.setText(
-                                        StringUtil.getTimeFormattedFromMillis(currentMillis));
+                                        StringUtil.getTimeFormattedFromMillis(updateMillis));
                             }
                         }
                     });
@@ -246,13 +248,21 @@ public class AlarmSoundEditActivity extends Activity{
                 }
             }
         });
+        mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+            @Override
+            public void onSeekComplete(MediaPlayer mediaPlayer) {
+                mMediaPlayer.start();
+                playerPositionUpdateThread.start();
+            }
+        });
+        mMediaPlayer.seekTo(soundStartMillis);
     }
 
     private void pauseAudio(){
         if (D) {Log.d(DEBUG_TAG, "Pausing audio.");}
         playerPositionUpdateThread.interrupt();
         playerPositionUpdateThread = null;
-        xMediaPlayer.pause();
+        mMediaPlayer.pause();
         setPlayButton(false);
         resetUIPlaybackPosition();
     }
@@ -334,5 +344,9 @@ public class AlarmSoundEditActivity extends Activity{
     }
 
 
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        button_playPause.setActivated(true);
+    }
 }
 
