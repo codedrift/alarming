@@ -231,43 +231,7 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
 
     private void playAudio(){
         if (D) {Log.d(DEBUG_TAG, "Playing audio.");}
-        mPlayerPositionUpdateThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (D) {Log.d(DEBUG_TAG, "Starting player position thread.");}
-                int currentPlayerMillis = 0;
-                while(audioPlaying) {
-                    try {
-                        currentPlayerMillis = mMediaPlayer.getCurrentPosition();
-                    } catch (IllegalStateException e){
-                        if (D) {Log.d(DEBUG_TAG, "Unable to update player position. Exiting " +
-                                "thread");}
-                        return;
-                    }
-                    final int updateMillis = currentPlayerMillis;
-                    mCurrentPlayerMills = currentPlayerMillis;
-                    if(currentPlayerMillis >= mEndMillis){
-                        pauseAudio();
-                        return;
-                    }
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(updateMillis > 0) {
-                                textView_currentPosition.setText(
-                                        StringUtil.getTimeFormattedFromMillis(updateMillis));
-                            }
-                        }
-                    });
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException e) {
-                        Log.e(DEBUG_TAG,
-                                "Update thread for current position has been interrupted.");
-                    }
-                }
-            }
-        });
+        createPlayerPositionUpdateThread();
         if(mCurrentPlayerMills > mStartMillis){
             mMediaPlayer.start();
             setPlayButton(true);
@@ -322,6 +286,47 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
         button_stop.setEnabled(false);
         textView_resetPlaybackPosition();
     }
+
+    private void createPlayerPositionUpdateThread(){
+        mPlayerPositionUpdateThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (D) {Log.d(DEBUG_TAG, "Starting player position thread.");}
+                int currentPlayerMillis = 0;
+                while(audioPlaying) {
+                    try {
+                        currentPlayerMillis = mMediaPlayer.getCurrentPosition();
+                    } catch (IllegalStateException e){
+                        if (D) {Log.d(DEBUG_TAG, "Unable to update player position. Exiting " +
+                                "thread");}
+                        return;
+                    }
+                    final int updateMillis = currentPlayerMillis;
+                    mCurrentPlayerMills = currentPlayerMillis;
+                    if(currentPlayerMillis >= mEndMillis){
+                        pauseAudio();
+                        return;
+                    }
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(updateMillis > 0) {
+                                textView_currentPosition.setText(
+                                        StringUtil.getTimeFormattedFromMillis(updateMillis));
+                            }
+                        }
+                    });
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        Log.e(DEBUG_TAG,
+                                "Update thread for current position has been interrupted.");
+                    }
+                }
+            }
+        });
+    }
+
 
 
     //================================================================================
