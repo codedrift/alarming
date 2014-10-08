@@ -53,10 +53,11 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     //================================================================================
 
     private MediaPlayer mMediaPlayer;
-    private int startMillis;
-    private int endMillis;
-    private String dataSource;
-    private boolean loopAudio;
+    private Thread mPlayerPositionUpdateThread;
+    private boolean mAudioPlaying = false;
+    private int mStartMillis;
+    private int mEndMillis;
+    private String mDataSource;
 
     private KeyguardManager mKeyGuardManager;
     private KeyguardManager.KeyguardLock mKeyguardLock;
@@ -118,12 +119,12 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
                 finishThis();
             }
         });
+        //acquireWakeLock();
     }
 
 
     @Override
     public void onAttachedToWindow() {
-        acquireWakeLock();
         disableKeyguard();
         playAlarmSound();
         AlarmGson alg = PrefUtil.getAlarmGson(this);
@@ -140,6 +141,10 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     @Override
     public void onStop(){
         super.onStop();
+        if(mPlayerPositionUpdateThread != null){
+            mPlayerPositionUpdateThread.interrupt();
+            mPlayerPositionUpdateThread = null;
+        }
         if(mMediaPlayer != null){
             mMediaPlayer.release();
             mMediaPlayer = null;
@@ -165,7 +170,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         MediaUtil.resetSystemMediaVolume(this);
         // System
         reEnableKeyGuard();
-        releaseWakeLock();
+        //releaseWakeLock();
         // Finish Activity
         if (D) {Log.d(DEBUG_TAG, "Finishing Activity.");}
         finish();
@@ -262,22 +267,22 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
             int rand = r.nextInt(uris.length);
             if (D) {Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #"
                     + rand + ".");}
-            dataSource = uris[rand];
-            fileOK = FileUtil.fileIsOK(this, dataSource);
-            AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(dataSource);
+            mDataSource = uris[rand];
+            fileOK = FileUtil.fileIsOK(this, mDataSource);
+            AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(mDataSource);
             if(alsg != null){
-                startMillis = alsg.getStartTimeMillis();
-                endMillis = alsg.getEndTimeMillis();
-                loopAudio = alsg.isLooping();
+                mStartMillis = alsg.getStartTimeMillis();
+                mEndMillis = alsg.getEndTimeMillis();
+                //loopAudio = alsg.isLooping();
             } else{
-                startMillis = 0;
-                endMillis = 0;
+                mStartMillis = 0;
+                mEndMillis = 0;
             }
         }
         if(!fileOK) {
             if (D) {Log.d(DEBUG_TAG, "No uri available, playing default alarm sound.");}
             // Play default alarm sound
-            dataSource = Settings.System.DEFAULT_ALARM_ALERT_URI.getPath();
+            mDataSource = Settings.System.DEFAULT_ALARM_ALERT_URI.getPath();
         }
         startMediaPlayer();
     }
@@ -286,8 +291,9 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         if (D) {Log.d(DEBUG_TAG, "Starting media player.");}
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+        mMediaPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
         try {
-            mMediaPlayer.setDataSource(dataSource);
+            mMediaPlayer.setDataSource(mDataSource);
         } catch (IOException e) {
             if(D) {Log.d(DEBUG_TAG, "Unable to set data source");}
         }
@@ -296,13 +302,54 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         mMediaPlayer.prepareAsync();
     }
 
+    private void createPlayerPositionUpdateThread(){
+        mPlayerPositionUpdateThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (D) {Log.d(DEBUG_TAG, "Starting player position thread.");}
+                int currentPlayerMillis = 0;
+                while(mAudioPlaying) {
+                    try {
+                        currentPlayerMillis = mMediaPlayer.getCurrentPosition();
+                    } catch (IllegalStateException e){
+                        if (D) {Log.d(DEBUG_TAG, "Unable to update player position. Exiting " +
+                                "thread");}
+                        return;
+                    }
+                    if(currentPlayerMillis >= mEndMillis){
+                        loopAudio();
+                        return;
+                    }
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        Log.e(DEBUG_TAG,
+                                "Update thread for current position has been interrupted.");
+                    }
+                }
+            }
+        });
+    }
+
+    private void loopAudio(){
+        if(mPlayerPositionUpdateThread != null){
+            mPlayerPositionUpdateThread.interrupt();
+            mPlayerPositionUpdateThread = null;
+        }
+        mMediaPlayer.pause();
+        mMediaPlayer.seekTo(mStartMillis);
+    }
+
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
-        mMediaPlayer.seekTo(startMillis);
+        mMediaPlayer.seekTo(mStartMillis);
     }
 
     @Override
     public void onSeekComplete(MediaPlayer mediaPlayer) {
         mMediaPlayer.start();
+        mAudioPlaying = true;
+        createPlayerPositionUpdateThread();
+        mPlayerPositionUpdateThread.start();
     }
 }
