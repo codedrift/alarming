@@ -70,7 +70,7 @@ public class MediaUtil {
         int percent = PrefUtil.getInt(context, PrefKey.ALARM_SOUND_VOLUME, 80);
         int maxVolume = getAudioStreamMaxVolume(context);
         int volume = Math.round(((float) percent / 100) * maxVolume);
-        if (D) {Log.d(DEBUG_TAG, "Setting STREAM_MUSIC volume (loaded from preference) to " + volume
+        if (D) {Log.d(DEBUG_TAG, "Setting STREAM_ALARM volume (loaded from preference) to " + volume
         + " PERCENT=" + percent);}
         setStreamMusicVolume(context, volume);
     }
@@ -82,7 +82,7 @@ public class MediaUtil {
      */
     public static void resetSystemMediaVolume(Context context){
         int originalVolume = PrefUtil.getInt(context, PrefKey.AUDIO_ORIGINAL_VOLUME, 0);
-        if (D) {Log.d(DEBUG_TAG, "Resetting system STREAM_MUSIC volume to " + originalVolume);}
+        if (D) {Log.d(DEBUG_TAG, "Resetting system STREAM_ALARM volume to " + originalVolume);}
         setStreamMusicVolume(context, originalVolume);
     }
 
@@ -101,7 +101,7 @@ public class MediaUtil {
      */
     public static void saveSystemMediaVolume(Context context){
         int currentVolume  = getAudioManager(context).getStreamVolume(AudioManager.STREAM_ALARM);
-        if (D) {Log.d(DEBUG_TAG, "Saving system STREAM_MUSIC volume. Found " + currentVolume);}
+        if (D) {Log.d(DEBUG_TAG, "Saving system STREAM_ALARM volume. Found " + currentVolume);}
         PrefUtil.putInt(context, PrefKey.AUDIO_ORIGINAL_VOLUME, currentVolume);
     }
 

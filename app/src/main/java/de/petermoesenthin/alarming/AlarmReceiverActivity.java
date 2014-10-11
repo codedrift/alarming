@@ -84,10 +84,12 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        /*
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
+        */
         setContentView(R.layout.activity_alarm_reciver);
 
         int currentOrientation = getResources().getConfiguration().orientation;
@@ -119,7 +121,6 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
                 finishThis();
             }
         });
-        //acquireWakeLock();
     }
 
 
@@ -149,6 +150,12 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
     }
 
     @Override
@@ -170,7 +177,6 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         MediaUtil.resetSystemMediaVolume(this);
         // System
         reEnableKeyGuard();
-        //releaseWakeLock();
         // Finish Activity
         if (D) {Log.d(DEBUG_TAG, "Finishing Activity.");}
         finish();
@@ -197,31 +203,12 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         }
     }
 
-    /**
-     * Sets and acquires a wakelock for this activity.
-     */
-    private void acquireWakeLock(){
-        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(
-                (PowerManager.SCREEN_BRIGHT_WAKE_LOCK
-                        | PowerManager.FULL_WAKE_LOCK
-                        | PowerManager.ACQUIRE_CAUSES_WAKEUP),
-                "Alarming_WakeLock");
-        mWakeLock.acquire();
-    }
-
-    private void releaseWakeLock(){
-        if(mWakeLock.isHeld()){
-            mWakeLock.release();
-        }
-    }
-
     private void startVibration(){
         if (D) {Log.d(DEBUG_TAG, "Starting vibration.");}
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         // Start without a delay
-        // Vibrate for 100 milliseconds
-        // Sleep for 1000 milliseconds
+        // Vibrate for 500 milliseconds
+        // Sleep for 500 milliseconds
         long[] pattern = {0, 500, 500};
         if(mVibrator.hasVibrator()){
             mVibrator.vibrate(pattern, 0);
@@ -308,15 +295,24 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
             public void run() {
                 if (D) {Log.d(DEBUG_TAG, "Starting player position thread.");}
                 int currentPlayerMillis = 0;
+                if(mEndMillis == 0){
+                    mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            loopAudio();
+                        }
+                    });
+                    return;
+                }
                 while(mAudioPlaying) {
                     try {
                         currentPlayerMillis = mMediaPlayer.getCurrentPosition();
-                    } catch (IllegalStateException e){
-                        if (D) {Log.d(DEBUG_TAG, "Unable to update player position. Exiting " +
-                                "thread");}
+                    } catch (Exception e){
+                        if (D) {Log.d(DEBUG_TAG, "Unable to update player position." +
+                                " Exiting thread");}
                         return;
                     }
-                    if(currentPlayerMillis >= mEndMillis){
+                    if(currentPlayerMillis > mEndMillis){
                         loopAudio();
                         return;
                     }

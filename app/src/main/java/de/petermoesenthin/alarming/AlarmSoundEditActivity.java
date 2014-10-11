@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.edmodo.rangebar.RangeBar;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 import de.petermoesenthin.alarming.util.FileUtil;
@@ -42,7 +43,7 @@ import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
 
 public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPreparedListener,
-        MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnCompletionListener{
+        MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener{
 
     //================================================================================
     // Members
@@ -112,6 +113,12 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
                 }
             }
         });
+        button_stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopAudio();
+            }
+        });
         button_play_pause.setEnabled(false);
         button_stop.setEnabled(false);
     }
@@ -119,35 +126,19 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
     @Override
     protected void onPause() {
         super.onPause();
-        if(mMediaPlayer != null){
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
+        releaseMediaPlayer();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mMediaPlayer = new MediaPlayer();
-        // TODO remove test setting
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mMediaPlayer.setDataSource(mSoundFilePath);
-        } catch (IOException e) {
-            if(D) {Log.d(DEBUG_TAG, "Unable to set data source");}
-        }
-        mMediaPlayer.setOnSeekCompleteListener(this);
-        mMediaPlayer.setOnPreparedListener(this);
-        mMediaPlayer.prepareAsync();
+        setUpMediaPlayer();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if(mMediaPlayer != null){
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
+        releaseMediaPlayer();
     }
 
     @Override
@@ -234,24 +225,40 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
         createPlayerPositionUpdateThread();
         if(mCurrentPlayerMills > mStartMillis){
             mMediaPlayer.start();
-            setPlayButton(true);
+            mPlayerPositionUpdateThread.start();
+            setPlayPauseButtonPlaying(true);
         } else {
             mMediaPlayer.seekTo(mStartMillis);
+            button_play_pause.setEnabled(false);
         }
+    }
+
+    private void setUpMediaPlayer() {
+        mMediaPlayer = new MediaPlayer();
+        // TODO remove test setting
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mMediaPlayer.setDataSource(mSoundFilePath);
+        } catch (IOException e) {
+            if(D) {Log.d(DEBUG_TAG, "Unable to set data source");}
+        }
+        mMediaPlayer.setOnErrorListener(this);
+        mMediaPlayer.setOnSeekCompleteListener(this);
+        mMediaPlayer.setOnPreparedListener(this);
+        mMediaPlayer.prepareAsync();
     }
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
-        if (D) {Log.d(DEBUG_TAG, "onPrepared");}
         button_play_pause.setEnabled(true);
     }
 
     @Override
     public void onSeekComplete(MediaPlayer mediaPlayer) {
-        if (D) {Log.d(DEBUG_TAG, "onSeekComplete");}
         mMediaPlayer.start();
         mPlayerPositionUpdateThread.start();
-        setPlayButton(true);
+        setPlayPauseButtonPlaying(true);
+        button_play_pause.setEnabled(true);
         button_stop.setEnabled(true);
     }
 
@@ -265,7 +272,14 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
             mPlayerPositionUpdateThread = null;
         }
         mMediaPlayer.pause();
-        setPlayButton(true);
+        setPlayPauseButtonPlaying(false);
+    }
+
+    private void releaseMediaPlayer(){
+        if(mMediaPlayer != null){
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
     }
 
     private void stopAudio(){
@@ -275,16 +289,32 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
             mPlayerPositionUpdateThread = null;
         }
         mMediaPlayer.stop();
-        setPlayButton(false);
-        textView_resetPlaybackPosition();
-        button_stop.setEnabled(false);
+        mCurrentPlayerMills = 0;
+        audioPlaying = false;
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                setPlayPauseButtonPlaying(false);
+                textView_resetPlaybackPosition();
+                button_stop.setEnabled(false);
+                button_play_pause.setEnabled(false);
+            }
+        });
+        mMediaPlayer.prepareAsync();
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        setPlayButton(false);
+        setPlayPauseButtonPlaying(false);
         button_stop.setEnabled(false);
         textView_resetPlaybackPosition();
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        releaseMediaPlayer();
+        setUpMediaPlayer();
+        return false;
     }
 
     private void createPlayerPositionUpdateThread(){
@@ -292,19 +322,23 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
             @Override
             public void run() {
                 if (D) {Log.d(DEBUG_TAG, "Starting player position thread.");}
+                if(mEndMillis == 0 || mEndMillis < mCurrentPlayerMills){
+                    return;
+                }
                 int currentPlayerMillis = 0;
                 while(audioPlaying) {
                     try {
                         currentPlayerMillis = mMediaPlayer.getCurrentPosition();
-                    } catch (IllegalStateException e){
+                    } catch (Exception e){
                         if (D) {Log.d(DEBUG_TAG, "Unable to update player position. Exiting " +
                                 "thread");}
+                        setPlayPauseButtonPlaying(false);
                         return;
                     }
                     final int updateMillis = currentPlayerMillis;
                     mCurrentPlayerMills = currentPlayerMillis;
                     if(currentPlayerMillis >= mEndMillis){
-                        pauseAudio();
+                        stopAudio();
                         return;
                     }
                     mHandler.post(new Runnable() {
@@ -319,7 +353,7 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
                     try {
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
-                        Log.e(DEBUG_TAG,
+                        Log.d(DEBUG_TAG,
                                 "Update thread for current position has been interrupted.");
                     }
                 }
@@ -354,7 +388,7 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
         });
     }
 
-    private void setPlayButton(boolean playing){
+    private void setPlayPauseButtonPlaying(boolean playing){
         audioPlaying = playing;
         if(playing){
             mHandler.post(new Runnable() {
@@ -404,6 +438,7 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
             }
         });
     }
+
 
 
 }

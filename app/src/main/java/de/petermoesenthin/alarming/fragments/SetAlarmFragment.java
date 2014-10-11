@@ -121,8 +121,8 @@ public class SetAlarmFragment extends Fragment implements
                 startActivity(i);
             }
         });
-
-
+        PrefUtil.getApplicationPrefs(fragmentContext)
+                .registerOnSharedPreferenceChangeListener(this);
         return rootView;
     }
 
@@ -130,6 +130,13 @@ public class SetAlarmFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         loadAlarmState();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        PrefUtil.getApplicationPrefs(fragmentContext)
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
     //================================================================================
