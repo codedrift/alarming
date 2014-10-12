@@ -112,6 +112,7 @@ public class SetAlarmFragment extends Fragment implements
             }
         });
 
+
         Button test = (Button) rootView.findViewById(R.id.buttonTest);
         test.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +122,8 @@ public class SetAlarmFragment extends Fragment implements
                 startActivity(i);
             }
         });
+
+
         PrefUtil.getApplicationPrefs(fragmentContext)
                 .registerOnSharedPreferenceChangeListener(this);
         return rootView;
@@ -151,17 +154,23 @@ public class SetAlarmFragment extends Fragment implements
         AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
         if(alg != null){
             if(D) {Log.d(DEBUG_TAG,"Alarm state found. Preparing views.");}
-            String alarmFormatted = StringUtil.getSystemFormatTime(fragmentContext, alg.getHour(),
-                    alg.getMinute());
-            String[] timeSplit = alarmFormatted.split(" ");
-            textView_alarmTime.setText(timeSplit[0]);
-            if(timeSplit.length > 1){
-                textView_am_pm.setText(timeSplit[1]);
-            }
+            setAlarmTimeView(alg.getHour(), alg.getMinute());
             setCircleButtonActive(alg.isAlarmSet());
             checkBox_vibrate.setChecked(alg.vibrate());
         } else {
             if(D) {Log.d(DEBUG_TAG,"No alarm state found.");}
+        }
+    }
+
+    private void setAlarmTimeView(int hour, int minute){
+        String alarmFormatted = StringUtil.getTimeFormattedSystem(fragmentContext, hour,
+                minute);
+        String[] timeSplit = alarmFormatted.split(" ");
+        textView_am_pm.setVisibility(View.INVISIBLE);
+        textView_alarmTime.setText(timeSplit[0]);
+        if(timeSplit.length > 1){
+            textView_am_pm.setText(timeSplit[1]);
+            textView_am_pm.setVisibility(View.VISIBLE);
         }
     }
 
@@ -216,8 +225,7 @@ public class SetAlarmFragment extends Fragment implements
     @Override
     public void onDialogTimeSet(int reference, int hourOfDay, int minute) {
         if(D) {Log.d(DEBUG_TAG,"Time picker finished. Setting alarm time.");}
-        String alarmTimeFormatted = StringUtil.getTimeFormatted(hourOfDay, minute);
-        textView_alarmTime.setText(alarmTimeFormatted);
+        setAlarmTimeView(hourOfDay, minute);
         AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
         alg.setHour(hourOfDay);
         alg.setMinute(minute);

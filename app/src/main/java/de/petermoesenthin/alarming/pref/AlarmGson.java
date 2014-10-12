@@ -20,6 +20,7 @@ public class AlarmGson {
     private int hour;
     private int minute;
     private boolean alarmSet = false;
+    private boolean repeatAlarm = false;
     private boolean vibrate = true;
 
     public AlarmGson(int hour, int minute){

@@ -31,6 +31,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -39,6 +43,7 @@ import java.util.Random;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.ui.SwipeToDismissTouchListener;
 import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
@@ -68,8 +73,9 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     public static final String DEBUG_TAG = "AlarmReceiverActivity";
     public static final boolean D = true;
 
-    private Button button_snooze;
-    private Button button_dismiss;
+    private TextView button_snooze;
+    private TextView button_dismiss;
+    private LinearLayout layout_buttons;
 
     //================================================================================
     // Lifecycle
@@ -84,12 +90,11 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        /*
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
-        */
+
         setContentView(R.layout.activity_alarm_reciver);
 
         int currentOrientation = getResources().getConfiguration().orientation;
@@ -99,7 +104,9 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
-        button_dismiss = (Button) findViewById(R.id.button_dismiss);
+        layout_buttons = (LinearLayout) findViewById(R.id.layout_dismiss_snooze);
+        button_dismiss = (TextView) findViewById(R.id.button_dismiss);
+        /*
         button_dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,15 +115,40 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
                 finishThis();
             }
         });
+        */
+        button_dismiss.setOnTouchListener(new SwipeToDismissTouchListener(button_dismiss, null,
+                new SwipeToDismissTouchListener.DismissCallbacks(){
+                    @Override
+                    public boolean canDismiss(Object token) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onDismiss(View view, Object token) {
+                        if (D) {Log.d(DEBUG_TAG, "Alarm has been dismissed.");}
+                        clearAlarmSet();
+                        button_snooze.setVisibility(View.GONE);
+                        layout_buttons.removeView(button_dismiss);
+                        finishThis();
+                    }
+                }
+                ));
         int snoozeTime  = PrefUtil.getInt(this, PrefKey.SNOOZE_TIME, 10);
         String text_snooze = getResources().getString(R.string.button_snooze);
         String formatted = String.format(text_snooze, snoozeTime);
-        button_snooze = (Button) findViewById(R.id.button_snooze);
+        if(snoozeTime == 1){
+            formatted += " " + getResources().getString(R.string.minute);
+        } else {
+            formatted += " " + getResources().getString(R.string.minutes);
+        }
+        button_snooze = (TextView) findViewById(R.id.button_snooze);
         button_snooze.setText(formatted);
         button_snooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (D) {Log.d(DEBUG_TAG, "Alarm has been snoozed. ya biscuit.");}
+                if (D) {
+                    Log.d(DEBUG_TAG, "Alarm has been snoozed. ya biscuit.");
+                }
                 setSnooze();
                 finishThis();
             }
@@ -226,6 +258,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         // Clear any pending notifications
         NotificationUtil.clearAlarmNotifcation(this);
         NotificationUtil.clearSnoozeNotification(this);
+        AlarmUtil.deactivateSnooze(this);
         // Unset alarm from preferences
         AlarmGson alg = PrefUtil.getAlarmGson(this);
         alg.setAlarmSet(false);

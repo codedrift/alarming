@@ -66,7 +66,8 @@ public class NotificationUtil {
                 PendingIntent.FLAG_UPDATE_CURRENT);
         //Build and show Notification
         AlarmGson alg = PrefUtil.getAlarmGson(context);
-        String alarmFormatted = StringUtil.getTimeFormatted(alg.getHour(), alg.getMinute());
+        String alarmFormatted = StringUtil.getTimeFormattedSystem(context, alg.getHour(),
+                alg.getMinute());
         NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_alarmclock_light)
                 .setOngoing(true)

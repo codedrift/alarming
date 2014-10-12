@@ -36,6 +36,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView_am_pm"
         android:textSize="12sp"
+        android:textStyle="bold"
+        android:paddingTop="15dp"
         android:text="@string/textView_am_pm"
         android:visibility="invisible"
         android:layout_alignTop="@id/textView_alarmTime"

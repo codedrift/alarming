@@ -41,7 +41,6 @@ android:layout_height="match_parent">
     android:layout_height="match_parent"
     android:divider="@android:color/transparent"
     android:dividerHeight="1dp"
-    android:paddingTop="15dp"
     android:background="@color/veryLightGray"
     android:orientation="vertical">
 

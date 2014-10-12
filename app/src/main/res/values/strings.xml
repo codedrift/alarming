@@ -54,8 +54,10 @@
     </string-array>
 
     <!-- .AlarmReceiverAcitivity -->
-    <string name="button_snooze">Snooze alarm for %1$s minute(s)</string>
-    <string name="button_dismiss">Dismiss</string>
+    <string name="button_snooze">Snooze alarm for %1$s</string>
+    <string name="minute">minute</string>
+    <string name="minutes">minutes</string>
+    <string name="button_dismiss">Swipe to dismiss</string>
 
     <!-- .AboutActivity -->
     <string name="activity_title_about">Settings</string>

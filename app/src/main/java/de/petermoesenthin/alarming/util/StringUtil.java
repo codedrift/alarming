@@ -42,7 +42,7 @@ public class StringUtil {
         return alarmTimeFormatted;
     }
 
-    public static String getSystemFormatTime(Context context, int hour, int minute){
+    public static String getTimeFormattedSystem(Context context, int hour, int minute){
         Calendar c = AlarmUtil.getNextAlarmTimeAbsolute(hour, minute);
         return android.text.format.DateFormat.getTimeFormat(context).format(c.getTime());
     }
