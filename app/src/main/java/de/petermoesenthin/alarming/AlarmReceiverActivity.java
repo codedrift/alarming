@@ -90,10 +90,12 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        /*
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
+        */
 
         setContentView(R.layout.activity_alarm_reciver);
 
@@ -197,6 +199,8 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
+        // Media volume
+        MediaUtil.resetSystemMediaVolume(this);
     }
 
     /**
@@ -205,13 +209,12 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     public void finishThis(){
         // Stop vibration
         stopVibration();
-        // Media volume
-        MediaUtil.resetSystemMediaVolume(this);
         // System
         reEnableKeyGuard();
         // Finish Activity
         if (D) {Log.d(DEBUG_TAG, "Finishing Activity.");}
         finish();
+        this.overridePendingTransition(android.R.anim.fade_out, android.R.anim.fade_out);
     }
 
     //================================================================================

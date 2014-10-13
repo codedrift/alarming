@@ -105,7 +105,6 @@ public class NotificationUtil {
                         context.getResources().getString(R.string.notification_cancelSnooze),
                         pIntent);
         getNotificationManager(context).notify(SNOOZE_NOTIFICATION_ID, notBuilder.build());
-
     }
 
     public static void clearAlarmNotifcation(Context context){
