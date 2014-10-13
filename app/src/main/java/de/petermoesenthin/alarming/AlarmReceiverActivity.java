@@ -30,11 +30,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -284,8 +281,8 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
             fileOK = FileUtil.fileIsOK(this, mDataSource);
             AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(mDataSource);
             if(alsg != null){
-                mStartMillis = alsg.getStartTimeMillis();
-                mEndMillis = alsg.getEndTimeMillis();
+                mStartMillis = alsg.getStartMillis();
+                mEndMillis = alsg.getEndMillis();
                 //loopAudio = alsg.isLooping();
             } else{
                 mStartMillis = 0;

@@ -215,6 +215,16 @@ public class FileUtil {
         });
     }
 
+    public static AlarmSoundGson buildBasicMetaFile(String path){
+        AlarmSoundGson alsg = new AlarmSoundGson();
+        String[] meta = MediaUtil.getBasicMetaData(path);
+        alsg.setMetaArtist(meta[0]);
+        alsg.setMetaTitle(meta[1]);
+        alsg.setLength(Integer.valueOf(meta[2]));
+        //TODO get hash for file (not path!)
+        return alsg;
+    }
+
     /**
      * Writes the sound configuration file based on
      * @param soundFilePath the path of the used sound file and

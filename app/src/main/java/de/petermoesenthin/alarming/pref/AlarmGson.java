@@ -17,18 +17,15 @@ package de.petermoesenthin.alarming.pref;
 
 public class AlarmGson {
 
-    private int hour;
-    private int minute;
+    private int hour = 0;
+    private int minute = 0;
     private boolean alarmSet = false;
     private boolean repeatAlarm = false;
     private boolean vibrate = true;
-    private String message;
-    private String color;
+    private String message = "";
+    private String color = "";
+    private int id = 0;
 
-    public AlarmGson(int hour, int minute){
-        this.hour = hour;
-        this.minute = minute;
-    }
     public AlarmGson(){
     }
 
@@ -86,5 +83,13 @@ public class AlarmGson {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

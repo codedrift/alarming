@@ -32,7 +32,6 @@ dependencies {
             'com.larswerkman:HoloColorPicker:1.4',
             'com.github.markushi:circlebutton:1.1',
             'com.pkmmte.view:circularimageview:1.1'
-
     )
     compile('de.psdev.licensesdialog:licensesdialog:1.6.0') {
         exclude module: 'support-v4'

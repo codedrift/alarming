@@ -19,10 +19,12 @@ package de.petermoesenthin.alarming.pref;
 public class AlarmSoundGson {
 
     private String path;
-    private int startTimeMillis;
-    private int endTimeMillis;
-    private int pathHash = 0;
-    private boolean looping = true;
+    private String metaTitle;
+    private String metaArtist;
+    private int startMillis = 0;
+    private int endMillis = 0;
+    private int length;
+    private int hash = 0;
 
     public String getPath() {
         return path;
@@ -32,37 +34,51 @@ public class AlarmSoundGson {
         this.path = path;
     }
 
-    public int getStartTimeMillis() {
-        return startTimeMillis;
+    public int getStartMillis() {
+        return startMillis;
     }
 
-    public void setStartTimeMillis(int startTimeMillis) {
-        this.startTimeMillis = startTimeMillis;
+    public void setStartMillis(int startMillis) {
+        this.startMillis = startMillis;
     }
 
-    public int getEndTimeMillis() {
-        return endTimeMillis;
+    public int getEndMillis() {
+        return endMillis;
     }
 
-    public void setEndTimeMillis(int endTimeMillis) {
-        this.endTimeMillis = endTimeMillis;
+    public void setEndMillis(int endMillis) {
+        this.endMillis = endMillis;
     }
 
-    public int getPathHash() {
-        return pathHash;
+    public int getHash() {
+        return hash;
     }
 
-    public void setPathHash(int pathHash) {
-        this.pathHash = pathHash;
+    public void setHash(int hash) {
+        this.hash = hash;
     }
 
-    public boolean isLooping() {
-        return looping;
+    public String getMetaTitle() {
+        return metaTitle;
     }
 
-    public void setLooping(boolean looping) {
-        this.looping = looping;
+    public void setMetaTitle(String metaTitle) {
+        this.metaTitle = metaTitle;
     }
 
+    public String getMetaArtist() {
+        return metaArtist;
+    }
 
+    public void setMetaArtist(String metaArtist) {
+        this.metaArtist = metaArtist;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
 }

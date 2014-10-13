@@ -22,7 +22,7 @@ public class PrefKey {
     // General
     //================================================================================
 
-    public static final String PREF_FILE_NAME = "AlarmingPrefs";
+    public static final String PREF_FILE_NAME = "alarming_prefs";
     public static final String APP_FIRST_START = "app_first_start";
     public static final String SHOW_ALARM_NOTIFICATION = "show_alarm_notification";
 
@@ -38,7 +38,7 @@ public class PrefKey {
     //================================================================================
 
     public static final String ALARM_SOUND_VOLUME = "alarm_sound_volume";
-    public static final String AUDIO_ORIGINAL_VOLUME = "audio_original_volume";
-    public static final String ALARM_SOUND_URIS_GSON = "alarm_sound_uris_gson";
+    public static final String AUDIO_ORIGINAL_VOLUME = "alarm_original_volume";
+    public static final String ALARM_SOUND_URIS_GSON = "alarm_sound_uris";
 
 }

@@ -302,6 +302,7 @@ public class SoundManagerFragment extends Fragment implements
                 String[] uris = PrefUtil.getAlarmSoundUris(fragmentContext);
                 if(uris != null){
                     mListItemCount = uris.length;
+                    //TODO load from preference
                     for (String uri : uris) {
                         String[] metaData = MediaUtil.getBasicMetaData(uri);
                         listItems.add(new AlarmSoundListItem(metaData[0], metaData[1]));

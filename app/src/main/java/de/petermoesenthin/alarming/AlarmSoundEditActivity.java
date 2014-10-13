@@ -34,7 +34,6 @@ import android.widget.Toast;
 import com.edmodo.rangebar.RangeBar;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 import de.petermoesenthin.alarming.util.FileUtil;
@@ -196,8 +195,8 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
             mStartMillis = 0;
             mEndMillis = mSoundMillis;
         } else {
-            mStartMillis = alsg.getStartTimeMillis();
-            mEndMillis = alsg.getEndTimeMillis();
+            mStartMillis = alsg.getStartMillis();
+            mEndMillis = alsg.getEndMillis();
         }
     }
 
@@ -207,10 +206,10 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
     private void saveConfig(){
         if (D) {Log.d(DEBUG_TAG, "Saving configuration.");}
         AlarmSoundGson alsg = new AlarmSoundGson();
-        alsg.setStartTimeMillis(mStartMillis);
-        alsg.setEndTimeMillis(mEndMillis);
+        alsg.setStartMillis(mStartMillis);
+        alsg.setEndMillis(mEndMillis);
         alsg.setPath(mSoundFilePath);
-        alsg.setPathHash(mSoundFilePath.hashCode());
+        alsg.setHash(mSoundFilePath.hashCode());
         FileUtil.writeSoundConfigurationFile(mSoundFilePath,alsg);
         Toast.makeText(this,R.string.toast_config_saved,Toast.LENGTH_SHORT).show();
     }

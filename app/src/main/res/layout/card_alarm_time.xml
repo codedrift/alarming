@@ -72,6 +72,7 @@
         android:text="@string/textView_alarmText"
         android:textStyle="bold"
         android:textSize="18sp"
+        android:clickable="true"
         android:textAllCaps="true"
         android:layout_below="@id/textView_alarmTime"
         />
@@ -84,37 +85,6 @@
         android:layout_below="@id/textView_alarmText"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_gravity="center"
-            android:background="@drawable/selector_basic"
-            android:id="@+id/layout_choose_color"
-            android:layout_alignParentEnd="true"
-            android:padding="4dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignBottom="@id/checkBox_repeat_alarm"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/textView_chooseColor"
-                android:textStyle="bold"
-                android:textAllCaps="true"
-                android:textSize="14sp"
-                />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/view_color_indicator"
-                android:background="@color/material_yellow"
-                android:clickable="true"
-                />
-
-        </LinearLayout>
 
         <CheckBox
             android:layout_width="wrap_content"
@@ -140,14 +110,39 @@
             android:layout_alignLeft="@id/checkBox_vibrate"
             android:text="@string/checkbox_repeat"/>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:background="@drawable/selector_basic"
+            android:id="@+id/layout_choose_color"
+            android:layout_alignParentEnd="true"
+            android:padding="4dp"
+            android:clickable="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/checkBox_repeat_alarm"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/textView_chooseColor"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textSize="14sp"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/view_color_indicator"
+                android:background="@color/material_yellow"
+                android:clickable="true"
+                />
+
+        </LinearLayout>
+
         </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/layout_alarm_quick_settings">
-
-    </RelativeLayout>
-
 
 </RelativeLayout>
