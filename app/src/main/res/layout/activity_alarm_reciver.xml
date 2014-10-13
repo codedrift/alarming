@@ -39,26 +39,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="48dp"
         android:orientation="vertical"
+        android:background="@color/veryLightGray"
         android:id="@+id/layout_dismiss_snooze"
         android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:background="@drawable/selector_basic"
-            android:text="@string/button_snooze"
-            android:id="@+id/button_snooze"
-             />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/custom_green_positive"
-            android:id="@+id/view_divider_small" />
 
         <TextView
             android:layout_width="match_parent"
@@ -71,11 +56,25 @@
             android:text="@string/button_dismiss"
             android:id="@+id/button_dismiss"
             />
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/custom_blue_negative"
-            android:id="@+id/view_divider_small_1" />
+            android:layout_height="1dp"
+            android:background="@color/lightGray"
+            android:id="@+id/view_divider_small" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:background="@drawable/selector_basic"
+            android:text="@string/button_snooze"
+            android:id="@+id/button_snooze"
+             />
+
 
         </LinearLayout>
 
