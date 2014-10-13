@@ -96,7 +96,6 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
         */
-
         setContentView(R.layout.activity_alarm_reciver);
 
         int currentOrientation = getResources().getConfiguration().orientation;
@@ -108,16 +107,6 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         }
         layout_buttons = (LinearLayout) findViewById(R.id.layout_dismiss_snooze);
         button_dismiss = (TextView) findViewById(R.id.button_dismiss);
-        /*
-        button_dismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (D) {Log.d(DEBUG_TAG, "Alarm has been dismissed.");}
-                clearAlarmSet();
-                finishThis();
-            }
-        });
-        */
         button_dismiss.setOnTouchListener(new SwipeToDismissTouchListener(button_dismiss, null,
                 new SwipeToDismissTouchListener.DismissCallbacks(){
                     @Override
@@ -184,6 +173,9 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
+        // Media volume
+        MediaUtil.resetSystemMediaVolume(this);
+
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -199,8 +191,6 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
-        // Media volume
-        MediaUtil.resetSystemMediaVolume(this);
     }
 
     /**
@@ -314,7 +304,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         if (D) {Log.d(DEBUG_TAG, "Starting media player.");}
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-        mMediaPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
+        //mMediaPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
         try {
             mMediaPlayer.setDataSource(mDataSource);
         } catch (IOException e) {

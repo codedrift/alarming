@@ -37,6 +37,8 @@
     <string name="checkbox_vibrate">Vibrate</string>
     <string name="toast_alarmTimeNotSet">Could not set Alarm! No time set.</string>
     <string name="textView_am_pm">-</string>
+    <string name="checkbox_repeat">Repeat</string>
+    <string name="textView_chooseColor">Choose color</string>
 
     <!-- fragments/SoundManagerFragment -->
     <string name="action_save_config">Save configuration</string>
@@ -110,5 +112,7 @@
         Set up all your songs and Alarming will pick one. Never be annoyed by your alarm sound
         again!
     </string>
+    <string name="textView_alarmText">Alarm text</string>
+
 
 </resources>

@@ -19,12 +19,14 @@
     android:layout_height="match_parent">
 
     <com.larswerkman.holocolorpicker.ColorPicker
-        android:id="@+id/picker"
+        android:id="@+id/colorDialog_picker"
         android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content"/>
 
     <com.larswerkman.holocolorpicker.SVBar
-        android:id="@+id/svbar"
+        android:id="@+id/colorDialog_svBar"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

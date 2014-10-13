@@ -16,7 +16,10 @@
 
 package de.petermoesenthin.alarming.fragments;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -27,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.timepicker.TimePickerBuilder;
@@ -197,13 +201,38 @@ public class SetAlarmFragment extends Fragment implements
 
     private void setCircleButtonActive(boolean isActive){
         if(isActive){
-            circleButton.setColor(getResources().getColor(R.color.yellow_main));
+            circleButton.setColor(getResources().getColor(R.color.material_yellow));
             circleButton.setImageResource(R.drawable.ic_action_alarmclock_light);
         } else {
             circleButton.setColor(getResources().getColor(R.color.veryLightGray));
             circleButton.setImageResource(R.drawable.ic_alarmclock_light_no_bells);
         }
+    }
 
+    private void showColorPickerDialog(){
+        AlertDialog.Builder builder;
+        AlertDialog alertDialog;
+        LayoutInflater inflater = (LayoutInflater) fragmentContext.getSystemService
+                (Activity.LAYOUT_INFLATER_SERVICE);
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.dialog_alarm_color,
+                null);
+        //Set dialog views
+        //...
+
+        builder = new AlertDialog.Builder(fragmentContext);
+        builder.setView(layout);
+        builder.setCancelable(true);
+        builder.setNegativeButton(R.string.dialog_button_cancel, null);
+        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Do work on OK
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(true);
+        alertDialog.show();
     }
 
     /**
@@ -213,7 +242,7 @@ public class SetAlarmFragment extends Fragment implements
         if(D) {Log.d(DEBUG_TAG,"Showing time picker dialog.");}
         TimePickerBuilder tpb = new TimePickerBuilder()
                 .setFragmentManager(getChildFragmentManager())
-                .setStyleResId(R.style.BetterPickersDialogFragment_Light)
+                .setStyleResId(R.style.BetterPicker_Alarming)
                 .setTargetFragment(SetAlarmFragment.this);
         tpb.show();
     }

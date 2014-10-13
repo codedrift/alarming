@@ -96,8 +96,8 @@
         custom:tickHeight="0dp"
         custom:tickCount="100"
         custom:barColor="@color/lightGray"
-        custom:connectingLineColor="@color/yellow_main"
-        custom:thumbColorNormal="@color/yellow_main"
+        custom:connectingLineColor="@color/material_yellow"
+        custom:thumbColorNormal="@color/material_yellow"
         custom:thumbColorPressed="@color/yellow_darker"
         />
 

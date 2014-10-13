@@ -18,30 +18,31 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:actionBarStyle">@style/AlarmingActionBar</item>
     </style>
 
+    <!-- Alarm receiver -->
     <style name="AlarmReceiverTheme" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen">
     </style>
 
-    <!-- ActionBar styles -->
+    <!-- ActionBar -->
     <style
-        name="MyActionBar"
+        name="AlarmingActionBar"
         parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">#FFBB33</item>
+        <item name="android:background">@color/material_yellow</item>
     </style>
 
 
-    <!-- Colors -->
-    <color name="white">#FFFFFF</color>
-    <color name="veryLightGray">#D9D9D9</color>
-    <color name="lightGray">#ffcdcdcd</color>
-    <color name="drawer_additional_button_text_color">#ff373737</color>
-    <color name="yellow_main">#ffc107</color>
-    <color name="yellow_darker">#ffebb007</color>
-    <color name="selector_background_pressed">#1A000000</color>
-    <color name="selector_background_focused">#77000000</color>
-    <color name="custom_green_positive">#cc259b24</color>
-    <color name="custom_blue_negative">#cc3f51b5</color>
-
+    <style name="BetterPicker_Alarming">
+        <item name="bpDialogBackground">@drawable/dialog_full_holo_light</item>
+        <item name="bpTitleColor">@color/dialog_text_color_holo_light</item>
+        <item name="bpTextColor">@color/dialog_text_color_holo_light</item>
+        <item name="bpDeleteIcon">@drawable/ic_backspace_light</item>
+        <item name="bpCheckIcon">@drawable/ic_check_light</item>
+        <item name="bpKeyBackground">@drawable/key_background_light</item>
+        <item name="bpButtonBackground">@drawable/selector_basic</item>
+        <item name="bpTitleDividerColor">@color/material_yellow</item>
+        <item name="bpDividerColor">@color/default_divider_color_light</item>
+        <item name="bpKeyboardIndicatorColor">@color/material_yellow</item>
+    </style>
 </resources>

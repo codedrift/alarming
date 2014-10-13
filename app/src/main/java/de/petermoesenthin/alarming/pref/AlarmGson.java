@@ -22,6 +22,8 @@ public class AlarmGson {
     private boolean alarmSet = false;
     private boolean repeatAlarm = false;
     private boolean vibrate = true;
+    private String message;
+    private String color;
 
     public AlarmGson(int hour, int minute){
         this.hour = hour;
@@ -62,4 +64,27 @@ public class AlarmGson {
         this.vibrate = vibrate;
     }
 
+    public boolean isRepeatAlarm() {
+        return repeatAlarm;
+    }
+
+    public void setRepeatAlarm(boolean repeatAlarm) {
+        this.repeatAlarm = repeatAlarm;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

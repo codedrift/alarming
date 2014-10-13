@@ -30,7 +30,7 @@
         android:layout_gravity="center_horizontal"
         android:id="@+id/circleProgressBar_SoundList"
         android:indeterminate="true"
-        app:cpb_color="@color/yellow_main"
+        app:cpb_color="@color/material_yellow"
         app:cpb_rotation_speed="1.0"
         app:cpb_sweep_speed="1.0"
         app:cpb_stroke_width="4dp"

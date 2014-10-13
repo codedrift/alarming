@@ -52,8 +52,10 @@ public class SettingsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        this.getActionBar().setHomeButtonEnabled(true);
-        this.getActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getActionBar() != null){
+            getActionBar().setHomeButtonEnabled(true);
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         setTitle(R.string.activity_title_settings);
         setUpUi();
     }
@@ -141,6 +143,7 @@ public class SettingsActivity extends Activity {
             }
         });
         alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(true);
         alertDialog.show();
     }
 
@@ -198,6 +201,7 @@ public class SettingsActivity extends Activity {
             }
         });
         alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(true);
         alertDialog.show();
     }
 
