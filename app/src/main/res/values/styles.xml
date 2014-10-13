@@ -38,9 +38,9 @@
         <item name="bpTitleColor">@color/dialog_text_color_holo_light</item>
         <item name="bpTextColor">@color/dialog_text_color_holo_light</item>
         <item name="bpDeleteIcon">@drawable/ic_backspace_light</item>
-        <item name="bpCheckIcon">@drawable/ic_check_light</item>
-        <item name="bpKeyBackground">@drawable/key_background_light</item>
-        <item name="bpButtonBackground">@drawable/selector_basic</item>
+        <item name="bpCheckIcon">@drawable/selector_basic_yellow</item>
+        <item name="bpKeyBackground">@drawable/selector_basic_yellow</item>
+        <item name="bpButtonBackground">@drawable/selector_basic_yellow</item>
         <item name="bpTitleDividerColor">@color/material_yellow</item>
         <item name="bpDividerColor">@color/default_divider_color_light</item>
         <item name="bpKeyboardIndicatorColor">@color/material_yellow</item>

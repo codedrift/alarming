@@ -39,6 +39,7 @@
     <string name="textView_am_pm">-</string>
     <string name="checkbox_repeat">Repeat</string>
     <string name="textView_chooseColor">Choose color</string>
+    <string name="textView_alarmText">Wake up!</string>
 
     <!-- fragments/SoundManagerFragment -->
     <string name="action_save_config">Save configuration</string>
@@ -112,7 +113,6 @@
         Set up all your songs and Alarming will pick one. Never be annoyed by your alarm sound
         again!
     </string>
-    <string name="textView_alarmText">Alarm text</string>
 
 
 </resources>

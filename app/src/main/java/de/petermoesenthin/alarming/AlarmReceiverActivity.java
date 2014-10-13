@@ -81,9 +81,10 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        if (D) {Log.d(DEBUG_TAG, "onCreate()");}
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -146,8 +147,8 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 
     @Override
     public void onAttachedToWindow() {
+        if (D) {Log.d(DEBUG_TAG, "onAttachedToWindow()");}
         disableKeyguard();
-        playAlarmSound();
         AlarmGson alg = PrefUtil.getAlarmGson(this);
         if(alg.vibrate()){
             startVibration();
@@ -157,11 +158,14 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     @Override
     public void onResume(){
         super.onResume();
+        if (D) {Log.d(DEBUG_TAG, "onResume()");}
+        playAlarmSound();
     }
 
     @Override
     public void onStop(){
         super.onStop();
+        if (D) {Log.d(DEBUG_TAG, "onStop()");}
         if(mPlayerPositionUpdateThread != null){
             mPlayerPositionUpdateThread.interrupt();
             mPlayerPositionUpdateThread = null;
@@ -175,7 +179,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -184,6 +188,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     @Override
     public void onPause(){
         super.onPause();
+        if (D) {Log.d(DEBUG_TAG, "onPause()");}
         if(mMediaPlayer != null){
             mMediaPlayer.release();
             mMediaPlayer = null;
@@ -212,6 +217,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
      * Disables the keyguard.
      */
     private void disableKeyguard(){
+        if (D) {Log.d(DEBUG_TAG, "Disabling Keyguard.");}
         mKeyGuardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         mKeyguardLock = mKeyGuardManager.newKeyguardLock("Alarming_Keyguard");
         if (mKeyGuardManager.inKeyguardRestrictedInputMode()){
@@ -220,6 +226,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     }
 
     private void reEnableKeyGuard(){
+        if (D) {Log.d(DEBUG_TAG, "Reenabling keyguard.");}
         if(mKeyguardLock != null){
             mKeyguardLock.reenableKeyguard();
         }

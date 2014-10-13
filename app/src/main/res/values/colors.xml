@@ -12,6 +12,8 @@
     <color name="yellow_darker">#ffebb007</color>
     <color name="selector_background_pressed">#1A000000</color>
     <color name="selector_background_focused">#77000000</color>
+    <color name="selector_background_pressed_yellow">#3cffc107</color>
+    <color name="selector_background_focused_yellow">#95ffc107</color>
     <color name="custom_green_positive">#cc259b24</color>
     <color name="custom_blue_negative">#cc3f51b5</color>
 </resources>

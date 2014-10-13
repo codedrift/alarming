@@ -64,63 +64,74 @@
         android:layout_alignBottom="@+id/textView_alarmTime"
         />
 
-    <TextView
-        android:layout_width="96dp"
-        android:layout_height="24dp"
-        android:background="@drawable/selector_basic"
-        android:id="@+id/textView_alarmText"
-        android:text="@string/textView_alarmText"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:clickable="true"
-        android:textAllCaps="true"
-        android:layout_below="@id/textView_alarmTime"
-        />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/layout_alarm_quick_settings"
         android:padding="8dp"
-        android:layout_below="@id/textView_alarmText"
+        android:layout_below="@id/textView_alarmTime"
         android:orientation="horizontal">
 
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_checkboxes"
+    android:padding="2dp"
+    android:orientation="vertical">
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/checkBox_vibrate"
-            android:textStyle="bold"
-            android:padding="2dp"
-            android:textSize="14sp"
-            android:textAllCaps="true"
-            android:textColor="@color/material_black"
-            android:text="@string/checkbox_vibrate"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_vibrate"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textAllCaps="true"
+        android:textColor="@color/material_black"
+        android:text="@string/checkbox_vibrate"/>
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/checkBox_repeat_alarm"
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_repeat_alarm"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textAllCaps="true"
+        android:textColor="@color/material_black"
+        android:text="@string/checkbox_repeat"/>
+
+    </LinearLayout>
+
+        <TextView
+            android:layout_width="96dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_basic"
+            android:id="@+id/textView_alarmText"
+            android:text="@string/textView_alarmText"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:gravity="center"
             android:textStyle="bold"
-            android:textSize="14sp"
-            android:padding="2dp"
+            android:textSize="18sp"
+            android:clickable="true"
+            android:padding="5dp"
             android:textAllCaps="true"
-            android:textColor="@color/material_black"
-            android:layout_below="@id/checkBox_vibrate"
-            android:layout_alignLeft="@id/checkBox_vibrate"
-            android:text="@string/checkbox_repeat"/>
+            android:layout_toRightOf="@+id/layout_checkboxes"
+            android:layout_toEndOf="@+id/layout_checkboxes"
+            android:layout_alignBottom="@+id/layout_checkboxes"
+            android:layout_toLeftOf="@+id/layout_choose_color"
+            android:layout_toStartOf="@+id/layout_choose_color"
+            android:layout_alignTop="@+id/layout_choose_color"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/selector_basic"
             android:id="@+id/layout_choose_color"
-            android:layout_alignParentEnd="true"
-            android:padding="4dp"
+            android:padding="2dp"
             android:clickable="true"
             android:layout_alignParentRight="true"
-            android:layout_alignBottom="@id/checkBox_repeat_alarm"
+            android:layout_alignParentEnd="true"
             android:orientation="vertical">
 
             <TextView
@@ -135,7 +146,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="8dp"
                 android:id="@+id/view_color_indicator"
                 android:background="@color/material_yellow"
                 android:clickable="true"
