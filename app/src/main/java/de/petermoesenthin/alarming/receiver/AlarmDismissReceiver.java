@@ -37,7 +37,7 @@ public class AlarmDismissReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(NotificationUtil.ACTION_DISMISS_ALARM)) {
-            if(D) {Log.d(DEBUG_TAG, "Received intent to dismiss snooze");}
+            if(D) {Log.d(DEBUG_TAG, "Received intent to dismiss alarm");}
             NotificationUtil.clearAlarmNotifcation(context);
             AlarmUtil.deactivateAlarm(context);
             AlarmGson alg = PrefUtil.getAlarmGson(context);

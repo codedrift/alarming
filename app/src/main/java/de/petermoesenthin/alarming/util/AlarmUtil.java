@@ -42,7 +42,8 @@ public class AlarmUtil {
             if(D) {Log.d(DEBUG_TAG, "Alarm was not set. Cannot set alarm in the past.");}
         }else {
             setRTCWakeup(context, calendar, ALARM_ID);
-            NotificationUtil.showAlarmSetNotification(context);
+            NotificationUtil.showAlarmSetNotification(context, calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE));
         }
     }
 

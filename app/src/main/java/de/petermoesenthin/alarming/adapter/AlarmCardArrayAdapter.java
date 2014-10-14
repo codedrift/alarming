@@ -30,30 +30,132 @@ import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 
 public class AlarmCardArrayAdapter extends CardArrayAdapter {
 
-    public AlarmCardArrayAdapter(Context context, List<Card> cards) {
+    private ViewHolder mViewHolder;
+    private List<Card> mCards;
+    private AdapterCallacks mAdapterCallacks;
+
+
+    public interface AdapterCallacks{
+        ViewHolder onCreateViews(ViewHolder viewHolder, int position);
+        void onAlarmTimeClick(ViewHolder viewHolder, int position);
+        void onAlarmSetClick(ViewHolder viewHolder, int position);
+        void onVibrateClick(ViewHolder viewHolder, int position);
+        void onRepeatAlarmClick(ViewHolder viewHolder, int position);
+        void onAlarmTextClick(ViewHolder viewHolder, int position);
+        void onChooseColorClick(ViewHolder viewHolder, int position);
+    }
+
+    public AlarmCardArrayAdapter(Context context, List<Card> cards,
+                                 AdapterCallacks adapterCallacks) {
         super(context, cards);
+        this.mAdapterCallacks = adapterCallacks;
+        this.mCards = cards;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public int getCount() {
+        return mCards.size();
+    }
+
+    @Override
+    public Card getItem(int position) {
+        return mCards.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View v = super.getView(position, convertView, parent);
-        TextView alarmTime = (TextView) v.findViewById(R.id.textView_alarmTime);
-        TextView am_pm = (TextView) v.findViewById(R.id.textView_am_pm);
-        CircleButton alarmSet = (CircleButton) v.findViewById(R.id.button_alarm_set);
-        CheckBox vibrate = (CheckBox) v.findViewById(R.id.checkBox_vibrate);
-        CheckBox repeatAlarm = (CheckBox) v.findViewById(R.id.checkBox_repeat_alarm);
-        TextView alarmText = (TextView) v.findViewById(R.id.textView_alarmText);
-        LinearLayout chooseColor = (LinearLayout) v.findViewById(R.id.layout_choose_color);
+        if(convertView == null){
+            mViewHolder = new ViewHolder();
+            mViewHolder.alarmTime = (TextView) v.findViewById(R.id.textView_alarmTime);
+            mViewHolder.am_pm = (TextView) v.findViewById(R.id.textView_am_pm);
+            mViewHolder.alarmSet = (CircleButton) v.findViewById(R.id.button_alarm_set);
+            mViewHolder.vibrate = (CheckBox) v.findViewById(R.id.checkBox_vibrate);
+            mViewHolder.repeatAlarm = (CheckBox) v.findViewById(R.id.checkBox_repeat_alarm);
+            mViewHolder.alarmText = (TextView) v.findViewById(R.id.textView_alarmText);
+            mViewHolder.chooseColor = (LinearLayout) v.findViewById(R.id.layout_choose_color);
+        } else {
+            mViewHolder = (ViewHolder) convertView.getTag();
+        }
+        setOnClickListeners(position, mViewHolder);
+
+        if(mAdapterCallacks != null){
+            mAdapterCallacks.onCreateViews(mViewHolder, position);
+        }
+
+        v.setTag(mViewHolder);
         return v;
     }
 
-    private class ViewHolder {
-        TextView alarm_time;
-        TextView am_pm;
-        CircleButton alarmSet;
-        CheckBox vibrate;
-        CheckBox repeatAlarm;
-        TextView alarmText;
-        LinearLayout chooseColor;
+    private void setOnClickListeners(final int position, final ViewHolder viewHolder){
+        mViewHolder.alarmTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mAdapterCallacks != null){
+                    mAdapterCallacks.onAlarmTimeClick(viewHolder, position);
+                }
+            }
+        });
+
+        mViewHolder.alarmSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mAdapterCallacks != null){
+                    mAdapterCallacks.onAlarmSetClick(viewHolder, position);
+                }
+            }
+        });
+
+        mViewHolder.vibrate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mAdapterCallacks != null){
+                    mAdapterCallacks.onVibrateClick(viewHolder, position);
+                }
+            }
+        });
+
+        mViewHolder.repeatAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mAdapterCallacks != null){
+                    mAdapterCallacks.onRepeatAlarmClick(viewHolder, position);
+                }
+            }
+        });
+
+        mViewHolder.alarmText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mAdapterCallacks != null){
+                    mAdapterCallacks.onAlarmTextClick(viewHolder, position);
+                }
+            }
+        });
+
+        mViewHolder.chooseColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mAdapterCallacks != null){
+                    mAdapterCallacks.onChooseColorClick(viewHolder, position);
+                }
+            }
+        });
+    }
+
+    public class ViewHolder {
+        public TextView alarmTime;
+        public TextView am_pm;
+        public CircleButton alarmSet;
+        public CheckBox vibrate;
+        public CheckBox repeatAlarm;
+        public TextView alarmText;
+        public LinearLayout chooseColor;
     }
 }

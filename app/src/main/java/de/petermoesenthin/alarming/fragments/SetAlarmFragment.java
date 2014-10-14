@@ -20,20 +20,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -42,23 +35,20 @@ import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import at.markushi.ui.CircleButton;
-import de.petermoesenthin.alarming.AlarmReceiverActivity;
 import de.petermoesenthin.alarming.R;
+import de.petermoesenthin.alarming.adapter.AlarmCardArrayAdapter;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.internal.CardArrayMultiChoiceAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
-import it.gmariotti.cardslib.library.view.CardView;
 
 public class SetAlarmFragment extends Fragment implements
-        TimePickerDialogFragment.TimePickerDialogHandler,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     //================================================================================
@@ -69,15 +59,9 @@ public class SetAlarmFragment extends Fragment implements
     private static final boolean D = true;
 
     private Context fragmentContext;
-    CardListView mCardListView;
-    /*
-    private TextView textView_alarmTime;
-    private TextView textView_am_pm;
-    private CircleButton circleButton;
-    private CheckBox checkBox_vibrate;
-    */
-
-
+    private CardListView mCardListView;
+    private AlarmCardArrayAdapter mAlarmCardArrayAdapter;
+    private List<AlarmGson> mAlarms = new ArrayList<AlarmGson>();
 
     //================================================================================
     // Lifecycle
@@ -88,156 +72,182 @@ public class SetAlarmFragment extends Fragment implements
                              Bundle savedInstanceState) {
         fragmentContext = getActivity();
         View rootView = inflater.inflate(R.layout.fragment_set_alarm, container, false);
-        // Card view
-        Card card = new Card(fragmentContext, R.layout.card_alarm_time);
-        //CardView cardView = (CardView) rootView.findViewById(R.id.alarmCard);
-        //cardView.setCard(card);
-
-        //ListView
-        ArrayList<Card> cards = new ArrayList<Card>();
-        cards.add(card);
-        cards.add(card);
         mCardListView = (CardListView) rootView.findViewById(R.id.cardListView_alarm);
-        mCardListView.setAdapter(new CardArrayAdapter(fragmentContext, cards));
-        mCardListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(D) {Log.d(DEBUG_TAG,"Received click." + view.toString() + " " + position + " "
-                + id);}
-            }
-        });
-        /*
-        textView_alarmTime = (TextView) card.getCardView().findViewById(R.id.textView_alarmTime);
-        textView_alarmTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTimePicker();
-            }
-        });
-        textView_am_pm = (TextView) card.getCardView().findViewById(R.id.textView_am_pm);
-
-        circleButton = (CircleButton) card.getCardView().findViewById(R.id.button_alarm_set);
-        circleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
-                boolean alarmSet = alg.isAlarmSet();
-                if(alarmSet){
-                    deactivateAlarm();
-                } else {
-                    activateAlarm();
-                }
-
-            }
-        });
-
-        checkBox_vibrate = (CheckBox) card.getCardView().findViewById(R.id.checkBox_vibrate);
-        checkBox_vibrate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
-                boolean vibrate = alg.vibrate();
-                alg.setVibrate(!vibrate);
-                checkBox_vibrate.setChecked(!vibrate);
-                PrefUtil.setAlarmGson(fragmentContext, alg);
-            }
-        });
-
-
-        Button test = (Button) rootView.findViewById(R.id.buttonTest);
-        test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), AlarmReceiverActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
-            }
-        });
-        */
-
-        PrefUtil.getApplicationPrefs(fragmentContext)
-                .registerOnSharedPreferenceChangeListener(this);
+        setUpListview();
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadAlarmState();
+        PrefUtil.getApplicationPrefs(fragmentContext)
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        PrefUtil.getApplicationPrefs(fragmentContext)
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        PrefUtil.getApplicationPrefs(fragmentContext)
-                .unregisterOnSharedPreferenceChangeListener(this);
+
     }
 
     //================================================================================
     // Methods
     //================================================================================
 
-    /**
-     * Update the alarm state view and preference
-     */
-    private void loadAlarmState(){
-        if(D) {Log.d(DEBUG_TAG,"Updating alarm state from preference.");}
-        AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
-        if(alg != null){
-            if(D) {Log.d(DEBUG_TAG,"Alarm state found. Preparing views.");}
-            setAlarmTimeView(alg.getHour(), alg.getMinute());
-            setCircleButtonActive(alg.isAlarmSet());
-            //checkBox_vibrate.setChecked(alg.vibrate());
-        } else {
-            if(D) {Log.d(DEBUG_TAG,"No alarm state found.");}
+
+    private void setUpListview(){
+        Card card = new Card(fragmentContext,R.layout.card_alarm_time);
+        List<Card> cards = new ArrayList<Card>();
+        mAlarms = PrefUtil.getAlarms(fragmentContext);
+        if(mAlarms.isEmpty()){
+            mAlarms.add(new AlarmGson());
         }
+        for(AlarmGson ignored : mAlarms){
+            cards.add(card);
+        }
+        createlistViewAdapter(cards, mAlarms);
+        mCardListView.setAdapter(mAlarmCardArrayAdapter);
     }
 
-    private void setAlarmTimeView(int hour, int minute){
-        String alarmFormatted = StringUtil.getTimeFormattedSystem(fragmentContext, hour,
-                minute);
-        String[] timeSplit = alarmFormatted.split(" ");
-        //textView_am_pm.setVisibility(View.INVISIBLE);
-        //textView_alarmTime.setText(timeSplit[0]);
-        if(timeSplit.length > 1){
-            //textView_am_pm.setText(timeSplit[1]);
-            //textView_am_pm.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void activateAlarm(){
-        AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
+    private void activateAlarm(int position){
+        AlarmGson alg = mAlarms.get(position);
         alg.setAlarmSet(true);
-        PrefUtil.setAlarmGson(fragmentContext, alg);
         Calendar calendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
         AlarmUtil.setAlarm(fragmentContext, calendarSet);
-        setCircleButtonActive(true);
+        PrefUtil.setAlarms(fragmentContext, mAlarms);
     }
 
-    private void deactivateAlarm(){
-        AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
+    private void deactivateAlarm(int position){
+        AlarmGson alg = mAlarms.get(position);
         alg.setAlarmSet(false);
-        PrefUtil.setAlarmGson(fragmentContext, alg);
         AlarmUtil.deactivateAlarm(fragmentContext);
-        setCircleButtonActive(false);
+        PrefUtil.setAlarms(fragmentContext, mAlarms);
+    }
+
+    public void setAlarmTime(int position, int hourOfDay, int minute) {
+        if(D) {Log.d(DEBUG_TAG,"Time picker finished. Setting alarm time at " + position);}
+        AlarmGson alg = mAlarms.get(position);
+        alg.setHour(hourOfDay);
+        alg.setMinute(minute);
+        activateAlarm(position);
+        PrefUtil.setAlarms(fragmentContext, mAlarms);
     }
 
     //================================================================================
     // UI
     //================================================================================
 
-    private void setCircleButtonActive(boolean isActive){
-        if(isActive){
-            //circleButton.setColor(getResources().getColor(R.color.material_yellow));
-            //circleButton.setImageResource(R.drawable.ic_action_alarmclock_light);
-        } else {
-            //circleButton.setColor(getResources().getColor(R.color.veryLightGray));
-            //circleButton.setImageResource(R.drawable.ic_alarmclock_light_no_bells);
+    private void createlistViewAdapter(List<Card> cards, final List<AlarmGson> alarms){
+        mAlarmCardArrayAdapter = new AlarmCardArrayAdapter
+                (fragmentContext, cards, new AlarmCardArrayAdapter.AdapterCallacks() {
+
+                    @Override
+                    public AlarmCardArrayAdapter.ViewHolder onCreateViews(
+                            AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
+                        if (D) {Log.d(DEBUG_TAG, "onCreateViews at " + position);}
+                        AlarmGson alarm = mAlarms.get(position);
+
+                        setAlarmTimeView(viewHolder.alarmTime, viewHolder.am_pm, alarm.getHour(),
+                                alarm.getMinute());
+                        setCircleButtonActive(viewHolder.alarmSet, alarm.isAlarmSet());
+                        viewHolder.vibrate.setChecked(alarm.doesVibrate());
+                        viewHolder.repeatAlarm.setChecked(alarm.doesRepeat());
+                        viewHolder.alarmText.setText(alarm.getMessage());
+                        //mViewHolder.chooseColor
+
+                        return viewHolder;
+                    }
+
+                    @Override
+                    public void onAlarmTimeClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
+                                                 int position) {
+                        if (D) {Log.d(DEBUG_TAG, "AlarmTimeClick  at " + position);}
+                        showTimePicker(position, viewHolder);
+                    }
+
+                    @Override
+                    public void onAlarmSetClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
+                                                int position) {
+                        if (D) {Log.d(DEBUG_TAG, "AlarmSetClick at " + position);}
+                        AlarmGson alg = alarms.get(position);
+                        boolean alarmSet = alg.isAlarmSet();
+                        if(alarmSet){
+                            deactivateAlarm(position);
+                            setCircleButtonActive(viewHolder.alarmSet, false);
+                        } else {
+                            activateAlarm(position);
+                            setCircleButtonActive(viewHolder.alarmSet, true);
+                        }
+                    }
+
+                    @Override
+                    public void onVibrateClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
+                                               int position) {
+                        if (D) {Log.d(DEBUG_TAG, "VibrateClick at " + position);}
+                        AlarmGson alg = mAlarms.get(position);
+                        boolean doesVibrate = alg.doesVibrate();
+                        alg.setVibrate(!doesVibrate);
+                        viewHolder.vibrate.setChecked(!doesVibrate);
+                        PrefUtil.setAlarms(fragmentContext, mAlarms);
+                    }
+
+                    @Override
+                    public void onRepeatAlarmClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
+                                                   int position) {
+                        if (D) {Log.d(DEBUG_TAG, "RepeatAlarmClick at " + position);}
+                        AlarmGson alg = mAlarms.get(position);
+                        boolean doesRepeat = alg.doesRepeat();
+                        alg.setVibrate(!doesRepeat);
+                        viewHolder.repeatAlarm.setChecked(!doesRepeat);
+                        PrefUtil.setAlarms(fragmentContext, mAlarms);
+                    }
+
+                    @Override
+                    public void onAlarmTextClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
+                                                 int position) {
+                        if (D) {Log.d(DEBUG_TAG, "AlarmTextClick at " + position);}
+                    }
+
+                    @Override
+                    public void onChooseColorClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
+                                                   int position) {
+                        if (D) {Log.d(DEBUG_TAG, "ChooseColorClick at " + position);}
+                        showColorPickerDialog(position);
+                    }
+                }
+                );
+    }
+
+    private void setAlarmTimeView(TextView alarmTime, TextView am_pm, int hour, int minute){
+        String alarmFormatted = StringUtil.getTimeFormattedSystem(fragmentContext, hour,
+                minute);
+        String[] timeSplit = alarmFormatted.split(" ");
+        am_pm.setVisibility(View.INVISIBLE);
+        alarmTime.setText(timeSplit[0]);
+        if(timeSplit.length > 1){
+            am_pm.setText(timeSplit[1]);
+            am_pm.setVisibility(View.VISIBLE);
         }
     }
 
-    private void showColorPickerDialog(){
+    private void setCircleButtonActive(CircleButton circleButton, boolean isActive){
+        if(isActive){
+            circleButton.setColor(getResources().getColor(R.color.material_yellow));
+            circleButton.setImageResource(R.drawable.ic_action_alarmclock_light);
+        } else {
+            circleButton.setColor(getResources().getColor(R.color.veryLightGray));
+            circleButton.setImageResource(R.drawable.ic_alarmclock_light_no_bells);
+        }
+    }
+
+    private void showColorPickerDialog(int position){
         AlertDialog.Builder builder;
         AlertDialog alertDialog;
         LayoutInflater inflater = (LayoutInflater) fragmentContext.getSystemService
@@ -266,13 +276,25 @@ public class SetAlarmFragment extends Fragment implements
     /**
      * Show a timepicker to set the alarm time
      */
-    private void showTimePicker() {
+    private void showTimePicker(int position, final AlarmCardArrayAdapter.ViewHolder viewHolder) {
         if(D) {Log.d(DEBUG_TAG,"Showing time picker dialog.");}
         TimePickerBuilder tpb = new TimePickerBuilder()
                 .setFragmentManager(getChildFragmentManager())
                 .setStyleResId(R.style.BetterPicker_Alarming)
-                .setTargetFragment(SetAlarmFragment.this);
+                .setReference(position)
+                .addTimePickerDialogHandler(new DialogTimeHandler() {
+                    @Override
+                    public void onDialogTimeSet(int reference, int hourOfDay, int minute) {
+                        setAlarmTime(reference, hourOfDay, minute);
+                        setAlarmTimeView(viewHolder.alarmTime, viewHolder.am_pm, hourOfDay, minute);
+                    }
+                });
         tpb.show();
+    }
+
+    private interface DialogTimeHandler extends TimePickerDialogFragment.TimePickerDialogHandler {
+        @Override
+        public void onDialogTimeSet(int reference, int hourOfDay, int minute);
     }
 
     //================================================================================
@@ -280,20 +302,9 @@ public class SetAlarmFragment extends Fragment implements
     //================================================================================
 
     @Override
-    public void onDialogTimeSet(int reference, int hourOfDay, int minute) {
-        if(D) {Log.d(DEBUG_TAG,"Time picker finished. Setting alarm time.");}
-        setAlarmTimeView(hourOfDay, minute);
-        AlarmGson alg = PrefUtil.getAlarmGson(fragmentContext);
-        alg.setHour(hourOfDay);
-        alg.setMinute(minute);
-        PrefUtil.setAlarmGson(fragmentContext, alg);
-        activateAlarm();
-    }
-
-    @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(PrefKey.ALARM_GSON)){
-            loadAlarmState();
+        if(key.equals(PrefKey.ALARMS)){
+            if(D) {Log.d(DEBUG_TAG,"Preferences have changed");}
         }
     }
 }

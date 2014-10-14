@@ -37,6 +37,7 @@ import java.util.List;
 import de.petermoesenthin.alarming.adapter.DrawerItemArrayAdapter;
 import de.petermoesenthin.alarming.fragments.SetAlarmFragment;
 import de.petermoesenthin.alarming.fragments.SoundManagerFragment;
+import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.ui.DrawerItem;
 import de.petermoesenthin.alarming.util.PrefUtil;

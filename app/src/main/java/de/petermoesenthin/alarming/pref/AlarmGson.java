@@ -53,7 +53,7 @@ public class AlarmGson {
         this.alarmSet = alarmSet;
     }
 
-    public boolean vibrate() {
+    public boolean doesVibrate() {
         return vibrate;
     }
 
@@ -61,11 +61,11 @@ public class AlarmGson {
         this.vibrate = vibrate;
     }
 
-    public boolean isRepeatAlarm() {
+    public boolean doesRepeat() {
         return repeatAlarm;
     }
 
-    public void setRepeatAlarm(boolean repeatAlarm) {
+    public void setRepeat(boolean repeatAlarm) {
         this.repeatAlarm = repeatAlarm;
     }
 

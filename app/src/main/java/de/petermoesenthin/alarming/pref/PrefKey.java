@@ -31,6 +31,7 @@ public class PrefKey {
     //================================================================================
 
     public static final String ALARM_GSON = "alarm_gson";
+    public static final String ALARMS = "alarms";
     public static final String SNOOZE_TIME = "snooze_time";
 
     //================================================================================

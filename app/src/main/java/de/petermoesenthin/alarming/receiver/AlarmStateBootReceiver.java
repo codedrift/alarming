@@ -41,7 +41,9 @@ public class AlarmStateBootReceiver extends BroadcastReceiver {
                     Calendar calendar = AlarmUtil
                             .getNextAlarmTimeAbsolute(alg.getHour(),alg.getMinute());
                     AlarmUtil.setAlarm(context,calendar);
-                    NotificationUtil.showAlarmSetNotification(context);
+                    NotificationUtil.showAlarmSetNotification(context,
+                            calendar.get(Calendar.HOUR_OF_DAY),
+                            calendar.get(Calendar.MINUTE));
                 }
             }
         }

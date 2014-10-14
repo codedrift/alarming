@@ -21,8 +21,11 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
@@ -159,6 +162,23 @@ public class PrefUtil {
             alg = new AlarmGson();
         }
         return alg;
+    }
+
+    public static List<AlarmGson> getAlarms(Context context){
+        Gson gson = new Gson();
+        String js = getString(context, PrefKey.ALARMS, null);
+        List<AlarmGson> alarms = gson.fromJson(js, new TypeToken<ArrayList<AlarmGson>>(){}.getType
+                ());
+        if(alarms == null){
+            alarms = new ArrayList<AlarmGson>();
+        }
+        return alarms;
+    }
+
+    public static void setAlarms(Context context, List<AlarmGson> alarms){
+        Gson gson = new Gson();
+        String js = gson.toJson(alarms);
+        PrefUtil.putString(context, PrefKey.ALARMS, js);
     }
 
 }

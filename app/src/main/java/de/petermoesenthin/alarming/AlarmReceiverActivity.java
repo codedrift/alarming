@@ -150,7 +150,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         if (D) {Log.d(DEBUG_TAG, "onAttachedToWindow()");}
         disableKeyguard();
         AlarmGson alg = PrefUtil.getAlarmGson(this);
-        if(alg.vibrate()){
+        if(alg.doesVibrate()){
             startVibration();
         }
     }

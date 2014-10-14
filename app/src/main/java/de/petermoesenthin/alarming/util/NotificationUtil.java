@@ -50,7 +50,7 @@ public class NotificationUtil {
     /**
      * Shows a persistent notification indicating the alarm time if is set.
      */
-    public static void showAlarmSetNotification(Context context){
+    public static void showAlarmSetNotification(Context context, int hour, int minute){
         //Early out if a notification is not wanted
         boolean showNotification = PrefUtil.getBoolean(context,
                 PrefKey.SHOW_ALARM_NOTIFICATION, true);
@@ -65,9 +65,7 @@ public class NotificationUtil {
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         //Build and show Notification
-        AlarmGson alg = PrefUtil.getAlarmGson(context);
-        String alarmFormatted = StringUtil.getTimeFormattedSystem(context, alg.getHour(),
-                alg.getMinute());
+        String alarmFormatted = StringUtil.getTimeFormattedSystem(context, hour, minute);
         NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_alarmclock_light)
                 .setOngoing(true)
