@@ -25,9 +25,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -36,6 +40,7 @@ import android.widget.TextView;
 import com.doomonafireball.betterpickers.timepicker.TimePickerBuilder;
 import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import at.markushi.ui.CircleButton;
@@ -47,6 +52,9 @@ import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
 import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import it.gmariotti.cardslib.library.internal.CardArrayMultiChoiceAdapter;
+import it.gmariotti.cardslib.library.view.CardListView;
 import it.gmariotti.cardslib.library.view.CardView;
 
 public class SetAlarmFragment extends Fragment implements
@@ -61,11 +69,15 @@ public class SetAlarmFragment extends Fragment implements
     private static final boolean D = true;
 
     private Context fragmentContext;
-
+    CardListView mCardListView;
+    /*
     private TextView textView_alarmTime;
     private TextView textView_am_pm;
     private CircleButton circleButton;
     private CheckBox checkBox_vibrate;
+    */
+
+
 
     //================================================================================
     // Lifecycle
@@ -75,21 +87,37 @@ public class SetAlarmFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragmentContext = getActivity();
-        View rootView = inflater.inflate(R.layout.fragment_setalarm, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_set_alarm, container, false);
         // Card view
         Card card = new Card(fragmentContext, R.layout.card_alarm_time);
-        CardView cardView = (CardView) rootView.findViewById(R.id.alarmCard);
-        cardView.setCard(card);
-        textView_alarmTime = (TextView) cardView.findViewById(R.id.textView_alarmTime);
+        //CardView cardView = (CardView) rootView.findViewById(R.id.alarmCard);
+        //cardView.setCard(card);
+
+        //ListView
+        ArrayList<Card> cards = new ArrayList<Card>();
+        cards.add(card);
+        cards.add(card);
+        mCardListView = (CardListView) rootView.findViewById(R.id.cardListView_alarm);
+        mCardListView.setAdapter(new CardArrayAdapter(fragmentContext, cards));
+        mCardListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(D) {Log.d(DEBUG_TAG,"Received click." + view.toString() + " " + position + " "
+                + id);}
+            }
+        });
+        /*
+        textView_alarmTime = (TextView) card.getCardView().findViewById(R.id.textView_alarmTime);
         textView_alarmTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTimePicker();
             }
         });
-        textView_am_pm = (TextView) cardView.findViewById(R.id.textView_am_pm);
+        textView_am_pm = (TextView) card.getCardView().findViewById(R.id.textView_am_pm);
 
-        circleButton = (CircleButton) cardView.findViewById(R.id.button_alarm_set);
+        circleButton = (CircleButton) card.getCardView().findViewById(R.id.button_alarm_set);
         circleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,7 +132,7 @@ public class SetAlarmFragment extends Fragment implements
             }
         });
 
-        checkBox_vibrate = (CheckBox) cardView.findViewById(R.id.checkBox_vibrate);
+        checkBox_vibrate = (CheckBox) card.getCardView().findViewById(R.id.checkBox_vibrate);
         checkBox_vibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,7 +154,7 @@ public class SetAlarmFragment extends Fragment implements
                 startActivity(i);
             }
         });
-
+        */
 
         PrefUtil.getApplicationPrefs(fragmentContext)
                 .registerOnSharedPreferenceChangeListener(this);
@@ -160,7 +188,7 @@ public class SetAlarmFragment extends Fragment implements
             if(D) {Log.d(DEBUG_TAG,"Alarm state found. Preparing views.");}
             setAlarmTimeView(alg.getHour(), alg.getMinute());
             setCircleButtonActive(alg.isAlarmSet());
-            checkBox_vibrate.setChecked(alg.vibrate());
+            //checkBox_vibrate.setChecked(alg.vibrate());
         } else {
             if(D) {Log.d(DEBUG_TAG,"No alarm state found.");}
         }
@@ -170,11 +198,11 @@ public class SetAlarmFragment extends Fragment implements
         String alarmFormatted = StringUtil.getTimeFormattedSystem(fragmentContext, hour,
                 minute);
         String[] timeSplit = alarmFormatted.split(" ");
-        textView_am_pm.setVisibility(View.INVISIBLE);
-        textView_alarmTime.setText(timeSplit[0]);
+        //textView_am_pm.setVisibility(View.INVISIBLE);
+        //textView_alarmTime.setText(timeSplit[0]);
         if(timeSplit.length > 1){
-            textView_am_pm.setText(timeSplit[1]);
-            textView_am_pm.setVisibility(View.VISIBLE);
+            //textView_am_pm.setText(timeSplit[1]);
+            //textView_am_pm.setVisibility(View.VISIBLE);
         }
     }
 
@@ -201,11 +229,11 @@ public class SetAlarmFragment extends Fragment implements
 
     private void setCircleButtonActive(boolean isActive){
         if(isActive){
-            circleButton.setColor(getResources().getColor(R.color.material_yellow));
-            circleButton.setImageResource(R.drawable.ic_action_alarmclock_light);
+            //circleButton.setColor(getResources().getColor(R.color.material_yellow));
+            //circleButton.setImageResource(R.drawable.ic_action_alarmclock_light);
         } else {
-            circleButton.setColor(getResources().getColor(R.color.veryLightGray));
-            circleButton.setImageResource(R.drawable.ic_alarmclock_light_no_bells);
+            //circleButton.setColor(getResources().getColor(R.color.veryLightGray));
+            //circleButton.setImageResource(R.drawable.ic_alarmclock_light_no_bells);
         }
     }
 
