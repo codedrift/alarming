@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.timepicker.TimePickerBuilder;
 import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment;
+import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,6 +63,8 @@ public class SetAlarmFragment extends Fragment implements
     private CardListView mCardListView;
     private AlarmCardArrayAdapter mAlarmCardArrayAdapter;
     private List<AlarmGson> mAlarms = new ArrayList<AlarmGson>();
+    private List<Card> mCards = new ArrayList<Card>();
+    private FloatingActionButton mFAB;
 
     //================================================================================
     // Lifecycle
@@ -73,6 +76,14 @@ public class SetAlarmFragment extends Fragment implements
         fragmentContext = getActivity();
         View rootView = inflater.inflate(R.layout.fragment_set_alarm, container, false);
         mCardListView = (CardListView) rootView.findViewById(R.id.cardListView_alarm);
+        mFAB = (FloatingActionButton) rootView.findViewById(R.id.fab_add_alarm);
+        mFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewAlarm();
+            }
+        });
+        mFAB.listenTo(mCardListView);
         setUpListview();
         return rootView;
     }
@@ -101,18 +112,24 @@ public class SetAlarmFragment extends Fragment implements
     // Methods
     //================================================================================
 
+    private void addNewAlarm() {
+        mCards.add(new Card(fragmentContext,R.layout.card_alarm_time));
+        mAlarms.add(new AlarmGson());
+        createlistViewAdapter(mCards, mAlarms);
+        mCardListView.setAdapter(mAlarmCardArrayAdapter);
+    }
+
 
     private void setUpListview(){
         Card card = new Card(fragmentContext,R.layout.card_alarm_time);
-        List<Card> cards = new ArrayList<Card>();
         mAlarms = PrefUtil.getAlarms(fragmentContext);
         if(mAlarms.isEmpty()){
             mAlarms.add(new AlarmGson());
         }
         for(AlarmGson ignored : mAlarms){
-            cards.add(card);
+            mCards.add(card);
         }
-        createlistViewAdapter(cards, mAlarms);
+        createlistViewAdapter(mCards, mAlarms);
         mCardListView.setAdapter(mAlarmCardArrayAdapter);
     }
 

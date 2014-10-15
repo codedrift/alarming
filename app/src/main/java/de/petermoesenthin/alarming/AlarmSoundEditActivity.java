@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.edmodo.rangebar.RangeBar;
+import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 
@@ -70,6 +71,7 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
     private Button button_play_pause;
     private boolean audioPlaying = false;
     private Button button_stop;
+    private FloatingActionButton mFAB;
 
     private Handler mHandler = new Handler();
 
@@ -118,6 +120,14 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
                 stopAudio();
             }
         });
+        mFAB = (FloatingActionButton) findViewById(R.id.fab_save_config);
+        mFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveConfig();
+            }
+        });
+
         button_play_pause.setEnabled(false);
         button_stop.setEnabled(false);
     }
@@ -140,13 +150,6 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
         releaseMediaPlayer();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_alarmsoundedit, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
     //================================================================================
     // Callbacks
     //================================================================================
@@ -159,9 +162,6 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                return true;
-            case R.id.action_save_sound_config:
-                saveConfig();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

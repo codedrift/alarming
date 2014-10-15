@@ -45,4 +45,6 @@
         <item name="bpDividerColor">@color/default_divider_color_light</item>
         <item name="bpKeyboardIndicatorColor">@color/material_yellow</item>
     </style>
+
+    <style name="action_bar_height">64dp</style>
 </resources>

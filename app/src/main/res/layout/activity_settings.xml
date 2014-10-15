@@ -21,9 +21,9 @@
     android:isScrollContainer="true"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
     >
     <TextView
+        android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
@@ -36,7 +36,7 @@
         android:layout_height="2dp"
         android:background="@color/veryLightGray"
         android:layout_marginTop="2dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="1dp"
         android:id="@+id/view_divider_big_1" />
 
     <LinearLayout
@@ -88,7 +88,7 @@
         android:layout_height="2dp"
         android:background="@color/veryLightGray"
         android:layout_marginTop="2dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="1dp"
         android:id="@+id/view_divider_big_2" />
 
     <LinearLayout
@@ -134,7 +134,7 @@
         android:layout_height="2dp"
         android:background="@color/veryLightGray"
         android:layout_marginTop="2dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="1dp"
         android:id="@+id/view_divider_big_3" />
 
 
@@ -171,8 +171,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/veryLightGray"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="5dp"
         android:id="@+id/view_divider_small_2" />
 
 </LinearLayout>

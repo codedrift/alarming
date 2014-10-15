@@ -36,5 +36,6 @@ dependencies {
     compile('de.psdev.licensesdialog:licensesdialog:1.6.0') {
         exclude module: 'support-v4'
     }
+
     compile project(':libs:FloatingActionButton')
 }
