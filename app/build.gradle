@@ -21,7 +21,7 @@ android {
 
 dependencies {
     compile(
-        fileTree(dir: 'libs', include: ['*.jar']),
+            fileTree(dir: 'libs', include: ['*.jar']),
             'com.google.code.gson:gson:2.2.4',
             'com.doomonafireball.betterpickers:library:1.5.2',
             //'com.android.support:support-v4:18.0.+',
@@ -36,4 +36,5 @@ dependencies {
     compile('de.psdev.licensesdialog:licensesdialog:1.6.0') {
         exclude module: 'support-v4'
     }
+    compile project(':libs:FloatingActionButton')
 }

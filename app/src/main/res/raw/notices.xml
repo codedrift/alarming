@@ -70,9 +70,9 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>android-circlebutton</name>
-        <url>https://github.com/markushi/android-circlebutton</url>
-        <copyright>Copyright 2014 markushi</copyright>
-        <license>Apache Software License 2.0</license>
+        <name>FloatingActionButton</name>
+        <url>https://github.com/FaizMalkani/FloatingActionButton</url>
+        <copyright>Copyright (c) 2014 Faiz Malkani</copyright>
+        <license>MIT License</license>
     </notice>
 </notices>
