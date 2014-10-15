@@ -44,9 +44,7 @@
         android:id="@+id/listView_alarmSounds"
         android:layout_width="fill_parent"
         android:visibility="gone"
-        android:fadeScrollbars="true"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
+        android:scrollbars="none"
         android:scrollbarStyle="outsideInset"
         android:layout_height="wrap_content">
     </ListView>

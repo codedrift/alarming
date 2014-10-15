@@ -39,6 +39,7 @@ import de.petermoesenthin.alarming.fragments.SetAlarmFragment;
 import de.petermoesenthin.alarming.fragments.SoundManagerFragment;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.ui.AlarmingDrawerToggle;
 import de.petermoesenthin.alarming.ui.DrawerItem;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
@@ -122,15 +123,16 @@ public class MainActivity extends FragmentActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         // Set Actionbar toggle
-        mDrawerToggle = new ActionBarDrawerToggle(this,
+        mDrawerToggle = new AlarmingDrawerToggle(this,
                 mDrawerLayout,
-                R.drawable.ic_navigation_drawer,
+                R.drawable.ic_drawer,
                 R.string.drawer_open, // "open drawer" description
                 R.string.drawer_close // "close drawer" description
         ){
             public void onDrawerClosed(View view) {setTitle(mTitle);}
             public void onDrawerOpened(View drawerView) {setTitle(mDrawerTitle);}
         };
+
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 

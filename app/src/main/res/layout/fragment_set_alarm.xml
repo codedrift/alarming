@@ -26,7 +26,8 @@
     <it.gmariotti.cardslib.library.view.CardListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
+        android:paddingTop="8dp"
+        android:scrollbars="none"
         android:id="@+id/cardListView_alarm"/>
 
     <com.faizmalkani.floatingactionbutton.FloatingActionButton

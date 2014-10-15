@@ -75,4 +75,12 @@
         <copyright>Copyright (c) 2014 Faiz Malkani</copyright>
         <license>MIT License</license>
     </notice>
+    <notice>
+        <name>MaterialDesign</name>
+        <url>https://github.com/Templarian/MaterialDesign</url>
+        <copyright>Copyright 2014 Austin Andrews</copyright>
+        <license>SIL OPEN FONT LICENSE Version 1.1</license>
+    </notice>
+
+
 </notices>

@@ -41,7 +41,7 @@ android:layout_height="match_parent">
     android:layout_height="match_parent"
     android:divider="@android:color/transparent"
     android:dividerHeight="1dp"
-    android:background="@color/veryLightGray"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <ListView

@@ -115,8 +115,8 @@ public class SetAlarmFragment extends Fragment implements
     private void addNewAlarm() {
         mCards.add(new Card(fragmentContext,R.layout.card_alarm_time));
         mAlarms.add(new AlarmGson());
-        createlistViewAdapter(mCards, mAlarms);
-        mCardListView.setAdapter(mAlarmCardArrayAdapter);
+        mAlarmCardArrayAdapter.notifyDataSetChanged();
+        mCardListView.computeScroll();
     }
 
 
@@ -177,7 +177,7 @@ public class SetAlarmFragment extends Fragment implements
                         viewHolder.vibrate.setChecked(alarm.doesVibrate());
                         viewHolder.repeatAlarm.setChecked(alarm.doesRepeat());
                         viewHolder.alarmText.setText(alarm.getMessage());
-                        //mViewHolder.chooseColor
+                        //TODO mViewHolder.chooseColor
 
                         return viewHolder;
                     }

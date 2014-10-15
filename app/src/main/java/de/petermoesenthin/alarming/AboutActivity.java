@@ -28,7 +28,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import de.petermoesenthin.alarming.ui.OpenFontLicense;
+import de.psdev.licensesdialog.LicenseResolver;
 import de.psdev.licensesdialog.LicensesDialog;
+import de.psdev.licensesdialog.licenses.License;
+import de.psdev.licensesdialog.model.Notice;
+import de.psdev.licensesdialog.model.Notices;
 
 
 public class AboutActivity extends Activity {
@@ -80,7 +85,11 @@ public class AboutActivity extends Activity {
     }
 
     private void showLicensesDialog(){
-        new LicensesDialog.Builder(this).setNotices(R.raw.notices).build().show();
+        LicenseResolver.registerLicense(new OpenFontLicense());
+        LicensesDialog.Builder ldb = new LicensesDialog.Builder(this)
+                .setNotices(R.raw.notices);
+        LicensesDialog ld = ldb.build();
+        ld.show();
     }
 
     private void setUpListView(){
