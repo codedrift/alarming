@@ -19,6 +19,7 @@ package de.petermoesenthin.alarming;
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
@@ -35,6 +36,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 
 import de.petermoesenthin.alarming.pref.AlarmGson;
@@ -60,10 +62,11 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     private int mStartMillis;
     private int mEndMillis;
     private String mDataSource;
+    private int mAlarmId;
+    private AlarmGson mAlarmGson;
 
     private KeyguardManager mKeyGuardManager;
     private KeyguardManager.KeyguardLock mKeyguardLock;
-    private PowerManager.WakeLock mWakeLock;
 
     private Vibrator mVibrator;
 
@@ -72,6 +75,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 
     private TextView button_snooze;
     private TextView button_dismiss;
+    private TextView textView_alarmMessage;
     private LinearLayout layout_buttons;
 
     //================================================================================
@@ -84,7 +88,6 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         if (D) {Log.d(DEBUG_TAG, "onCreate()");}
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -105,6 +108,14 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         }
         layout_buttons = (LinearLayout) findViewById(R.id.layout_dismiss_snooze);
         button_dismiss = (TextView) findViewById(R.id.button_dismiss);
+        button_snooze = (TextView) findViewById(R.id.button_snooze);
+        //textView_alarmMessage = (TextView) findViewById(R.id.textView_alarm_message);
+
+        Intent intent = getIntent();
+        mAlarmId = intent.getIntExtra("id", -1);
+
+        //textView_alarmMessage.setText("" + mAlarmId);
+
         button_dismiss.setOnTouchListener(new SwipeToDismissTouchListener(button_dismiss, null,
                 new SwipeToDismissTouchListener.DismissCallbacks(){
                     @Override
@@ -130,7 +141,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         } else {
             formatted += " " + getResources().getString(R.string.minutes);
         }
-        button_snooze = (TextView) findViewById(R.id.button_snooze);
+
         button_snooze.setText(formatted);
         button_snooze.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,15 +153,15 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
                 finishThis();
             }
         });
+        List<AlarmGson> alarms = PrefUtil.getAlarms(this);
+        mAlarmGson = PrefUtil.findAlarmWithID(alarms, mAlarmId);
     }
-
 
     @Override
     public void onAttachedToWindow() {
         if (D) {Log.d(DEBUG_TAG, "onAttachedToWindow()");}
         disableKeyguard();
-        AlarmGson alg = PrefUtil.getAlarmGson(this);
-        if(alg.doesVibrate()){
+        if(mAlarmGson.doesVibrate()){
             startVibration();
         }
     }
@@ -179,7 +190,6 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -253,9 +263,9 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 
     private void clearAlarmSet(){
         // Clear any pending notifications
-        NotificationUtil.clearAlarmNotifcation(this);
-        NotificationUtil.clearSnoozeNotification(this);
-        AlarmUtil.deactivateSnooze(this);
+        NotificationUtil.clearAlarmNotifcation(this, mAlarmId);
+        NotificationUtil.clearSnoozeNotification(this, mAlarmId);
+        AlarmUtil.deactivateSnooze(this, mAlarmId);
         // Unset alarm from preferences
         AlarmGson alg = PrefUtil.getAlarmGson(this);
         alg.setAlarmSet(false);
@@ -268,7 +278,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         Calendar snoozetime = Calendar.getInstance();
         snoozetime.setTimeInMillis(System.currentTimeMillis());
         snoozetime.add(Calendar.MINUTE, snoozeTime);
-        AlarmUtil.setSnooze(this, snoozetime);
+        AlarmUtil.setSnooze(this, snoozetime, mAlarmId);
     }
 
     /**

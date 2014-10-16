@@ -113,10 +113,15 @@ public class SetAlarmFragment extends Fragment implements
     //================================================================================
 
     private void addNewAlarm() {
-        mCards.add(new Card(fragmentContext,R.layout.card_alarm_time));
-        mAlarms.add(new AlarmGson());
+        mCards.add(new Card(fragmentContext, R.layout.card_alarm_time));
+        AlarmGson alarmGson = new AlarmGson();
+        int alarmID = PrefUtil.getInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, 0);
+        alarmGson.setId(alarmID);
+        PrefUtil.putInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, alarmID + 1);
+        mAlarms.add(alarmGson);
         mAlarmCardArrayAdapter.notifyDataSetChanged();
-        mCardListView.computeScroll();
+        //TODO scroll listview up to make alarm visible
+        PrefUtil.setAlarms(fragmentContext, mAlarms);
     }
 
 
@@ -125,6 +130,7 @@ public class SetAlarmFragment extends Fragment implements
         mAlarms = PrefUtil.getAlarms(fragmentContext);
         if(mAlarms.isEmpty()){
             mAlarms.add(new AlarmGson());
+            PrefUtil.putInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, 1);
         }
         for(AlarmGson ignored : mAlarms){
             mCards.add(card);
@@ -137,14 +143,14 @@ public class SetAlarmFragment extends Fragment implements
         AlarmGson alg = mAlarms.get(position);
         alg.setAlarmSet(true);
         Calendar calendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
-        AlarmUtil.setAlarm(fragmentContext, calendarSet);
+        AlarmUtil.setAlarm(fragmentContext, calendarSet, alg.getId());
         PrefUtil.setAlarms(fragmentContext, mAlarms);
     }
 
     private void deactivateAlarm(int position){
         AlarmGson alg = mAlarms.get(position);
         alg.setAlarmSet(false);
-        AlarmUtil.deactivateAlarm(fragmentContext);
+        AlarmUtil.deactivateAlarm(fragmentContext, alg.getId());
         PrefUtil.setAlarms(fragmentContext, mAlarms);
     }
 
@@ -304,6 +310,7 @@ public class SetAlarmFragment extends Fragment implements
                     public void onDialogTimeSet(int reference, int hourOfDay, int minute) {
                         setAlarmTime(reference, hourOfDay, minute);
                         setAlarmTimeView(viewHolder.alarmTime, viewHolder.am_pm, hourOfDay, minute);
+                        setCircleButtonActive(viewHolder.alarmSet, true);
                     }
                 });
         tpb.show();

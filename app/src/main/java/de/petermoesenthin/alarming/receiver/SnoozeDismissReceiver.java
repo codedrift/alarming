@@ -37,8 +37,12 @@ public class SnoozeDismissReceiver extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(NotificationUtil.ACTION_DISMISS_SNOOZE)) {
             if(D) {Log.d(DEBUG_TAG, "Received intent to dismiss snooze");}
-            NotificationUtil.clearSnoozeNotification(context);
-            AlarmUtil.deactivateSnooze(context);
+            int id = intent.getIntExtra("id", -1);
+            if(id == -1){
+                if(D) {Log.d(DEBUG_TAG, "Received invalid id to dismiss snooze. Returning.");}
+                return;
+            }
+            AlarmUtil.deactivateSnooze(context, id);
         }
     }
 }

@@ -157,8 +157,8 @@ public class SoundManagerFragment extends Fragment implements
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                mProgressBar.setVisibility(View.GONE);
-                                mListView.setVisibility(View.VISIBLE);
+                                //mProgressBar.setVisibility(View.GONE);
+                                //mListView.setVisibility(View.VISIBLE);
                             }
                         });
                     }

@@ -34,6 +34,8 @@ public class PrefKey {
     public static final String ALARMS = "alarms";
     public static final String SNOOZE_TIME = "snooze_time";
 
+    public static final String ALARM_ID_COUNTER = "alarm_id_counter";
+
     //================================================================================
     // Sound
     //================================================================================

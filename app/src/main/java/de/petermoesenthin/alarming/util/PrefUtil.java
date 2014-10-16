@@ -181,4 +181,13 @@ public class PrefUtil {
         PrefUtil.putString(context, PrefKey.ALARMS, js);
     }
 
+    public static AlarmGson findAlarmWithID(List<AlarmGson> alarms, int id){
+        for(AlarmGson alg : alarms){
+            if(alg.getId() == id){
+                return alg;
+            }
+        }
+        return null;
+    }
+
 }

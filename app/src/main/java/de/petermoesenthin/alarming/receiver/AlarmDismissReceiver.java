@@ -20,6 +20,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import java.util.List;
+
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.NotificationUtil;
@@ -38,11 +40,16 @@ public class AlarmDismissReceiver extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(NotificationUtil.ACTION_DISMISS_ALARM)) {
             if(D) {Log.d(DEBUG_TAG, "Received intent to dismiss alarm");}
-            NotificationUtil.clearAlarmNotifcation(context);
-            AlarmUtil.deactivateAlarm(context);
-            AlarmGson alg = PrefUtil.getAlarmGson(context);
+            int id = intent.getIntExtra("id", -1);
+            if(id == -1){
+                if(D) {Log.d(DEBUG_TAG, "Received invalid id to dismiss alarm. Returning.");}
+                return;
+            }
+            AlarmUtil.deactivateAlarm(context, id);
+            List<AlarmGson> alarms = PrefUtil.getAlarms(context);
+            AlarmGson alg = PrefUtil.findAlarmWithID(alarms, id);
             alg.setAlarmSet(false);
-            PrefUtil.setAlarmGson(context, alg);
+            PrefUtil.setAlarms(context, alarms);
         }
     }
 }

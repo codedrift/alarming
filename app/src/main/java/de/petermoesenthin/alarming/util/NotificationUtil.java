@@ -37,6 +37,7 @@ public class NotificationUtil {
 
     private static final int INTENT_SNOOZE_DISMISS_ID = 0x006661236;
     private static final int INTENT_ALARM_DISMISS_ID = 0x006661237;
+
     public static final String ACTION_DISMISS_SNOOZE =
             "de.petermoesenthin.alarming.ACTION_DISMISS_SNOOZE";
 
@@ -50,7 +51,7 @@ public class NotificationUtil {
     /**
      * Shows a persistent notification indicating the alarm time if is set.
      */
-    public static void showAlarmSetNotification(Context context, int hour, int minute){
+    public static void showAlarmSetNotification(Context context, int hour, int minute, int id){
         //Early out if a notification is not wanted
         boolean showNotification = PrefUtil.getBoolean(context,
                 PrefKey.SHOW_ALARM_NOTIFICATION, true);
@@ -61,7 +62,8 @@ public class NotificationUtil {
         // Build dismiss intent
         Intent intent = new Intent();
         intent.setAction(ACTION_DISMISS_ALARM);
-        PendingIntent pIntent = PendingIntent.getBroadcast(context, INTENT_ALARM_DISMISS_ID,
+        intent.putExtra("id", id);
+        PendingIntent pIntent = PendingIntent.getBroadcast(context, INTENT_ALARM_DISMISS_ID + id,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         //Build and show Notification
@@ -81,14 +83,15 @@ public class NotificationUtil {
                 PendingIntent.FLAG_UPDATE_CURRENT);
         notBuilder.setContentIntent(contentIntent);
         notificationIntent.addFlags(Notification.FLAG_ONGOING_EVENT);
-        getNotificationManager(context).notify(ALARM_NOTIFICATION_ID, notBuilder.build());
+        getNotificationManager(context).notify(ALARM_NOTIFICATION_ID + id, notBuilder.build());
     }
 
-    public static void showSnoozeNotification(Context context, int hour, int minute){
+    public static void showSnoozeNotification(Context context, int hour, int minute, int id){
         Intent intent = new Intent();
         intent.setAction(ACTION_DISMISS_SNOOZE);
+        intent.putExtra("id", id);
         // Build dismiss intent
-        PendingIntent pIntent = PendingIntent.getBroadcast(context, INTENT_SNOOZE_DISMISS_ID,
+        PendingIntent pIntent = PendingIntent.getBroadcast(context, INTENT_SNOOZE_DISMISS_ID + id,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         String alarmFormatted = StringUtil.getTimeFormatted(hour, minute);
@@ -102,15 +105,15 @@ public class NotificationUtil {
                 .addAction(R.drawable.ic_action_cancel,
                         context.getResources().getString(R.string.notification_cancelSnooze),
                         pIntent);
-        getNotificationManager(context).notify(SNOOZE_NOTIFICATION_ID, notBuilder.build());
+        getNotificationManager(context).notify(SNOOZE_NOTIFICATION_ID + id, notBuilder.build());
     }
 
-    public static void clearAlarmNotifcation(Context context){
-        getNotificationManager(context).cancel(ALARM_NOTIFICATION_ID);
+    public static void clearAlarmNotifcation(Context context, int id){
+        getNotificationManager(context).cancel(ALARM_NOTIFICATION_ID + id);
     }
 
-    public static void clearSnoozeNotification(Context context){
-        getNotificationManager(context).cancel(SNOOZE_NOTIFICATION_ID);
+    public static void clearSnoozeNotification(Context context, int id){
+        getNotificationManager(context).cancel(SNOOZE_NOTIFICATION_ID + id);
     }
 
     public static NotificationManager getNotificationManager(Context context){
