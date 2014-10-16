@@ -29,7 +29,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="30dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
         android:id="@+id/circleProgressBar_SoundList"
         android:indeterminate="true"
         app:cpb_color="@color/material_yellow"
@@ -42,11 +42,11 @@
 
     <ListView
         android:id="@+id/listView_alarmSounds"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"
         android:scrollbars="none"
-        android:scrollbarStyle="outsideInset"
-        android:layout_height="wrap_content">
+        android:scrollbarStyle="outsideInset">
     </ListView>
 
     <com.faizmalkani.floatingactionbutton.FloatingActionButton

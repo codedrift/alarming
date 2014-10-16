@@ -70,6 +70,7 @@
         android:id="@+id/textView_startTime"
         android:text="@string/textView_soundStart"
         android:padding="5dp"
+        android:textSize="14sp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@id/view_divider1"/>
@@ -79,6 +80,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView_endTime"
         android:text="@string/textView_soundEnd"
+        android:textSize="14sp"
         android:padding="5dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -92,6 +94,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         custom:tickHeight="0dp"
         custom:tickCount="100"
         custom:barColor="@color/lightGray"
@@ -105,6 +109,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/rangebar_audiosection"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:padding="5dp"
         android:background="#ffe6e6e6">
         <Button
