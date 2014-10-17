@@ -8,7 +8,7 @@
     <color name="white">#FFFFFF</color>
     <color name="veryLightGray">#D9D9D9</color>
     <color name="lightGray">#ffcdcdcd</color>
-    <color name="drawer_additional_button_text_color">#ff373737</color>
+    <color name="drawer_additional_button_text_color">#ff4b4b4b</color>
     <color name="yellow_darker">#ffebb007</color>
     <color name="selector_background_pressed">#1A000000</color>
     <color name="selector_background_focused">#77000000</color>

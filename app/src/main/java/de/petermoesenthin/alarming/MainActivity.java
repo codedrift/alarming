@@ -37,7 +37,6 @@ import java.util.List;
 import de.petermoesenthin.alarming.adapter.DrawerItemArrayAdapter;
 import de.petermoesenthin.alarming.fragments.SetAlarmFragment;
 import de.petermoesenthin.alarming.fragments.SoundManagerFragment;
-import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.ui.AlarmingDrawerToggle;
 import de.petermoesenthin.alarming.ui.DrawerItem;
@@ -58,8 +57,8 @@ public class MainActivity extends FragmentActivity {
     private CharSequence mDrawerTitle;
     private ActionBarDrawerToggle mDrawerToggle;
     private static final int[] mDrawerImages = {
-            R.drawable.ic_alarmclock,
-            R.drawable.ic_audiofile};
+            R.drawable.ic_drawer_bell,
+            R.drawable.ic_drawer_sound};
 
     // Debug
     public static final String DEBUG_TAG = "MainActivity";

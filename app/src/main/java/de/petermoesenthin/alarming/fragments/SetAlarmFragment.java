@@ -182,7 +182,9 @@ public class SetAlarmFragment extends Fragment implements
                         setCircleButtonActive(viewHolder.alarmSet, alarm.isAlarmSet());
                         viewHolder.vibrate.setChecked(alarm.doesVibrate());
                         viewHolder.repeatAlarm.setChecked(alarm.doesRepeat());
-                        viewHolder.alarmText.setText(alarm.getMessage());
+                        if(!alarm.getMessage().isEmpty()) {
+                            viewHolder.alarmText.setText(alarm.getMessage());
+                        }
                         //TODO mViewHolder.chooseColor
 
                         return viewHolder;
@@ -263,10 +265,10 @@ public class SetAlarmFragment extends Fragment implements
     private void setCircleButtonActive(CircleButton circleButton, boolean isActive){
         if(isActive){
             circleButton.setColor(getResources().getColor(R.color.material_yellow));
-            circleButton.setImageResource(R.drawable.ic_action_alarmclock_light);
+            circleButton.setImageResource(R.drawable.ic_bell_ring);
         } else {
             circleButton.setColor(getResources().getColor(R.color.veryLightGray));
-            circleButton.setImageResource(R.drawable.ic_alarmclock_light_no_bells);
+            circleButton.setImageResource(R.drawable.ic_bell_outline);
         }
     }
 
@@ -297,7 +299,7 @@ public class SetAlarmFragment extends Fragment implements
     }
 
     /**
-     * Show a timepicker to set the alarm time
+     * Show a time picker to set the alarm time
      */
     private void showTimePicker(int position, final AlarmCardArrayAdapter.ViewHolder viewHolder) {
         if(D) {Log.d(DEBUG_TAG,"Showing time picker dialog.");}
