@@ -82,7 +82,7 @@ public class SetAlarmFragment extends Fragment implements
             }
         });
         mFAB.listenTo(mCardListView);
-        setUpListview();
+        setUpListView();
         return rootView;
     }
 
@@ -116,15 +116,12 @@ public class SetAlarmFragment extends Fragment implements
         PrefUtil.putInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, alarmID + 1);
         mAlarms.add(alarmGson);
         mAlarmCardArrayAdapter.notifyDataSetChanged();
-        if(mAlarms.size() > 1){
-            mFAB.listenTo(mCardListView);
-        }
-        //TODO scroll listview up to make alarm visible
+        //TODO scroll listView up to make alarm visible
         PrefUtil.setAlarms(fragmentContext, mAlarms);
     }
 
 
-    private void setUpListview(){
+    private void setUpListView(){
         mAlarms = PrefUtil.getAlarms(fragmentContext);
         if(mAlarms.isEmpty()){
             mAlarms.add(new AlarmGson());
@@ -145,10 +142,6 @@ public class SetAlarmFragment extends Fragment implements
     private void deleteAlarm(int position) {
         mAlarms.remove(position);
         PrefUtil.setAlarms(fragmentContext, mAlarms);
-        if(mAlarms.size() == 0){
-            mFAB.listenTo(null);
-            mFAB.hide(false);
-        }
         mAlarmCardArrayAdapter.notifyDataSetChanged();
     }
 
