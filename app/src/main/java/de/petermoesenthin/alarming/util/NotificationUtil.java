@@ -63,9 +63,6 @@ public class NotificationUtil {
         Intent intent = new Intent();
         intent.setAction(ACTION_DISMISS_ALARM);
         intent.putExtra("id", id);
-        PendingIntent pIntent = PendingIntent.getBroadcast(context, INTENT_ALARM_DISMISS_ID + id,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
         //Build and show Notification
         String alarmFormatted = StringUtil.getTimeFormattedSystem(context, hour, minute);
         NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
@@ -74,10 +71,7 @@ public class NotificationUtil {
                 .setContentTitle(
                         context.getResources().getString(R.string.notification_alarmActivated))
                 .setContentText(context.getResources().getString(R.string.notification_timeSetTo) +
-                        " " + alarmFormatted)
-                .addAction(R.drawable.ic_action_cancel,
-                        context.getResources().getString(R.string.notification_cancelSnooze),
-                        pIntent);
+                        " " + alarmFormatted);
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
