@@ -28,11 +28,10 @@ dependencies {
             'commons-io:commons-io:2.4',
             'com.edmodo:rangebar:1.0.0',
             'com.github.castorflex.smoothprogressbar:library-circular:1.0.0',
-            'com.github.gabrielemariotti.cards:library:1.9.1',
             'com.larswerkman:HoloColorPicker:1.4',
             'com.github.markushi:circlebutton:1.1',
             'com.pkmmte.view:circularimageview:1.1',
-            'com.android.support:cardview-v7:21.0.+'
+            'com.android.support:cardview-v7:+'
     )
     compile('de.psdev.licensesdialog:licensesdialog:1.6.0') {
         exclude module: 'support-v4'

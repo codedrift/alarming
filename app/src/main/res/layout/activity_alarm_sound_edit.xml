@@ -16,10 +16,10 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin">
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin">
 
 
     <TextView
@@ -62,7 +62,7 @@
         android:layout_below="@+id/textView_soundArtist"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:id="@+id/view_divider1" />
+        android:id="@+id/view_divider1"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -113,6 +113,7 @@
         android:layout_marginRight="5dp"
         android:padding="5dp"
         android:background="#ffe6e6e6">
+
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="100dp"
@@ -123,6 +124,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             />
+
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="100dp"
@@ -133,6 +135,7 @@
             android:layout_toEndOf="@id/button_play_pause"
             android:layout_centerVertical="true"
             />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -144,7 +147,7 @@
             android:layout_centerVertical="true"
             />
 
-        </RelativeLayout>
+    </RelativeLayout>
 
     <com.faizmalkani.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_save_config"
@@ -156,6 +159,6 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         app:color="@color/material_yellow"
-        app:drawable="@drawable/ic_action_save_white" />
+        app:drawable="@drawable/ic_action_save_white"/>
 
 </RelativeLayout>

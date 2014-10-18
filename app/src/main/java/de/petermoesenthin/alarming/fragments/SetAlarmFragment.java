@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.timepicker.TimePickerBuilder;
@@ -46,8 +47,6 @@ import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.view.CardListView;
 
 public class SetAlarmFragment extends Fragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -60,10 +59,9 @@ public class SetAlarmFragment extends Fragment implements
     private static final boolean D = true;
 
     private Context fragmentContext;
-    private CardListView mCardListView;
+    private ListView mCardListView;
     private AlarmCardArrayAdapter mAlarmCardArrayAdapter;
     private List<AlarmGson> mAlarms = new ArrayList<AlarmGson>();
-    private List<Card> mCards = new ArrayList<Card>();
     private FloatingActionButton mFAB;
 
     //================================================================================
@@ -75,7 +73,7 @@ public class SetAlarmFragment extends Fragment implements
                              Bundle savedInstanceState) {
         fragmentContext = getActivity();
         View rootView = inflater.inflate(R.layout.fragment_set_alarm, container, false);
-        mCardListView = (CardListView) rootView.findViewById(R.id.cardListView_alarm);
+        mCardListView = (ListView) rootView.findViewById(R.id.cardListView_alarm);
         mFAB = (FloatingActionButton) rootView.findViewById(R.id.fab_add_alarm);
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +103,6 @@ public class SetAlarmFragment extends Fragment implements
     @Override
     public void onStop() {
         super.onStop();
-
     }
 
     //================================================================================
@@ -113,29 +110,27 @@ public class SetAlarmFragment extends Fragment implements
     //================================================================================
 
     private void addNewAlarm() {
-        mCards.add(new Card(fragmentContext, R.layout.card_alarm_time));
         AlarmGson alarmGson = new AlarmGson();
         int alarmID = PrefUtil.getInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, 0);
         alarmGson.setId(alarmID);
         PrefUtil.putInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, alarmID + 1);
         mAlarms.add(alarmGson);
         mAlarmCardArrayAdapter.notifyDataSetChanged();
+        if(mAlarms.size() > 1){
+            mFAB.listenTo(mCardListView);
+        }
         //TODO scroll listview up to make alarm visible
         PrefUtil.setAlarms(fragmentContext, mAlarms);
     }
 
 
     private void setUpListview(){
-        Card card = new Card(fragmentContext,R.layout.card_alarm_time);
         mAlarms = PrefUtil.getAlarms(fragmentContext);
         if(mAlarms.isEmpty()){
             mAlarms.add(new AlarmGson());
             PrefUtil.putInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, 1);
         }
-        for(AlarmGson ignored : mAlarms){
-            mCards.add(card);
-        }
-        createlistViewAdapter(mCards, mAlarms);
+        createlistViewAdapter(mAlarms);
         mCardListView.setAdapter(mAlarmCardArrayAdapter);
     }
 
@@ -145,6 +140,16 @@ public class SetAlarmFragment extends Fragment implements
         Calendar calendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
         AlarmUtil.setAlarm(fragmentContext, calendarSet, alg.getId());
         PrefUtil.setAlarms(fragmentContext, mAlarms);
+    }
+
+    private void deleteAlarm(int position) {
+        mAlarms.remove(position);
+        PrefUtil.setAlarms(fragmentContext, mAlarms);
+        if(mAlarms.size() == 0){
+            mFAB.listenTo(null);
+            mFAB.hide(false);
+        }
+        mAlarmCardArrayAdapter.notifyDataSetChanged();
     }
 
     private void deactivateAlarm(int position){
@@ -167,9 +172,10 @@ public class SetAlarmFragment extends Fragment implements
     // UI
     //================================================================================
 
-    private void createlistViewAdapter(List<Card> cards, final List<AlarmGson> alarms){
+    private void createlistViewAdapter(final List<AlarmGson> alarms){
         mAlarmCardArrayAdapter = new AlarmCardArrayAdapter
-                (fragmentContext, cards, new AlarmCardArrayAdapter.AdapterCallacks() {
+                (fragmentContext, R.layout.card_alarm_time , alarms, new AlarmCardArrayAdapter
+                        .AdapterCallBacks() {
 
                     @Override
                     public AlarmCardArrayAdapter.ViewHolder onCreateViews(
@@ -238,6 +244,7 @@ public class SetAlarmFragment extends Fragment implements
                     public void onAlarmTextClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
                                                  int position) {
                         if (D) {Log.d(DEBUG_TAG, "AlarmTextClick at " + position);}
+
                     }
 
                     @Override
@@ -245,6 +252,14 @@ public class SetAlarmFragment extends Fragment implements
                                                    int position) {
                         if (D) {Log.d(DEBUG_TAG, "ChooseColorClick at " + position);}
                         showColorPickerDialog(position);
+                    }
+
+                    @Override
+                    public void onDeleteAlarmClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
+                                                   int position) {
+                        if (D) {Log.d(DEBUG_TAG, "DeleteAlarmClick at " + position);}
+                        deactivateAlarm(position);
+                        deleteAlarm(position);
                     }
                 }
                 );

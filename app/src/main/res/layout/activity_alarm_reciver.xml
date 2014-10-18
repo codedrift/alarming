@@ -15,10 +15,10 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:keepScreenOn="true"
-    android:background="@color/material_yellow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:keepScreenOn="true"
+                android:background="@color/material_yellow"
     >
 
     <LinearLayout
@@ -33,19 +33,19 @@
             android:layout_height="64dp"
             android:layout_weight="0.2"
             android:id="@+id/imageView_bell"
-            android:src="@drawable/ic_alarmclock"
+            android:src="@drawable/ic_bell_ring"
             android:layout_gravity="center"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="WAKE UP!"
+            android:text="@string/textView_alarmText"
             android:layout_weight="0.8"
             android:padding="16dp"
             android:id="@+id/textView_alarm_message"
             android:layout_gravity="center"/>
-        </LinearLayout>
+    </LinearLayout>
 
 
     <LinearLayout
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/lightGray"
-            android:id="@+id/view_divider_small" />
+            android:id="@+id/view_divider_small"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -86,7 +86,7 @@
             android:background="@drawable/selector_basic"
             android:text="@string/button_snooze"
             android:id="@+id/button_snooze"
-             />
+            />
 
-        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

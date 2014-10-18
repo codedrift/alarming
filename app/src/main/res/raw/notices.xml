@@ -81,6 +81,16 @@
         <copyright>Copyright 2014 Austin Andrews</copyright>
         <license>SIL OPEN FONT LICENSE Version 1.1</license>
     </notice>
-
-
+    <notice>
+        <name>Delete interface recycle bin symbol</name>
+        <url>http://www.icons8.com</url>
+        <copyright>Icons8</copyright>
+        <license>Creative Commons Attribution-NoDerivs 3.0 Unported</license>
+    </notice>
+    <notice>
+        <name>Painter palette and generic action icons</name>
+        <url>http://www.google.com</url>
+        <copyright>Google</copyright>
+        <license>Creative Commons Attribution-NoDerivs 3.0 Unported</license>
+    </notice>
 </notices>

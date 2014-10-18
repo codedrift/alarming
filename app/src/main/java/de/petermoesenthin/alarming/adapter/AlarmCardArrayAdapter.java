@@ -1,4 +1,4 @@
-package de.petermoesenthin.alarming.adapter;/*
+/*
  * Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,11 +13,14 @@ package de.petermoesenthin.alarming.adapter;/*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+package de.petermoesenthin.alarming.adapter;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,17 +28,25 @@ import java.util.List;
 
 import at.markushi.ui.CircleButton;
 import de.petermoesenthin.alarming.R;
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import de.petermoesenthin.alarming.pref.AlarmGson;
 
-public class AlarmCardArrayAdapter extends CardArrayAdapter {
+
+public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson>{
 
     private ViewHolder mViewHolder;
-    private List<Card> mCards;
-    private AdapterCallacks mAdapterCallacks;
+    private AdapterCallBacks mAdapterCallacks;
+    private Context mContext;
+    List<AlarmGson> mAlarms;
 
+    public AlarmCardArrayAdapter(Context context, int resource,
+                                 List<AlarmGson> alarms, AdapterCallBacks adapterCallacks) {
+        super(context, resource);
+        mContext = context;
+        mAdapterCallacks = adapterCallacks;
+        mAlarms = alarms;
+    }
 
-    public interface AdapterCallacks{
+    public interface AdapterCallBacks {
         ViewHolder onCreateViews(ViewHolder viewHolder, int position);
         void onAlarmTimeClick(ViewHolder viewHolder, int position);
         void onAlarmSetClick(ViewHolder viewHolder, int position);
@@ -43,23 +54,28 @@ public class AlarmCardArrayAdapter extends CardArrayAdapter {
         void onRepeatAlarmClick(ViewHolder viewHolder, int position);
         void onAlarmTextClick(ViewHolder viewHolder, int position);
         void onChooseColorClick(ViewHolder viewHolder, int position);
+        void onDeleteAlarmClick(ViewHolder viewHolder, int position);
     }
 
-    public AlarmCardArrayAdapter(Context context, List<Card> cards,
-                                 AdapterCallacks adapterCallacks) {
-        super(context, cards);
-        this.mAdapterCallacks = adapterCallacks;
-        this.mCards = cards;
+    public class ViewHolder {
+        public TextView alarmTime;
+        public TextView am_pm;
+        public CircleButton alarmSet;
+        public CheckBox vibrate;
+        public CheckBox repeatAlarm;
+        public TextView alarmText;
+        public LinearLayout chooseColor;
+        public ImageView deletAlarm;
     }
 
     @Override
     public int getCount() {
-        return mCards.size();
+        return mAlarms.size();
     }
 
     @Override
-    public Card getItem(int position) {
-        return mCards.get(position);
+    public AlarmGson getItem(int position) {
+        return mAlarms.get(position);
     }
 
     @Override
@@ -67,30 +83,33 @@ public class AlarmCardArrayAdapter extends CardArrayAdapter {
         return position;
     }
 
-
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View v = super.getView(position, convertView, parent);
         if(convertView == null){
+            LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context
+                    .LAYOUT_INFLATER_SERVICE);
+            convertView = layoutInflater.inflate(R.layout.card_alarm_time, null);
             mViewHolder = new ViewHolder();
-            mViewHolder.alarmTime = (TextView) v.findViewById(R.id.textView_alarmTime);
-            mViewHolder.am_pm = (TextView) v.findViewById(R.id.textView_am_pm);
-            mViewHolder.alarmSet = (CircleButton) v.findViewById(R.id.button_alarm_set);
-            mViewHolder.vibrate = (CheckBox) v.findViewById(R.id.checkBox_vibrate);
-            mViewHolder.repeatAlarm = (CheckBox) v.findViewById(R.id.checkBox_repeat_alarm);
-            mViewHolder.alarmText = (TextView) v.findViewById(R.id.textView_alarmText);
-            mViewHolder.chooseColor = (LinearLayout) v.findViewById(R.id.layout_choose_color);
+            mViewHolder.alarmTime = (TextView) convertView.findViewById(R.id.textView_alarmTime);
+            mViewHolder.am_pm = (TextView) convertView.findViewById(R.id.textView_am_pm);
+            mViewHolder.alarmSet = (CircleButton) convertView.findViewById(R.id.button_alarm_set);
+            mViewHolder.vibrate = (CheckBox) convertView.findViewById(R.id.checkBox_vibrate);
+            mViewHolder.repeatAlarm = (CheckBox) convertView.findViewById(R.id.checkBox_repeat_alarm);
+            mViewHolder.alarmText = (TextView) convertView.findViewById(R.id.textView_alarmText);
+            mViewHolder.chooseColor = (LinearLayout) convertView.findViewById(R.id.layout_choose_color);
+            mViewHolder.deletAlarm = (ImageView) convertView.findViewById(R.id.button_deleteAlarm);
+            setOnClickListeners(position, mViewHolder);
+
+            if(mAdapterCallacks != null){
+                mAdapterCallacks.onCreateViews(mViewHolder, position);
+            }
+            convertView.setTag(mViewHolder);
+
         } else {
             mViewHolder = (ViewHolder) convertView.getTag();
         }
-        setOnClickListeners(position, mViewHolder);
 
-        if(mAdapterCallacks != null){
-            mAdapterCallacks.onCreateViews(mViewHolder, position);
-        }
-
-        v.setTag(mViewHolder);
-        return v;
+        return convertView;
     }
 
     private void setOnClickListeners(final int position, final ViewHolder viewHolder){
@@ -147,15 +166,13 @@ public class AlarmCardArrayAdapter extends CardArrayAdapter {
                 }
             }
         });
-    }
-
-    public class ViewHolder {
-        public TextView alarmTime;
-        public TextView am_pm;
-        public CircleButton alarmSet;
-        public CheckBox vibrate;
-        public CheckBox repeatAlarm;
-        public TextView alarmText;
-        public LinearLayout chooseColor;
+        mViewHolder.deletAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mAdapterCallacks != null){
+                    mAdapterCallacks.onDeleteAlarmClick(viewHolder, position);
+                }
+            }
+        });
     }
 }

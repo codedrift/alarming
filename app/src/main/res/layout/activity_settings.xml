@@ -15,13 +15,14 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:isScrollContainer="true"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:isScrollContainer="true"
+              android:layout_marginLeft="16dp"
+              android:layout_marginRight="16dp"
     >
+
     <TextView
         android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
@@ -31,13 +32,14 @@
         android:textColor="#ff696969"
         android:text="@string/settings_category_general"
         android:id="@+id/textView_category_general"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/veryLightGray"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="1dp"
-        android:id="@+id/view_divider_big_1" />
+        android:id="@+id/view_divider_big_1"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,12 +60,13 @@
                 android:textSize="18sp"
                 android:text="@string/settings_show_notification_title"
                 android:id="@+id/textView_setting_notification_title"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/settings_show_notification_summary"
                 android:id="@+id/textView_setting_notification_summary"/>
-            </LinearLayout>
+        </LinearLayout>
 
         <CheckBox
             android:layout_width="wrap_content"
@@ -71,7 +74,7 @@
             android:layout_weight="0.03"
             android:id="@+id/checkBox_setting_notification"
             android:layout_gravity="center_vertical"/>
-        </LinearLayout>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -89,7 +92,7 @@
         android:background="@color/veryLightGray"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="1dp"
-        android:id="@+id/view_divider_big_2" />
+        android:id="@+id/view_divider_big_2"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -111,6 +114,7 @@
                 android:textSize="18sp"
                 android:text="@string/settings_alarm_sound_volume_title"
                 android:id="@+id/textView_alarm_sound_volume_title"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -135,7 +139,7 @@
         android:background="@color/veryLightGray"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="1dp"
-        android:id="@+id/view_divider_big_3" />
+        android:id="@+id/view_divider_big_3"/>
 
 
     <LinearLayout
@@ -147,30 +151,31 @@
         android:layout_height="wrap_content">
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:minHeight="48dp"
-        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:minHeight="48dp"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="@string/settings_snooze_time_title"
-            android:id="@+id/textView_snooze_time_title"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_snooze_time_summary"
-            android:id="@+id/textView_snooze_time_summary"/>
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="@string/settings_snooze_time_title"
+                android:id="@+id/textView_snooze_time_title"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_snooze_time_summary"
+                android:id="@+id/textView_snooze_time_summary"/>
+        </LinearLayout>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/veryLightGray"
-        android:id="@+id/view_divider_small_2" />
+        android:id="@+id/view_divider_small_2"/>
 
 </LinearLayout>

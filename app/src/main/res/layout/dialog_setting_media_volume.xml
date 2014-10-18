@@ -15,10 +15,10 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              android:orientation="vertical"
+              android:padding="10dp"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,6 +27,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/settings_dialog_alarm_sound_volume_inner_title"
         android:id="@+id/textView_settings_dialog_inner_title"/>
+
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
