@@ -16,18 +16,17 @@
 
 package de.petermoesenthin.alarming.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -44,6 +43,8 @@ import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmCardArrayAdapter;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.ui.LDialog;
+import de.petermoesenthin.alarming.ui.LDialogView;
 import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
@@ -63,6 +64,7 @@ public class SetAlarmFragment extends Fragment implements
     private AlarmCardArrayAdapter mAlarmCardArrayAdapter;
     private List<AlarmGson> mAlarms = new ArrayList<AlarmGson>();
     private FloatingActionButton mFAB;
+    private boolean mFlag_create_new = false;
 
     //================================================================================
     // Lifecycle
@@ -110,28 +112,31 @@ public class SetAlarmFragment extends Fragment implements
     //================================================================================
 
     private void addNewAlarm() {
+        if (D) {Log.d(DEBUG_TAG, "Add new alarm");}
         AlarmGson alarmGson = new AlarmGson();
         int alarmID = PrefUtil.getInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, 0);
         alarmGson.setId(alarmID);
-        PrefUtil.putInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, alarmID + 1);
-        mAlarms.add(alarmGson);
+        mAlarms.add(0, alarmGson);
+        mFlag_create_new = true;
         mAlarmCardArrayAdapter.notifyDataSetChanged();
-        //TODO scroll listView up to make alarm visible
+        PrefUtil.putInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, alarmID + 1);
         PrefUtil.setAlarms(fragmentContext, mAlarms);
     }
 
 
     private void setUpListView(){
+        if (D) {Log.d(DEBUG_TAG, "Set up list view");}
         mAlarms = PrefUtil.getAlarms(fragmentContext);
         if(mAlarms.isEmpty()){
             mAlarms.add(new AlarmGson());
             PrefUtil.putInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, 1);
         }
-        createlistViewAdapter(mAlarms);
+        createListViewAdapter(mAlarms);
         mCardListView.setAdapter(mAlarmCardArrayAdapter);
     }
 
     private void activateAlarm(int position){
+        if (D) {Log.d(DEBUG_TAG, "Activate alarm " + position);}
         AlarmGson alg = mAlarms.get(position);
         alg.setAlarmSet(true);
         Calendar calendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
@@ -140,16 +145,19 @@ public class SetAlarmFragment extends Fragment implements
     }
 
     private void deleteAlarm(int position) {
+        if (D) {Log.d(DEBUG_TAG, "Delete alarm " + position);}
         mAlarms.remove(position);
         PrefUtil.setAlarms(fragmentContext, mAlarms);
         mAlarmCardArrayAdapter.notifyDataSetChanged();
     }
 
     private void deactivateAlarm(int position){
+        if (D) {Log.d(DEBUG_TAG, "Deactivate alarm " + position);}
         AlarmGson alg = mAlarms.get(position);
         alg.setAlarmSet(false);
         AlarmUtil.deactivateAlarm(fragmentContext, alg.getId());
         PrefUtil.setAlarms(fragmentContext, mAlarms);
+        mAlarmCardArrayAdapter.notifyDataSetChanged();
     }
 
     public void setAlarmTime(int position, int hourOfDay, int minute) {
@@ -165,7 +173,7 @@ public class SetAlarmFragment extends Fragment implements
     // UI
     //================================================================================
 
-    private void createlistViewAdapter(final List<AlarmGson> alarms){
+    private void createListViewAdapter(final List<AlarmGson> alarms){
         mAlarmCardArrayAdapter = new AlarmCardArrayAdapter
                 (fragmentContext, R.layout.card_alarm_time , alarms, new AlarmCardArrayAdapter
                         .AdapterCallBacks() {
@@ -185,7 +193,10 @@ public class SetAlarmFragment extends Fragment implements
                             viewHolder.alarmText.setText(alarm.getMessage());
                         }
                         //TODO mViewHolder.chooseColor
-
+                        if(position == 0 && mFlag_create_new){
+                            mFlag_create_new = false;
+                            showTimePicker(position, viewHolder);
+                        }
                         return viewHolder;
                     }
 
@@ -237,7 +248,7 @@ public class SetAlarmFragment extends Fragment implements
                     public void onAlarmTextClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
                                                  int position) {
                         if (D) {Log.d(DEBUG_TAG, "AlarmTextClick at " + position);}
-
+                        showAlarmMessageDialog(viewHolder, position);
                     }
 
                     @Override
@@ -281,29 +292,56 @@ public class SetAlarmFragment extends Fragment implements
     }
 
     private void showColorPickerDialog(int position){
-        AlertDialog.Builder builder;
-        AlertDialog alertDialog;
-        LayoutInflater inflater = (LayoutInflater) fragmentContext.getSystemService
-                (Activity.LAYOUT_INFLATER_SERVICE);
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.dialog_alarm_color,
-                null);
-        //Set dialog views
-        //...
+        LDialog dialog = new LDialog(fragmentContext,
+                new LDialogView(fragmentContext, R.layout.dialog_content_color_picker,
+                        R.string.dialog_title_set_alarm_color));
+        dialog.setPositiveButtonListener(
+                new LDialog.LClickListener() {
+                    @Override
+                    public void onClick(AlertDialog dialog) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.setNegativeButtonListener(
+                new LDialog.LClickListener() {
+                    @Override
+                    public void onClick(AlertDialog dialog) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
+    }
 
-        builder = new AlertDialog.Builder(fragmentContext);
-        builder.setView(layout);
-        builder.setCancelable(true);
-        builder.setNegativeButton(R.string.dialog_button_cancel, null);
-        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                // Do work on OK
-                dialogInterface.dismiss();
-            }
-        });
-        alertDialog = builder.create();
-        alertDialog.setCanceledOnTouchOutside(true);
-        alertDialog.show();
+    private void showAlarmMessageDialog(final AlarmCardArrayAdapter.ViewHolder viewHolder,
+                                        final int position){
+        if (D) {Log.d(DEBUG_TAG,"Showing alarm message dialog");}
+        LDialogView dialogView = new LDialogView(fragmentContext, R.layout.dialog_content_edit_text,
+                R.string.dialog_title_set_alarm_message);
+        LDialog dialog = new LDialog(fragmentContext, dialogView);
+        final EditText editText = (EditText) dialogView.getView().findViewById(R.id
+                .editText);
+        editText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
+        String prefText  = mAlarms.get(position).getMessage();
+        editText.setText(prefText);
+        dialog.setPositiveButtonListener(
+                new LDialog.LClickListener() {
+                    @Override
+                    public void onClick(AlertDialog dialog) {
+                        String text = editText.getText().toString();
+                        mAlarms.get(position).setMessage(text);
+                        viewHolder.alarmText.setText(text);
+                        PrefUtil.setAlarms(fragmentContext, mAlarms);
+                        dialog.dismiss();
+                    }
+                });
+        dialog.setNegativeButtonListener(
+                new LDialog.LClickListener() {
+                    @Override
+                    public void onClick(AlertDialog dialog) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
     }
 
     /**
@@ -319,7 +357,9 @@ public class SetAlarmFragment extends Fragment implements
                     @Override
                     public void onDialogTimeSet(int reference, int hourOfDay, int minute) {
                         setAlarmTime(reference, hourOfDay, minute);
-                        setAlarmTimeView(viewHolder.alarmTime, viewHolder.am_pm, hourOfDay, minute);
+                        setAlarmTimeView(viewHolder.alarmTime, viewHolder.am_pm, hourOfDay,
+                                minute);
+                        activateAlarm(reference);
                         setCircleButtonActive(viewHolder.alarmSet, true);
                     }
                 });
@@ -339,6 +379,7 @@ public class SetAlarmFragment extends Fragment implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals(PrefKey.ALARMS)){
             if(D) {Log.d(DEBUG_TAG,"Preferences have changed");}
+            mAlarmCardArrayAdapter.notifyDataSetChanged();
         }
     }
 }

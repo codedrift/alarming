@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import de.petermoesenthin.alarming.AlarmReceiverActivity;
+import de.petermoesenthin.alarming.util.AlarmUtil;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -38,8 +39,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent){
-        if (D) {Log.d(DEBUG_TAG,"Received alarm intent.");}
         int alarmID = intent.getIntExtra("id", -1);
+        if (D) {Log.d(DEBUG_TAG,"Received alarm intent for id" + alarmID);}
         Intent i = new Intent(context, AlarmReceiverActivity.class);
         i.putExtra("id", alarmID);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

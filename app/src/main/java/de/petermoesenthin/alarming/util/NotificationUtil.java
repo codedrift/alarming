@@ -32,12 +32,6 @@ import de.petermoesenthin.alarming.pref.PrefKey;
 
 public class NotificationUtil {
 
-    private static final int ALARM_NOTIFICATION_ID = 0x006661234;
-    private static final int SNOOZE_NOTIFICATION_ID = 0x006661235;
-
-    private static final int INTENT_SNOOZE_DISMISS_ID = 0x006661236;
-    private static final int INTENT_ALARM_DISMISS_ID = 0x006661237;
-
     public static final String ACTION_DISMISS_SNOOZE =
             "de.petermoesenthin.alarming.ACTION_DISMISS_SNOOZE";
 
@@ -77,7 +71,7 @@ public class NotificationUtil {
                 PendingIntent.FLAG_UPDATE_CURRENT);
         notBuilder.setContentIntent(contentIntent);
         notificationIntent.addFlags(Notification.FLAG_ONGOING_EVENT);
-        getNotificationManager(context).notify(ALARM_NOTIFICATION_ID + id, notBuilder.build());
+        getNotificationManager(context).notify(id, notBuilder.build());
     }
 
     public static void showSnoozeNotification(Context context, int hour, int minute, int id){
@@ -85,7 +79,7 @@ public class NotificationUtil {
         intent.setAction(ACTION_DISMISS_SNOOZE);
         intent.putExtra("id", id);
         // Build dismiss intent
-        PendingIntent pIntent = PendingIntent.getBroadcast(context, INTENT_SNOOZE_DISMISS_ID + id,
+        PendingIntent pIntent = PendingIntent.getBroadcast(context,id,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         String alarmFormatted = StringUtil.getTimeFormatted(hour, minute);
@@ -99,15 +93,15 @@ public class NotificationUtil {
                 .addAction(R.drawable.ic_action_cancel,
                         context.getResources().getString(R.string.notification_cancelSnooze),
                         pIntent);
-        getNotificationManager(context).notify(SNOOZE_NOTIFICATION_ID + id, notBuilder.build());
+        getNotificationManager(context).notify(id, notBuilder.build());
     }
 
     public static void clearAlarmNotifcation(Context context, int id){
-        getNotificationManager(context).cancel(ALARM_NOTIFICATION_ID + id);
+        getNotificationManager(context).cancel(id);
     }
 
     public static void clearSnoozeNotification(Context context, int id){
-        getNotificationManager(context).cancel(SNOOZE_NOTIFICATION_ID + id);
+        getNotificationManager(context).cancel(id);
     }
 
     public static NotificationManager getNotificationManager(Context context){

@@ -109,12 +109,11 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         layout_buttons = (LinearLayout) findViewById(R.id.layout_dismiss_snooze);
         button_dismiss = (TextView) findViewById(R.id.button_dismiss);
         button_snooze = (TextView) findViewById(R.id.button_snooze);
-        //textView_alarmMessage = (TextView) findViewById(R.id.textView_alarm_message);
+        textView_alarmMessage = (TextView) findViewById(R.id.textView_alarm_message);
 
         Intent intent = getIntent();
         mAlarmId = intent.getIntExtra("id", -1);
-
-        //textView_alarmMessage.setText("" + mAlarmId);
+        if (D) {Log.d(DEBUG_TAG, "Received alarm intent for id " + mAlarmId);}
 
         button_dismiss.setOnTouchListener(new SwipeToDismissTouchListener(button_dismiss, null,
                 new SwipeToDismissTouchListener.DismissCallbacks(){
@@ -155,15 +154,12 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         });
         List<AlarmGson> alarms = PrefUtil.getAlarms(this);
         mAlarmGson = PrefUtil.findAlarmWithID(alarms, mAlarmId);
+        textView_alarmMessage.setText(mAlarmGson.getMessage());
     }
 
     @Override
     public void onAttachedToWindow() {
         if (D) {Log.d(DEBUG_TAG, "onAttachedToWindow()");}
-        disableKeyguard();
-        if(mAlarmGson.doesVibrate()){
-            startVibration();
-        }
     }
 
     @Override
@@ -171,6 +167,10 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         super.onResume();
         if (D) {Log.d(DEBUG_TAG, "onResume()");}
         playAlarmSound();
+        disableKeyguard();
+        if(mAlarmGson.doesVibrate()){
+            startVibration();
+        }
     }
 
     @Override

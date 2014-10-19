@@ -17,11 +17,10 @@ package de.petermoesenthin.alarming;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -29,9 +28,10 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.ui.LDialog;
+import de.petermoesenthin.alarming.ui.LDialogView;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
 
@@ -114,60 +114,50 @@ public class SettingsActivity extends Activity {
     }
 
     private void showSetSnoozeTimeDialog() {
-        AlertDialog.Builder builder;
-        AlertDialog alertDialog;
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.dialog_set_snooze_time,
-                null);
+        LDialogView dialogView = new LDialogView(this, R.layout.dialog_content_edit_text,
+                R.string.dialog_title_set_snooze_time);
+        LDialog dialog = new LDialog(this,
+                dialogView);
         int snoozeTime = PrefUtil.getInt(this, PrefKey.SNOOZE_TIME, 10);
-        final EditText editText_snoozeTime = (EditText) layout.findViewById(R.id
-                .editText_snoozeTime);
+        final EditText editText_snoozeTime = (EditText) dialogView.getView().findViewById(R.id
+                .editText);
         editText_snoozeTime.setText(String.valueOf(snoozeTime));
-        builder = new AlertDialog.Builder(this);
-        builder.setView(layout);
-        builder.setCancelable(true);
-        builder.setNegativeButton(R.string.dialog_button_cancel,
-                new DialogInterface.OnClickListener() {
+        editText_snoozeTime.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        dialog.setPositiveButtonListener(
+                new LDialog.LClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
+                    public void onClick(AlertDialog dialog) {
+                        String text = editText_snoozeTime.getText().toString();
+                        int number = Integer.parseInt(text);
+                        PrefUtil.putInt(getApplicationContext(),
+                                PrefKey.SNOOZE_TIME, Math.abs(number));
+                        dialog.dismiss();
                     }
                 });
-        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String text = editText_snoozeTime.getText().toString();
-                int number = Integer.parseInt(text);
-                PrefUtil.putInt(getApplicationContext(), PrefKey.SNOOZE_TIME, Math.abs(number));
-                dialogInterface.dismiss();
-            }
-        });
-        alertDialog = builder.create();
-        alertDialog.setCanceledOnTouchOutside(true);
-        alertDialog.show();
+        dialog.setNegativeButtonListener(
+                new LDialog.LClickListener() {
+                    @Override
+                    public void onClick(AlertDialog dialog) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
     }
 
     private void showVolumeSetDialog(){
-        AlertDialog.Builder builder;
-        AlertDialog alertDialog;
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.dialog_setting_media_volume,
-                null);
+        LDialogView dialogView = new LDialogView(this, R.layout.dialog_content_seekbar,
+                R.string.dialog_title_alarm_sound_volume);
+        LDialog dialog = new LDialog(this,
+                dialogView);
         int volume = PrefUtil.getInt(this,PrefKey.ALARM_SOUND_VOLUME, 80);
-        final SeekBar seekBar_volume = (SeekBar) layout.findViewById(R.id.seekBar_audioVolume);
-        final TextView textView_current_volume = (TextView)
-                layout.findViewById(R.id.textView_settings_dialog_inner_title);
-        final String dialog_inner_title =
-                getResources().getString(R.string.settings_dialog_alarm_sound_volume_inner_title);
-        String formatted = String.format(dialog_inner_title, volume + "%");
-        textView_current_volume.setText(formatted);
+        final SeekBar seekBar_volume = (SeekBar) dialogView.getView().findViewById(R.id
+                .seekBar);
         seekBar_volume.setMax(100);
         seekBar_volume.setProgress(volume);
         seekBar_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                String formatted = String.format(dialog_inner_title, i + "%");
-                textView_current_volume.setText(formatted);
             }
 
             @Override
@@ -177,32 +167,29 @@ public class SettingsActivity extends Activity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // Nothing
+                //TODO play test audio
             }
         });
-        builder = new AlertDialog.Builder(this);
-        builder.setView(layout);
-        builder.setCancelable(true);
-        builder.setNegativeButton(R.string.dialog_button_cancel,
-                new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                int newVolume = seekBar_volume.getProgress();
-                if (D) {Log.d(DEBUG_TAG, "Setting " + PrefKey.ALARM_SOUND_VOLUME + " to "
-                        + newVolume);}
-                PrefUtil.putInt(getApplicationContext(), PrefKey.ALARM_SOUND_VOLUME, newVolume);
-                dialogInterface.dismiss();
-            }
-        });
-        alertDialog = builder.create();
-        alertDialog.setCanceledOnTouchOutside(true);
-        alertDialog.show();
+        dialog.setPositiveButtonListener(
+                new LDialog.LClickListener() {
+                    @Override
+                    public void onClick(AlertDialog dialog) {
+                        int newVolume = seekBar_volume.getProgress();
+                        if (D) {Log.d(DEBUG_TAG, "Setting " + PrefKey.ALARM_SOUND_VOLUME + " to "
+                                + newVolume);}
+                        PrefUtil.putInt(getApplicationContext(), PrefKey.ALARM_SOUND_VOLUME,
+                                newVolume);
+                        dialog.dismiss();
+                    }
+                });
+        dialog.setNegativeButtonListener(
+                new LDialog.LClickListener() {
+                    @Override
+                    public void onClick(AlertDialog dialog) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
     }
 
 }

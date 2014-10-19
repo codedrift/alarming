@@ -22,6 +22,9 @@
         <item name="android:actionBarSize">@dimen/action_bar_height</item>
         <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_ab_up_compat</item>
+        <item name="android:editTextBackground">@drawable/alarming_edit_text_holo_light</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/alarming_btn_check_holo_light</item>
+        <item name="android:seekBarStyle">@style/alarming_seek_bar</item>
     </style>
 
     <!-- Alarm receiver -->
@@ -42,7 +45,6 @@
         <item name="android:textSize">20sp</item>
     </style>
 
-
     <style name="BetterPicker_Alarming">
         <item name="bpDialogBackground">@drawable/dialog_full_holo_light</item>
         <item name="bpTitleColor">@color/dialog_text_color_holo_light</item>
@@ -55,4 +57,16 @@
         <item name="bpDividerColor">@color/default_divider_color_light</item>
         <item name="bpKeyboardIndicatorColor">@color/material_yellow</item>
     </style>
+
+    <style name="alarming_edit_text" parent="AppTheme">
+        <item name="android:editTextBackground">@drawable/alarming_edit_text_holo_light</item>
+    </style>
+
+    <style name="alarming_seek_bar" parent="android:Widget.Holo.Light.SeekBar">
+    <item name="android:progressDrawable">@drawable/alarming_scrubber_progress_horizontal_holo_light</item>
+    <item name="android:indeterminateDrawable">@drawable/alarming_scrubber_progress_horizontal_holo_light</item>
+    <item name="android:thumb">@drawable/alarming_scrubber_control_selector_holo_light</item>
+</style>
+
+
 </resources>

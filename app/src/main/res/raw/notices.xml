@@ -52,12 +52,6 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>cardslib</name>
-        <url>https://github.com/gabrielemariotti/cardslib</url>
-        <copyright>Copyright 2013-2014 Gabriele Mariotti</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
         <name>LicensesDialog</name>
         <url>http://psdev.de/LicensesDialog/</url>
         <copyright>Copyright 2013 Philip Schiffer</copyright>
@@ -73,6 +67,12 @@
         <name>FloatingActionButton</name>
         <url>https://github.com/FaizMalkani/FloatingActionButton</url>
         <copyright>Copyright (c) 2014 Faiz Malkani</copyright>
+        <license>MIT License</license>
+    </notice>
+    <notice>
+        <name>RippleEffect</name>
+        <url>https://github.com/traex/RippleEffect</url>
+        <copyright>Copyright (c) 2014 Robin Chutaux</copyright>
         <license>MIT License</license>
     </notice>
     <notice>

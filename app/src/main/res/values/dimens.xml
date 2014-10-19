@@ -22,5 +22,6 @@
     <dimen name="textSize_drawerItemSelected">24sp</dimen>
     <dimen name="seperator_container_margin">10dp</dimen>
     <dimen name="action_bar_height">56dp</dimen>
+    <dimen name="l_button_corner_radius">4dp</dimen>
 
 </resources>

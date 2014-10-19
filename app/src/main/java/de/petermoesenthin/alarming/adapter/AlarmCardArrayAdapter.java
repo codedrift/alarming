@@ -98,16 +98,15 @@ public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson>{
             mViewHolder.alarmText = (TextView) convertView.findViewById(R.id.textView_alarmText);
             mViewHolder.chooseColor = (LinearLayout) convertView.findViewById(R.id.layout_choose_color);
             mViewHolder.deletAlarm = (ImageView) convertView.findViewById(R.id.button_deleteAlarm);
-            setOnClickListeners(position, mViewHolder);
-
-            if(mAdapterCallacks != null){
-                mAdapterCallacks.onCreateViews(mViewHolder, position);
-            }
             convertView.setTag(mViewHolder);
-
         } else {
             mViewHolder = (ViewHolder) convertView.getTag();
         }
+
+        if(mAdapterCallacks != null){
+            mAdapterCallacks.onCreateViews(mViewHolder, position);
+        }
+        setOnClickListeners(position, mViewHolder);
 
         return convertView;
     }

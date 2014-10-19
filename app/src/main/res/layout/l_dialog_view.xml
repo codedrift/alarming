@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:ripple="http://schemas.android.com/apk/res-auto"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="16dp"
+       >
+
+    <TextView
+        android:id="@+id/l_dialog_textView_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textSize="20sp"
+        android:textColor="@color/material_black"
+        android:textStyle="bold"/>
+
+    <ViewStub
+        android:id="@+id/l_dialog_content_stub"
+        android:inflatedId="@+id/l_dialog_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/l_textView_negative_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/selector_round_yellow"
+            android:clickable="true"
+            android:gravity="center"
+            android:minHeight="36dp"
+            android:minWidth="72dp"
+            android:padding="8dp"
+            android:text="@string/dialog_button_cancel"
+            android:alpha="0.8"
+            android:textColor="@color/material_black"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/l_textView_positive_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/selector_round_yellow"
+            android:clickable="true"
+            android:gravity="center"
+            android:minHeight="36dp"
+            android:minWidth="72dp"
+            android:padding="8dp"
+            android:text="@string/dialog_button_ok"
+            android:textColor="@color/material_black"
+            android:textSize="18sp"
+            android:alpha="0.8"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

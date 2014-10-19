@@ -79,14 +79,13 @@
 
     <string name="settings_category_media_playback">Media Playback</string>
     <string name="settings_alarm_sound_volume_title">Alarm sound volume</string>
-    <string name="settings_dialog_alarm_sound_volume_inner_title">Set the volume to %1$s</string>
+    <string name="dialog_title_alarm_sound_volume">Set alarm volume</string>
     <string name="settings_alarm_sound_volume_summary">Set the volume level for alarms</string>
 
     <string name="settings_category_alarm">Alarm</string>
     <string name="settings_snooze_time_title">Snooze time</string>
     <string name="settings_snooze_time_summary">Set the amount of time to snooze an alarm</string>
-    <string name="settings_dialog_snooze_time_inner_title">Set the minutes to snooze an
-        alarm</string>
+    <string name="dialog_title_set_snooze_time">Set snooze time</string>
 
     <!-- .AlarmSoundEditActivity -->
     <string name="activity_title_alarmSoundEdit">Edit audio file</string>
@@ -113,6 +112,8 @@
         Set up all your songs and Alarming will pick one. Never be annoyed by your alarm sound
         again!
     </string>
+    <string name="dialog_title_set_alarm_message">Set alarm message</string>
+    <string name="dialog_title_set_alarm_color">Set alarm color</string>
 
 
 </resources>
