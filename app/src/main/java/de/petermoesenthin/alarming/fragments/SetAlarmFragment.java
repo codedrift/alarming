@@ -85,26 +85,26 @@ public class SetAlarmFragment extends Fragment implements
         });
         mFAB.listenTo(mCardListView);
         setUpListView();
+        PrefUtil.getApplicationPrefs(fragmentContext)
+                .registerOnSharedPreferenceChangeListener(this);
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        PrefUtil.getApplicationPrefs(fragmentContext)
-                .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        PrefUtil.getApplicationPrefs(fragmentContext)
-                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        PrefUtil.getApplicationPrefs(fragmentContext)
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
     //================================================================================
@@ -135,13 +135,14 @@ public class SetAlarmFragment extends Fragment implements
         mCardListView.setAdapter(mAlarmCardArrayAdapter);
     }
 
-    private void activateAlarm(int position){
+    private void activateAlarm(AlarmCardArrayAdapter.ViewHolder viewHolder, int position){
         if (D) {Log.d(DEBUG_TAG, "Activate alarm " + position);}
         AlarmGson alg = mAlarms.get(position);
         alg.setAlarmSet(true);
         Calendar calendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
         AlarmUtil.setAlarm(fragmentContext, calendarSet, alg.getId());
         PrefUtil.setAlarms(fragmentContext, mAlarms);
+        setCircleButtonActive(viewHolder.alarmSet, true);
     }
 
     private void deleteAlarm(int position) {
@@ -151,13 +152,13 @@ public class SetAlarmFragment extends Fragment implements
         mAlarmCardArrayAdapter.notifyDataSetChanged();
     }
 
-    private void deactivateAlarm(int position){
+    private void deactivateAlarm(AlarmCardArrayAdapter.ViewHolder viewHolder, int position){
         if (D) {Log.d(DEBUG_TAG, "Deactivate alarm " + position);}
         AlarmGson alg = mAlarms.get(position);
         alg.setAlarmSet(false);
         AlarmUtil.deactivateAlarm(fragmentContext, alg.getId());
         PrefUtil.setAlarms(fragmentContext, mAlarms);
-        mAlarmCardArrayAdapter.notifyDataSetChanged();
+        setCircleButtonActive(viewHolder.alarmSet, false);
     }
 
     public void setAlarmTime(int position, int hourOfDay, int minute) {
@@ -165,7 +166,6 @@ public class SetAlarmFragment extends Fragment implements
         AlarmGson alg = mAlarms.get(position);
         alg.setHour(hourOfDay);
         alg.setMinute(minute);
-        activateAlarm(position);
         PrefUtil.setAlarms(fragmentContext, mAlarms);
     }
 
@@ -177,7 +177,6 @@ public class SetAlarmFragment extends Fragment implements
         mAlarmCardArrayAdapter = new AlarmCardArrayAdapter
                 (fragmentContext, R.layout.card_alarm_time , alarms, new AlarmCardArrayAdapter
                         .AdapterCallBacks() {
-
                     @Override
                     public AlarmCardArrayAdapter.ViewHolder onCreateViews(
                             AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
@@ -186,7 +185,11 @@ public class SetAlarmFragment extends Fragment implements
 
                         setAlarmTimeView(viewHolder.alarmTime, viewHolder.am_pm, alarm.getHour(),
                                 alarm.getMinute());
-                        setCircleButtonActive(viewHolder.alarmSet, alarm.isAlarmSet());
+                        if(alarm.isAlarmSet()){
+                            activateAlarm(viewHolder, position);
+                        } else {
+                            deactivateAlarm(viewHolder, position);
+                        }
                         viewHolder.vibrate.setChecked(alarm.doesVibrate());
                         viewHolder.repeatAlarm.setChecked(alarm.doesRepeat());
                         if(!alarm.getMessage().isEmpty()) {
@@ -214,11 +217,9 @@ public class SetAlarmFragment extends Fragment implements
                         AlarmGson alg = alarms.get(position);
                         boolean alarmSet = alg.isAlarmSet();
                         if(alarmSet){
-                            deactivateAlarm(position);
-                            setCircleButtonActive(viewHolder.alarmSet, false);
+                            deactivateAlarm(viewHolder, position);
                         } else {
-                            activateAlarm(position);
-                            setCircleButtonActive(viewHolder.alarmSet, true);
+                            activateAlarm(viewHolder, position);
                         }
                     }
 
@@ -262,7 +263,7 @@ public class SetAlarmFragment extends Fragment implements
                     public void onDeleteAlarmClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
                                                    int position) {
                         if (D) {Log.d(DEBUG_TAG, "DeleteAlarmClick at " + position);}
-                        deactivateAlarm(position);
+                        deactivateAlarm(viewHolder, position);
                         deleteAlarm(position);
                     }
                 }
@@ -359,8 +360,7 @@ public class SetAlarmFragment extends Fragment implements
                         setAlarmTime(reference, hourOfDay, minute);
                         setAlarmTimeView(viewHolder.alarmTime, viewHolder.am_pm, hourOfDay,
                                 minute);
-                        activateAlarm(reference);
-                        setCircleButtonActive(viewHolder.alarmSet, true);
+                        activateAlarm(viewHolder, reference);
                     }
                 });
         tpb.show();
@@ -379,6 +379,8 @@ public class SetAlarmFragment extends Fragment implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals(PrefKey.ALARMS)){
             if(D) {Log.d(DEBUG_TAG,"Preferences have changed");}
+            mAlarms = PrefUtil.getAlarms(fragmentContext);
+            mAlarmCardArrayAdapter.setAlarms(mAlarms);
             mAlarmCardArrayAdapter.notifyDataSetChanged();
         }
     }

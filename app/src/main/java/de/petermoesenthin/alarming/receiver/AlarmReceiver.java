@@ -40,7 +40,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent){
         int alarmID = intent.getIntExtra("id", -1);
-        if (D) {Log.d(DEBUG_TAG,"Received alarm intent for id" + alarmID);}
+        if (D) {Log.d(DEBUG_TAG,"Received alarm intent for id " + alarmID);}
         Intent i = new Intent(context, AlarmReceiverActivity.class);
         i.putExtra("id", alarmID);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

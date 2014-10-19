@@ -64,6 +64,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     private String mDataSource;
     private int mAlarmId;
     private AlarmGson mAlarmGson;
+    private List<AlarmGson> mAlarms;
 
     private KeyguardManager mKeyGuardManager;
     private KeyguardManager.KeyguardLock mKeyguardLock;
@@ -145,15 +146,13 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         button_snooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (D) {
-                    Log.d(DEBUG_TAG, "Alarm has been snoozed. ya biscuit.");
-                }
+                if (D) {Log.d(DEBUG_TAG, "Alarm has been snoozed. ya biscuit.");}
                 setSnooze();
                 finishThis();
             }
         });
-        List<AlarmGson> alarms = PrefUtil.getAlarms(this);
-        mAlarmGson = PrefUtil.findAlarmWithID(alarms, mAlarmId);
+        mAlarms = PrefUtil.getAlarms(this);
+        mAlarmGson = PrefUtil.findAlarmWithID(mAlarms, mAlarmId);
         textView_alarmMessage.setText(mAlarmGson.getMessage());
     }
 
@@ -267,9 +266,8 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         NotificationUtil.clearSnoozeNotification(this, mAlarmId);
         AlarmUtil.deactivateSnooze(this, mAlarmId);
         // Unset alarm from preferences
-        AlarmGson alg = PrefUtil.getAlarmGson(this);
-        alg.setAlarmSet(false);
-        PrefUtil.setAlarmGson(this, alg);
+        mAlarmGson.setAlarmSet(false);
+        PrefUtil.setAlarms(this, mAlarms);
     }
 
     private void setSnooze(){
@@ -300,7 +298,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
             if(alsg != null){
                 mStartMillis = alsg.getStartMillis();
                 mEndMillis = alsg.getEndMillis();
-                //loopAudio = alsg.isLooping();
+                //TODO loopAudio = alsg.isLooping();
             } else{
                 mStartMillis = 0;
                 mEndMillis = 0;

@@ -36,7 +36,7 @@ public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson>{
     private ViewHolder mViewHolder;
     private AdapterCallBacks mAdapterCallacks;
     private Context mContext;
-    List<AlarmGson> mAlarms;
+    private List<AlarmGson> mAlarms;
 
     public AlarmCardArrayAdapter(Context context, int resource,
                                  List<AlarmGson> alarms, AdapterCallBacks adapterCallacks) {
@@ -81,6 +81,14 @@ public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson>{
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public List<AlarmGson> getAlarms() {
+        return mAlarms;
+    }
+
+    public void setAlarms(List<AlarmGson> mAlarms) {
+        this.mAlarms = mAlarms;
     }
 
     @Override
