@@ -33,21 +33,20 @@ import de.petermoesenthin.alarming.pref.AlarmGson;
 
 public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson>{
 
-    private ViewHolder mViewHolder;
     private AdapterCallBacks mAdapterCallacks;
     private Context mContext;
     private List<AlarmGson> mAlarms;
 
     public AlarmCardArrayAdapter(Context context, int resource,
                                  List<AlarmGson> alarms, AdapterCallBacks adapterCallacks) {
-        super(context, resource);
+        super(context, resource, alarms);
         mContext = context;
         mAdapterCallacks = adapterCallacks;
         mAlarms = alarms;
     }
 
     public interface AdapterCallBacks {
-        ViewHolder onCreateViews(ViewHolder viewHolder, int position);
+        ViewHolder onBuildView(ViewHolder viewHolder, AlarmGson alarm);
         void onAlarmTimeClick(ViewHolder viewHolder, int position);
         void onAlarmSetClick(ViewHolder viewHolder, int position);
         void onVibrateClick(ViewHolder viewHolder, int position);
@@ -69,58 +68,38 @@ public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson>{
     }
 
     @Override
-    public int getCount() {
-        return mAlarms.size();
-    }
-
-    @Override
-    public AlarmGson getItem(int position) {
-        return mAlarms.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public List<AlarmGson> getAlarms() {
-        return mAlarms;
-    }
-
-    public void setAlarms(List<AlarmGson> mAlarms) {
-        this.mAlarms = mAlarms;
-    }
-
-    @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder = null;
+        AlarmGson alarm = getItem(position);
+
         if(convertView == null){
             LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context
                     .LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.card_alarm_time, null);
-            mViewHolder = new ViewHolder();
-            mViewHolder.alarmTime = (TextView) convertView.findViewById(R.id.textView_alarmTime);
-            mViewHolder.am_pm = (TextView) convertView.findViewById(R.id.textView_am_pm);
-            mViewHolder.alarmSet = (CircleButton) convertView.findViewById(R.id.button_alarm_set);
-            mViewHolder.vibrate = (CheckBox) convertView.findViewById(R.id.checkBox_vibrate);
-            mViewHolder.repeatAlarm = (CheckBox) convertView.findViewById(R.id.checkBox_repeat_alarm);
-            mViewHolder.alarmText = (TextView) convertView.findViewById(R.id.textView_alarmText);
-            mViewHolder.chooseColor = (LinearLayout) convertView.findViewById(R.id.layout_choose_color);
-            mViewHolder.deletAlarm = (ImageView) convertView.findViewById(R.id.button_deleteAlarm);
-            convertView.setTag(mViewHolder);
+            viewHolder = new ViewHolder();
+            viewHolder.alarmTime = (TextView) convertView.findViewById(R.id.textView_alarmTime);
+            viewHolder.am_pm = (TextView) convertView.findViewById(R.id.textView_am_pm);
+            viewHolder.alarmSet = (CircleButton) convertView.findViewById(R.id.button_alarm_set);
+            viewHolder.vibrate = (CheckBox) convertView.findViewById(R.id.checkBox_vibrate);
+            viewHolder.repeatAlarm = (CheckBox) convertView.findViewById(R.id.checkBox_repeat_alarm);
+            viewHolder.alarmText = (TextView) convertView.findViewById(R.id.textView_alarmText);
+            viewHolder.chooseColor = (LinearLayout) convertView.findViewById(R.id.layout_choose_color);
+            viewHolder.deletAlarm = (ImageView) convertView.findViewById(R.id.button_deleteAlarm);
+            convertView.setTag(viewHolder);
         } else {
-            mViewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        if(mAdapterCallacks != null){
-            mAdapterCallacks.onCreateViews(mViewHolder, position);
+        if(((mAdapterCallacks != null) && (alarm != null))){
+            mAdapterCallacks.onBuildView(viewHolder, alarm);
         }
-        setOnClickListeners(position, mViewHolder);
+        setOnClickListeners(position, viewHolder);
 
         return convertView;
     }
 
     private void setOnClickListeners(final int position, final ViewHolder viewHolder){
-        mViewHolder.alarmTime.setOnClickListener(new View.OnClickListener() {
+        viewHolder.alarmTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mAdapterCallacks != null){
@@ -129,7 +108,7 @@ public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson>{
             }
         });
 
-        mViewHolder.alarmSet.setOnClickListener(new View.OnClickListener() {
+        viewHolder.alarmSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mAdapterCallacks != null){
@@ -138,7 +117,7 @@ public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson>{
             }
         });
 
-        mViewHolder.vibrate.setOnClickListener(new View.OnClickListener() {
+        viewHolder.vibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mAdapterCallacks != null){
@@ -147,7 +126,7 @@ public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson>{
             }
         });
 
-        mViewHolder.repeatAlarm.setOnClickListener(new View.OnClickListener() {
+        viewHolder.repeatAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mAdapterCallacks != null){
@@ -156,7 +135,7 @@ public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson>{
             }
         });
 
-        mViewHolder.alarmText.setOnClickListener(new View.OnClickListener() {
+        viewHolder.alarmText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mAdapterCallacks != null){
@@ -165,7 +144,7 @@ public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson>{
             }
         });
 
-        mViewHolder.chooseColor.setOnClickListener(new View.OnClickListener() {
+        viewHolder.chooseColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mAdapterCallacks != null){
@@ -173,7 +152,7 @@ public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson>{
                 }
             }
         });
-        mViewHolder.deletAlarm.setOnClickListener(new View.OnClickListener() {
+        viewHolder.deletAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mAdapterCallacks != null){
