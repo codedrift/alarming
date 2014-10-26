@@ -23,8 +23,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -128,8 +126,8 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
             }
         });
 
-        button_play_pause.setEnabled(false);
-        button_stop.setEnabled(false);
+        enablePlayPauseButton(false);
+        enableStopButton(false);
     }
 
     @Override
@@ -228,13 +226,13 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
             setPlayPauseButtonPlaying(true);
         } else {
             mMediaPlayer.seekTo(mStartMillis);
-            button_play_pause.setEnabled(false);
+            enablePlayPauseButton(false);
         }
     }
 
     private void setUpMediaPlayer() {
+        if (D) {Log.d(DEBUG_TAG, "Setting up MediaPlayer.");}
         mMediaPlayer = new MediaPlayer();
-        // TODO remove test setting
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mMediaPlayer.setDataSource(mSoundFilePath);
@@ -249,16 +247,18 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
-        button_play_pause.setEnabled(true);
+        if (D) {Log.d(DEBUG_TAG, "MediaPlayer is prepared.");}
+        enablePlayPauseButton(true);
     }
 
     @Override
     public void onSeekComplete(MediaPlayer mediaPlayer) {
+        if (D) {Log.d(DEBUG_TAG, "MediaPlayer completed seek.");}
         mMediaPlayer.start();
         mPlayerPositionUpdateThread.start();
         setPlayPauseButtonPlaying(true);
-        button_play_pause.setEnabled(true);
-        button_stop.setEnabled(true);
+        enablePlayPauseButton(true);
+        enableStopButton(true);
     }
 
     /**
@@ -287,30 +287,28 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
             mPlayerPositionUpdateThread.interrupt();
             mPlayerPositionUpdateThread = null;
         }
-        mMediaPlayer.stop();
-        mCurrentPlayerMills = 0;
-        audioPlaying = false;
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                setPlayPauseButtonPlaying(false);
-                textView_resetPlaybackPosition();
-                button_stop.setEnabled(false);
-                button_play_pause.setEnabled(false);
-            }
-        });
-        mMediaPlayer.prepareAsync();
+        setPlayPauseButtonPlaying(false);
+        resetPlaybackPosition();
+        enableStopButton(false);
+        enablePlayPauseButton(false);
+        // Uncommented because onPrepared does not get called
+        //mMediaPlayer.stop();
+        //mMediaPlayer.prepareAsync();
+        releaseMediaPlayer();
+        setUpMediaPlayer();
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
+        if (D) {Log.d(DEBUG_TAG, "MediaPlayer completed playback");}
         setPlayPauseButtonPlaying(false);
-        button_stop.setEnabled(false);
-        textView_resetPlaybackPosition();
+        enableStopButton(false);
+        resetPlaybackPosition();
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
+        if (D) {Log.d(DEBUG_TAG, "MediaPlayer encountered an error. Resetting");}
         releaseMediaPlayer();
         setUpMediaPlayer();
         return false;
@@ -377,7 +375,9 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
         button_stop = (Button) findViewById(R.id.button_stop);
     }
 
-    private void textView_resetPlaybackPosition(){
+    private void resetPlaybackPosition(){
+        if (D) {Log.d(DEBUG_TAG, "Resetting Playback position");}
+        mCurrentPlayerMills = 0;
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -388,6 +388,7 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
     }
 
     private void setPlayPauseButtonPlaying(boolean playing){
+        if (D) {Log.d(DEBUG_TAG, "Setting PlayPauseButton to " + playing);}
         audioPlaying = playing;
         if(playing){
             mHandler.post(new Runnable() {
@@ -438,6 +439,25 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
         });
     }
 
+    private void enableStopButton(final boolean enabled){
+        if (D) {Log.d(DEBUG_TAG, "ButtonStop enabled: " + enabled);}
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                button_stop.setEnabled(enabled);
+            }
+        });
+    }
+
+    private void enablePlayPauseButton(final boolean enabled){
+        if (D) {Log.d(DEBUG_TAG, "ButtonPlayPause enabled: " + enabled);}
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                button_play_pause.setEnabled(enabled);
+            }
+        });
+    }
 
 
 }
