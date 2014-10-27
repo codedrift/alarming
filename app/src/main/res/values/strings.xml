@@ -40,6 +40,13 @@
     <string name="checkbox_repeat">Repeat</string>
     <string name="textView_chooseColor">Choose color</string>
     <string name="textView_alarmText">Wake up!</string>
+    <string-array name="alarm_texts">
+        <item>Wake up!</item>
+        <item>Time to get out of bed!</item>
+        <item>No excuses this time!</item>
+        <item>You have to do better than that!</item>
+        <item>Don\'t press snooze!</item>
+    </string-array>
 
     <!-- fragments/SoundManagerFragment -->
     <string name="action_save_config">Save configuration</string>

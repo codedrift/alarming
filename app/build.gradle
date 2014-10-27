@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '19.1.0'
+    buildToolsVersion '21.0.2'
 
     defaultConfig {
         applicationId "de.petermoesenthin.alarming"
@@ -25,16 +25,15 @@ dependencies {
             'com.google.code.gson:gson:2.2.4',
             'com.doomonafireball.betterpickers:library:1.5.2',
             'commons-io:commons-io:2.4',
-            'com.edmodo:rangebar:1.0.0',
             'com.github.castorflex.smoothprogressbar:library-circular:1.0.0',
             'com.larswerkman:HoloColorPicker:1.4',
             'com.github.markushi:circlebutton:1.1',
             'com.pkmmte.view:circularimageview:1.1',
+            'com.edmodo:rangebar:1.0.0',
             'com.android.support:cardview-v7:+'
     )
     compile('de.psdev.licensesdialog:licensesdialog:1.6.0') {
         exclude module: 'support-v4'
     }
-
     compile project(':libs:FloatingActionButton')
 }

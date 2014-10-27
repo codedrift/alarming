@@ -37,6 +37,7 @@ import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import at.markushi.ui.CircleButton;
 import de.petermoesenthin.alarming.R;
@@ -52,9 +53,9 @@ import de.petermoesenthin.alarming.util.StringUtil;
 public class SetAlarmFragment extends Fragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    //================================================================================
+    //==============================================================================================
     // Members
-    //================================================================================
+    //==============================================================================================
 
     public static final String DEBUG_TAG = "SetAlarmFragment";
     private static final boolean D = true;
@@ -66,9 +67,9 @@ public class SetAlarmFragment extends Fragment implements
     private FloatingActionButton mFAB;
     private boolean mFlag_create_new = false;
 
-    //================================================================================
+    //==============================================================================================
     // Lifecycle
-    //================================================================================
+    //==============================================================================================
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,19 +108,24 @@ public class SetAlarmFragment extends Fragment implements
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    //================================================================================
+    //==============================================================================================
     // Methods
-    //================================================================================
+    //==============================================================================================
 
     private void addNewAlarm() {
         if (D) {Log.d(DEBUG_TAG, "Add new alarm");}
         AlarmGson alarm = new AlarmGson();
         int alarmID = PrefUtil.getInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, 0);
         alarm.setId(alarmID);
+        Random r = new Random();
+        String[] messages = getResources().getStringArray(R.array.alarm_texts);
+        String message = messages[r.nextInt(messages.length)];
+        alarm.setMessage(message);
         //mAlarms.add(0, alarmGson);
         mAlarms.add(alarm);
         mFlag_create_new = true;
         mAlarmCardArrayAdapter.notifyDataSetChanged();
+        scrollCardListViewToBottom();
         PrefUtil.putInt(fragmentContext, PrefKey.ALARM_ID_COUNTER, alarmID + 1);
         PrefUtil.setAlarms(fragmentContext, mAlarms);
     }
@@ -167,9 +173,9 @@ public class SetAlarmFragment extends Fragment implements
         alg.setMinute(minute);
     }
 
-    //================================================================================
+    //==============================================================================================
     // UI
-    //================================================================================
+    //==============================================================================================
 
     private void createListViewAdapter(final List<AlarmGson> alarms){
         mAlarmCardArrayAdapter = new AlarmCardArrayAdapter
@@ -185,10 +191,8 @@ public class SetAlarmFragment extends Fragment implements
                         setCircleButtonActive(viewHolder.alarmSet, alarm.isAlarmSet());
                         viewHolder.vibrate.setChecked(alarm.doesVibrate());
                         viewHolder.repeatAlarm.setChecked(alarm.doesRepeat());
-                        if(alarm.getMessage().isEmpty()) {
-                            viewHolder.alarmText.setText("" + alarm.getId());
-                        } else {
-                            viewHolder.alarmText.setText("" + alarm.getMessage());
+                        if(!alarm.getMessage().isEmpty()) {
+                            viewHolder.alarmText.setText(alarm.getMessage());
                         }
                         //TODO mViewHolder.chooseColor
                         /*
@@ -291,6 +295,16 @@ public class SetAlarmFragment extends Fragment implements
         }
     }
 
+    private void scrollCardListViewToBottom() {
+        mCardListView.post(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last row so it will scroll into view...
+                mCardListView.setSelection(mAlarmCardArrayAdapter.getCount() - 1);
+            }
+        });
+    }
+
     private void showColorPickerDialog(int position){
         LDialog dialog = new LDialog(fragmentContext,
                 new LDialogView(fragmentContext, R.layout.dialog_content_color_picker,
@@ -346,6 +360,8 @@ public class SetAlarmFragment extends Fragment implements
 
     /**
      * Show a time picker to set the alarm time
+     * @param position Reference to the current position in the list view
+     * @param viewHolder Associated views in within the alarm card
      */
     private void showTimePicker(int position, final AlarmCardArrayAdapter.ViewHolder viewHolder) {
         if(D) {Log.d(DEBUG_TAG,"Showing time picker dialog.");}
@@ -370,15 +386,15 @@ public class SetAlarmFragment extends Fragment implements
         public void onDialogTimeSet(int reference, int hourOfDay, int minute);
     }
 
-    //================================================================================
+    //==============================================================================================
     // Callbacks
-    //================================================================================
+    //==============================================================================================
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals(PrefKey.ALARMS)){
             if(D) {Log.d(DEBUG_TAG,"Preferences have changed");}
-            //mAlarmCardArrayAdapter.notifyDataSetChanged();
+            mAlarmCardArrayAdapter.notifyDataSetChanged();
         }
     }
 }

@@ -16,12 +16,10 @@
 
 <resources>
     <dimen name="activity_horizontal_margin">8dp</dimen>
-
     <dimen name="textSize_drawerItem">24sp</dimen>
     <dimen name="textSize_drawerAdditionalItem">16sp</dimen>
     <dimen name="textSize_drawerItemSelected">24sp</dimen>
-    <dimen name="seperator_container_margin">10dp</dimen>
+    <dimen name="separator_container_margin">10dp</dimen>
     <dimen name="action_bar_height">56dp</dimen>
     <dimen name="l_button_corner_radius">4dp</dimen>
-
 </resources>
