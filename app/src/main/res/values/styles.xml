@@ -17,7 +17,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/AlarmingActionBar</item>
         <item name="android:actionBarSize">@dimen/action_bar_height</item>
         <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
