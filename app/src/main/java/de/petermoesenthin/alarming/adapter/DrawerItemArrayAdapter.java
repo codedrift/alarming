@@ -33,60 +33,40 @@ import de.petermoesenthin.alarming.ui.DrawerItem;
 
 public class DrawerItemArrayAdapter extends ArrayAdapter<DrawerItem> {
 
-    //==========================================================================
-    // Members
-    //==========================================================================
+    private Context mContext;
 
-    private Context context;
-
-    //==========================================================================
-    // Lifecycle
-    //==========================================================================
-
-    public DrawerItemArrayAdapter(Context context, int layoutId,
-                                  List<DrawerItem> drawerItemList) {
+    public DrawerItemArrayAdapter(Context context, int layoutId, List<DrawerItem> drawerItemList) {
         super(context, layoutId, drawerItemList);
-        this.context = context;
+        this.mContext = context;
     }
-
-    //==========================================================================
-    // Methods
-    //==========================================================================
-
 
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         DrawerItem drawerItem = getItem(position);
+        View v = convertView;
 
         LayoutInflater layoutInflater = (LayoutInflater)
-                context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+                mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
-        if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.listitem_drawer,
+        if (v == null) {
+            v = layoutInflater.inflate(R.layout.listitem_drawer,
                     null);
             viewHolder = new ViewHolder();
-            viewHolder.itemImage = (ImageView) convertView.findViewById(
-                    R.id.drawer_listItem_ImageView);
-            viewHolder.itemText = (TextView) convertView.findViewById(
-                    R.id.drawer_listItem_TextView);
+            viewHolder.itemImage = (ImageView) v.findViewById(R.id.drawer_listItem_ImageView);
+            viewHolder.itemText = (TextView) v.findViewById(R.id.drawer_listItem_TextView);
             if (position == 0) {
                 viewHolder.itemText.setTypeface(null, Typeface.BOLD);
             }
-            convertView.setTag(viewHolder);
+            v.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (ViewHolder) v.getTag();
         }
 
         viewHolder.itemText.setText(drawerItem.getTitle());
         viewHolder.itemImage.setImageResource(drawerItem.getImageId());
 
-        return convertView;
+        return v;
     }
-
-
-    //==========================================================================
-    // Inner Classes
-    //==========================================================================
 
     private class ViewHolder {
         ImageView itemImage;

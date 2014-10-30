@@ -37,7 +37,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.petermoesenthin.alarming.callbacks.OnCopyFinishedListener;
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 
 public class FileUtil {
@@ -47,6 +46,11 @@ public class FileUtil {
 
     public static final String APP_EXT_STORAGE_FOLDER = "alarming";
     public static final String AUDIO_METADATA_FILE_EXTENSION = "alarmingmeta";
+
+    public interface OnCopyFinishedListener {
+
+        void onOperationFinished();
+    }
 
     /**
      * Copies a file to the Alarming directory in the external storage

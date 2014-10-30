@@ -40,29 +40,21 @@ public class SettingsActivity extends Activity {
     public static final String DEBUG_TAG = "SettingsActivity";
     public static final boolean D = true;
 
-    private CheckBox checkBox_showNotification;
-    private LinearLayout linearLayout_setAlarmVolume;
-    private LinearLayout linearLayout_setSnoozeTime;
-
-    //==========================================================================
-    // Lifecycle
-    //==========================================================================
+    //----------------------------------------------------------------------------------------------
+    //                                      LIFECYCLE
+    //----------------------------------------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        if(getActionBar() != null){
+        if (getActionBar() != null) {
             getActionBar().setHomeButtonEnabled(true);
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
         setTitle(R.string.activity_title_settings);
         setUpUi();
     }
-
-    //==========================================================================
-    // Callbacks
-    //==========================================================================
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -78,12 +70,13 @@ public class SettingsActivity extends Activity {
         }
     }
 
-    //==========================================================================
-    // Ui
-    //==========================================================================
+    //----------------------------------------------------------------------------------------------
+    //                                      UI
+    //----------------------------------------------------------------------------------------------
 
-    private void setUpUi(){
-        checkBox_showNotification = (CheckBox) findViewById(R.id.checkBox_setting_notification);
+    private void setUpUi() {
+        CheckBox checkBox_showNotification = (CheckBox) findViewById(
+                R.id.checkBox_setting_notification);
         checkBox_showNotification.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -96,7 +89,8 @@ public class SettingsActivity extends Activity {
                 });
         boolean showNotification = PrefUtil.getBoolean(this, PrefKey.SHOW_ALARM_NOTIFICATION, true);
         checkBox_showNotification.setChecked(showNotification);
-        linearLayout_setAlarmVolume = (LinearLayout) findViewById(R.id.linearLayout_setAlarmVolume);
+        LinearLayout linearLayout_setAlarmVolume = (LinearLayout) findViewById(
+                R.id.linearLayout_setAlarmVolume);
         linearLayout_setAlarmVolume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,7 +98,8 @@ public class SettingsActivity extends Activity {
             }
         });
 
-        linearLayout_setSnoozeTime = (LinearLayout) findViewById(R.id.linearLayout_setSnoozeTime);
+        LinearLayout linearLayout_setSnoozeTime = (LinearLayout) findViewById(
+                R.id.linearLayout_setSnoozeTime);
         linearLayout_setSnoozeTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,12 +140,12 @@ public class SettingsActivity extends Activity {
         dialog.show();
     }
 
-    private void showVolumeSetDialog(){
+    private void showVolumeSetDialog() {
         LDialogView dialogView = new LDialogView(this, R.layout.dialog_content_seekbar,
                 R.string.dialog_title_alarm_sound_volume);
         LDialog dialog = new LDialog(this,
                 dialogView);
-        int volume = PrefUtil.getInt(this,PrefKey.ALARM_SOUND_VOLUME, 80);
+        int volume = PrefUtil.getInt(this, PrefKey.ALARM_SOUND_VOLUME, 80);
         final SeekBar seekBar_volume = (SeekBar) dialogView.getView().findViewById(R.id
                 .seekBar);
         seekBar_volume.setMax(100);
@@ -175,8 +170,10 @@ public class SettingsActivity extends Activity {
                     @Override
                     public void onClick(AlertDialog dialog) {
                         int newVolume = seekBar_volume.getProgress();
-                        if (D) {Log.d(DEBUG_TAG, "Setting " + PrefKey.ALARM_SOUND_VOLUME + " to "
-                                + newVolume);}
+                        if (D) {
+                            Log.d(DEBUG_TAG, "Setting " + PrefKey.ALARM_SOUND_VOLUME + " to "
+                                    + newVolume);
+                        }
                         PrefUtil.putInt(getApplicationContext(), PrefKey.ALARM_SOUND_VOLUME,
                                 newVolume);
                         dialog.dismiss();

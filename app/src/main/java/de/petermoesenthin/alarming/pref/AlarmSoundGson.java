@@ -18,12 +18,12 @@ package de.petermoesenthin.alarming.pref;
 
 public class AlarmSoundGson {
 
-    private String path;
-    private String metaTitle;
-    private String metaArtist;
+    private String path = "";
+    private String metaTitle = "";
+    private String metaArtist = "";
     private int startMillis = 0;
     private int endMillis = 0;
-    private int length;
+    private int length = 0;
     private int hash = 0;
 
     public String getPath() {

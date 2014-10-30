@@ -29,10 +29,6 @@ public class SnoozeDismissReceiver extends BroadcastReceiver{
     public static final String DEBUG_TAG = "SnoozeDismissReceiver";
     private static final boolean D = true;
 
-    //================================================================================
-    // Lifecycle
-    //================================================================================
-
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(NotificationUtil.ACTION_DISMISS_SNOOZE)) {

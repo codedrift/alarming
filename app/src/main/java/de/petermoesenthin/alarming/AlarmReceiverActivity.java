@@ -79,9 +79,9 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     private TextView textView_alarmMessage;
     private LinearLayout layout_buttons;
 
-    //================================================================================
-    // Lifecycle
-    //================================================================================
+    //----------------------------------------------------------------------------------------------
+    //                                      LIFECYCLE
+    //----------------------------------------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -218,9 +218,9 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         this.overridePendingTransition(android.R.anim.fade_out, android.R.anim.fade_out);
     }
 
-    //================================================================================
-    // Methods
-    //================================================================================
+    //----------------------------------------------------------------------------------------------
+    //                                      SYSTEM
+    //----------------------------------------------------------------------------------------------
 
     /**
      * Disables the keyguard.
@@ -260,6 +260,10 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         }
     }
 
+    //----------------------------------------------------------------------------------------------
+    //                                      ALARM
+    //----------------------------------------------------------------------------------------------
+
     private void clearAlarmSet(){
         // Clear any pending notifications
         NotificationUtil.clearAlarmNotifcation(this, mAlarmId);
@@ -278,6 +282,10 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         snoozetime.add(Calendar.MINUTE, snoozeTime);
         AlarmUtil.setSnooze(this, snoozetime, mAlarmId);
     }
+
+    //----------------------------------------------------------------------------------------------
+    //                                      MEDIA PLAYBACK
+    //----------------------------------------------------------------------------------------------
 
     /**
      * Prepares alarm sound playback

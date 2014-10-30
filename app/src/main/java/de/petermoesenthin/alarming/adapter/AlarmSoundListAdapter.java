@@ -30,20 +30,11 @@ import de.petermoesenthin.alarming.ui.AlarmSoundListItem;
 
 public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
 
-    //==========================================================================
-    // Members
-    //==========================================================================
+    private Context mContext;
 
-    private Context context;
-
-    //==========================================================================
-    // Lifecycle
-    //==========================================================================
-
-    public AlarmSoundListAdapter(Context context, int layoutId,
-                                   List<AlarmSoundListItem> itemList) {
+    public AlarmSoundListAdapter(Context context, int layoutId, List<AlarmSoundListItem> itemList) {
         super(context, layoutId, itemList);
-        this.context = context;
+        this.mContext = context;
     }
 
     //==========================================================================
@@ -53,32 +44,24 @@ public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         AlarmSoundListItem listItem = getItem(position);
+        View v = convertView;
 
-        LayoutInflater layoutInflater = (LayoutInflater) context
-                .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-
-        if (convertView == null) {
-            convertView = layoutInflater
-                    .inflate(R.layout.listitem_alarm_sound, null);
+        if (v == null) {
+            LayoutInflater layoutInflater = (LayoutInflater) mContext
+                    .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+            v = layoutInflater.inflate(R.layout.listitem_alarm_sound, null);
             viewHolder = new ViewHolder();
-            viewHolder.itemTitle = (TextView) convertView
-                    .findViewById(R.id.listItem_textView_soundTitle);
-            viewHolder.itemArtist = (TextView) convertView
-                    .findViewById(R.id.listItem_textView_soundArtist);
-            convertView.setTag(viewHolder);
+            viewHolder.itemTitle = (TextView) v.findViewById(R.id.listItem_textView_soundTitle);
+            viewHolder.itemArtist = (TextView) v.findViewById(R.id.listItem_textView_soundArtist);
+            v.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (ViewHolder) v.getTag();
         }
         viewHolder.itemTitle.setText(listItem.getTitle());
         viewHolder.itemArtist.setText(listItem.getArtist());
 
-        return convertView;
+        return v;
     }
-
-    //==========================================================================
-    // Inner Classes
-    //==========================================================================
-
 
     private class ViewHolder {
         TextView itemTitle;

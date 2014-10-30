@@ -30,9 +30,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -49,7 +46,6 @@ import java.util.List;
 import de.petermoesenthin.alarming.AlarmSoundEditActivity;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmSoundListAdapter;
-import de.petermoesenthin.alarming.callbacks.OnCopyFinishedListener;
 import de.petermoesenthin.alarming.ui.AlarmSoundListItem;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
@@ -59,41 +55,36 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 public class SoundManagerFragment extends Fragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    //================================================================================
-    // Members
-    //================================================================================
-
     public static final String DEBUG_TAG = "SoundManagerFragment";
     private static final boolean D = true;
 
     private ListView mListView;
     private AlertDialog mOptionsDialog;
     private int mListItemCount = 0;
-    private CircularProgressBar mProgressBar;
-    private Handler mHandler = new Handler();
-    private Context fragmentContext;
-    private FloatingActionButton mFAB;
-
     private AdapterView.OnItemClickListener mListClickListener =
-            new AdapterView.OnItemClickListener(){
+            new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (position == mListItemCount) {
                         startAudioFileIntent();
-                    }else {
+                    } else {
                         showItemActionDialog(position);
                     }
                 }
             };
+    private CircularProgressBar mProgressBar;
+    private Handler mHandler = new Handler();
+    private Context mContext;
+    private FloatingActionButton mFAB;
 
-    //================================================================================
-    // Lifecycle
-    //================================================================================
+    //----------------------------------------------------------------------------------------------
+    //                                      LIFECYCLE
+    //----------------------------------------------------------------------------------------------
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        fragmentContext = container.getContext();
+        mContext = container.getContext();
         View rootView = inflater.inflate(R.layout.fragment_sound_manager, container, false);
         mListView = (ListView) rootView.findViewById(R.id.listView_alarmSounds);
         mFAB = (FloatingActionButton) rootView.findViewById(R.id.fab_add_sound);
@@ -112,81 +103,84 @@ public class SoundManagerFragment extends Fragment implements
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        PrefUtil.getApplicationPrefs(fragmentContext)
+        PrefUtil.getApplicationPrefs(mContext)
                 .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
-        PrefUtil.getApplicationPrefs(fragmentContext)
+        PrefUtil.getApplicationPrefs(mContext)
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    //================================================================================
-    // Callbacks
-    //================================================================================
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (D) {Log.d(DEBUG_TAG,"Preferences changed");}
+        if (D) {
+            Log.d(DEBUG_TAG, "Preferences changed");
+        }
         setupListView();
     }
 
     @Override
-    public void onActivityResult(int requestCode,int resultCode,Intent data){
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1){
-            if(resultCode == Activity.RESULT_OK){
-                if (D) {Log.d(DEBUG_TAG,"File chosen");}
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (D) {
+                    Log.d(DEBUG_TAG, "File chosen");
+                }
                 //the selected audio file
                 Uri uri = data.getData();
-                if(!FileUtil.fileIsOK(fragmentContext, uri.getPath())){
+                if (!FileUtil.fileIsOK(mContext, uri.getPath())) {
                     showWrongFileTypeDialog();
                     return;
                 }
                 mListView.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.VISIBLE);
-                FileUtil.saveFileToExtAppStorage(fragmentContext.getApplicationContext(), uri,
-                        new OnCopyFinishedListener(){
-                    @Override
-                    public void onOperationFinished() {
-                        PrefUtil.updateAlarmSoundUris(fragmentContext);
-                        mHandler.post(new Runnable() {
+                FileUtil.saveFileToExtAppStorage(mContext.getApplicationContext(), uri,
+                        new FileUtil.OnCopyFinishedListener() {
                             @Override
-                            public void run() {
-                                //mProgressBar.setVisibility(View.GONE);
-                                //mListView.setVisibility(View.VISIBLE);
+                            public void onOperationFinished() {
+                                PrefUtil.updateAlarmSoundUris(mContext);
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //mProgressBar.setVisibility(View.GONE);
+                                        //mListView.setVisibility(View.VISIBLE);
+                                    }
+                                });
                             }
                         });
-                    }
-                });
             }
         }
     }
 
-    //================================================================================
-    // Methods
-    //================================================================================
+    //----------------------------------------------------------------------------------------------
+    //                                      UI
+    //----------------------------------------------------------------------------------------------
 
     /**
      * Show a dialog to interact with an audio file.
+     *
      * @param itemPosition Selected item in parent listView
      */
     private void showItemActionDialog(final int itemPosition) {
-        if (D) {Log.d(DEBUG_TAG,"Showing item options dialog");}
-        AlertDialog.Builder builder = new AlertDialog.Builder(fragmentContext);
+        if (D) {
+            Log.d(DEBUG_TAG, "Showing item options dialog");
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_alarm_sound_options, null);
         ListView optionsListView =
                 (ListView) dialogView.findViewById(R.id.listView_alarmSoundOptions);
         String[] options =
-                fragmentContext.getResources().getStringArray(R.array.sound_action_options);
+                mContext.getResources().getStringArray(R.array.sound_action_options);
         final ArrayList<String> list = new ArrayList<String>();
         Collections.addAll(list, options);
-        ListAdapter adapter = new ArrayAdapter<String>(fragmentContext,
+        ListAdapter adapter = new ArrayAdapter<String>(mContext,
                 android.R.layout.simple_list_item_1, list);
         optionsListView.setAdapter(adapter);
         optionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -194,14 +188,18 @@ public class SoundManagerFragment extends Fragment implements
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        if (D) {Log.d(DEBUG_TAG, "Starting AlarmSoundEditActivity");}
-                        Intent i = new Intent(fragmentContext, AlarmSoundEditActivity.class);
+                        if (D) {
+                            Log.d(DEBUG_TAG, "Starting AlarmSoundEditActivity");
+                        }
+                        Intent i = new Intent(mContext, AlarmSoundEditActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        i.putExtra("audio_id",itemPosition);
-                        fragmentContext.startActivity(i);
+                        i.putExtra("audio_id", itemPosition);
+                        mContext.startActivity(i);
                         break;
                     case 1:
-                        if (D) {Log.d(DEBUG_TAG, "Deleting sound file");}
+                        if (D) {
+                            Log.d(DEBUG_TAG, "Deleting sound file");
+                        }
                         showDeleteFileDialog(itemPosition);
                         break;
                 }
@@ -220,24 +218,30 @@ public class SoundManagerFragment extends Fragment implements
     /**
      * Start an intent to load an audio file
      */
-    private void startAudioFileIntent(){
-        if (D) {Log.d(DEBUG_TAG,"Starting file intent");}
+    private void startAudioFileIntent() {
+        if (D) {
+            Log.d(DEBUG_TAG, "Starting file intent");
+        }
         Intent audioIntent = new Intent();
         audioIntent.setType("file/*");
         audioIntent.setAction(Intent.ACTION_GET_CONTENT);
         try {
             startActivityForResult(audioIntent, 1);
-        }catch (ActivityNotFoundException e){
-            if (D) {Log.e(DEBUG_TAG,"No activity for file intents available",e);}
+        } catch (ActivityNotFoundException e) {
+            if (D) {
+                Log.e(DEBUG_TAG, "No activity for file intents available", e);
+            }
         }
     }
 
     /**
      * Show a dialog to inform the user that a wrong file type has been selected
      */
-    private void showWrongFileTypeDialog(){
-        if (D) {Log.d(DEBUG_TAG,"Showing wrong file type dialog");}
-        AlertDialog.Builder builder = new AlertDialog.Builder(fragmentContext);
+    private void showWrongFileTypeDialog() {
+        if (D) {
+            Log.d(DEBUG_TAG, "Showing wrong file type dialog");
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(R.string.alertTitle_wrongFileType).setMessage(R.string.alert_wrongFileType)
                 .setCancelable(false)
                 .setPositiveButton(R.string.dialog_button_ok,
@@ -251,24 +255,26 @@ public class SoundManagerFragment extends Fragment implements
         alert.show();
     }
 
-    private void showDeleteFileDialog(final int itemPosition){
-        if (D) {Log.d(DEBUG_TAG,"Showing delete file type dialog");}
-        AlertDialog.Builder builder = new AlertDialog.Builder(fragmentContext);
+    private void showDeleteFileDialog(final int itemPosition) {
+        if (D) {
+            Log.d(DEBUG_TAG, "Showing delete file type dialog");
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(R.string.alertTitle_delete_file).setMessage(R.string.alert_delete_file)
                 .setCancelable(true)
                 .setNegativeButton(R.string.dialog_button_cancel,
                         new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                })
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        })
                 .setPositiveButton(R.string.dialog_button_ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 FileUtil.deleteFile(
-                                        PrefUtil.getAlarmSoundUris(fragmentContext)[itemPosition]);
-                                PrefUtil.updateAlarmSoundUris(fragmentContext);
+                                        PrefUtil.getAlarmSoundUris(mContext)[itemPosition]);
+                                PrefUtil.updateAlarmSoundUris(mContext);
                                 dialog.dismiss();
                             }
                         }
@@ -277,27 +283,25 @@ public class SoundManagerFragment extends Fragment implements
         alert.show();
     }
 
-    //================================================================================
-    // UI setup
-    //================================================================================
-
     /**
      * Setup the listView containing all alarm sounds
      */
-    private void setupListView(){
-        if (D) {Log.d(DEBUG_TAG,"Setting up sound listView");}
+    private void setupListView() {
+        if (D) {
+            Log.d(DEBUG_TAG, "Setting up sound listView");
+        }
         mListView.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
         Thread listViewThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 final List<AlarmSoundListItem> listItems = new ArrayList<AlarmSoundListItem>();
-                String[] uris = PrefUtil.getAlarmSoundUris(fragmentContext);
-                if(uris != null){
+                String[] uris = PrefUtil.getAlarmSoundUris(mContext);
+                if (uris != null) {
                     mListItemCount = uris.length;
                     //TODO iload from preference
-                        for (String uri : uris) {
-                            String[] metaData = MediaUtil.getBasicMetaData(uri);
+                    for (String uri : uris) {
+                        String[] metaData = MediaUtil.getBasicMetaData(uri);
                         listItems.add(new AlarmSoundListItem(metaData[0], metaData[1]));
                     }
                 } else {
@@ -308,7 +312,7 @@ public class SoundManagerFragment extends Fragment implements
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mListView.setAdapter(new AlarmSoundListAdapter(fragmentContext,
+                        mListView.setAdapter(new AlarmSoundListAdapter(mContext,
                                         R.layout.listitem_drawer,
                                         listItems
                                 )

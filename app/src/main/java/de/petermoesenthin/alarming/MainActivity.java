@@ -45,10 +45,6 @@ import de.petermoesenthin.alarming.util.PrefUtil;
 
 public class MainActivity extends FragmentActivity {
 
-    //================================================================================
-    // Members
-    //================================================================================
-
     // Navigation Drawer
     private String[] mDrawerTitles;
     private ListView mDrawerListView;
@@ -66,9 +62,9 @@ public class MainActivity extends FragmentActivity {
 
 
 
-    //================================================================================
-    // Lifecycle
-    //================================================================================
+    //----------------------------------------------------------------------------------------------
+    //                                      LIFECYCLE
+    //----------------------------------------------------------------------------------------------
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,9 +95,17 @@ public class MainActivity extends FragmentActivity {
         mDrawerToggle.syncState();
     }
 
-    //================================================================================
-    // Methods
-    //================================================================================
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //----------------------------------------------------------------------------------------------
+    //                                      UI
+    //----------------------------------------------------------------------------------------------
 
     public void setTitle(CharSequence title) {
         this.mTitle = title;
@@ -176,8 +180,6 @@ public class MainActivity extends FragmentActivity {
         startActivity(i);
     }
 
-
-
     /**
      * Replaces the the content of the MainActivity content area with a new fragment.
      * @param fragment
@@ -189,22 +191,6 @@ public class MainActivity extends FragmentActivity {
                 .commit();
     }
 
-    //================================================================================
-    // Callbacks
-    //================================================================================
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    //================================================================================
-    // Inner classes
-    //================================================================================
 
     /**
      *

@@ -26,16 +26,8 @@ import de.petermoesenthin.alarming.util.AlarmUtil;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    //================================================================================
-    // Members
-    //================================================================================
-
     public static final String DEBUG_TAG = "AlarmReceiver";
     private static final boolean D = true;
-
-    //================================================================================
-    // Lifecycle
-    //================================================================================
 
     @Override
     public void onReceive(Context context, Intent intent){

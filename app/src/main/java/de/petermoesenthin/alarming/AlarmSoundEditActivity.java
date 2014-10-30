@@ -43,10 +43,6 @@ import de.petermoesenthin.alarming.util.StringUtil;
 public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener{
 
-    //================================================================================
-    // Members
-    //================================================================================
-
     public static final String DEBUG_TAG = "AlarmSoundEditActivity";
     private static final boolean D = true;
 
@@ -75,9 +71,9 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
 
 
 
-    //================================================================================
-    // Lifecycle
-    //================================================================================
+    //----------------------------------------------------------------------------------------------
+    //                                      LIFECYCLE
+    //----------------------------------------------------------------------------------------------
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,10 +144,6 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
         releaseMediaPlayer();
     }
 
-    //================================================================================
-    // Callbacks
-    //================================================================================
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -212,9 +204,9 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
         Toast.makeText(this,R.string.toast_config_saved,Toast.LENGTH_SHORT).show();
     }
 
-    //================================================================================
-    // Methods
-    //================================================================================
+    //----------------------------------------------------------------------------------------------
+    //                                      MEDIA PLAYBACK
+    //----------------------------------------------------------------------------------------------
 
 
     private void playAudio(){
@@ -360,9 +352,9 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
 
 
 
-    //================================================================================
-    // UI
-    //================================================================================
+    //----------------------------------------------------------------------------------------------
+    //                                      UI
+    //----------------------------------------------------------------------------------------------
 
     private void loadUiResources(){
         textView_soundTitle = (TextView) findViewById(R.id.textView_soundTitle);
