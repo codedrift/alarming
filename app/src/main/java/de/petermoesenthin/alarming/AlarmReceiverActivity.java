@@ -52,10 +52,6 @@ import de.petermoesenthin.alarming.util.PrefUtil;
 public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnSeekCompleteListener{
 
-    //================================================================================
-    // Member
-    //================================================================================
-
     private MediaPlayer mMediaPlayer;
     private Thread mPlayerPositionUpdateThread;
     private boolean mAudioPlaying = false;
