@@ -22,13 +22,7 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>android-betterpickers</name>
-        <url>https://github.com/derekbrameyer/android-betterpickers</url>
-        <copyright>Copyright 2013 Derek Brameyer</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
-        <name>support-v4</name>
+        <name>support-v7</name>
         <url>https://developer.android.com/tools/support-library/index.html</url>
         <copyright>Copyright 2013 The Android Open Source Project</copyright>
         <license>Apache Software License 2.0</license>
