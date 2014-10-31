@@ -23,7 +23,7 @@ public class AlarmGson {
     private boolean repeatAlarm = false;
     private boolean vibrate = true;
     private String message = "";
-    private String color = "";
+    private int color = -1;
     private int id = 0;
 
     public AlarmGson(){
@@ -69,11 +69,11 @@ public class AlarmGson {
         this.repeatAlarm = repeatAlarm;
     }
 
-    public String getColor() {
+    public int getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(int color) {
         this.color = color;
     }
 

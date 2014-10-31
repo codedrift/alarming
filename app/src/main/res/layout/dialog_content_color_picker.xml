@@ -20,7 +20,7 @@
               android:layout_height="match_parent">
 
     <com.larswerkman.holocolorpicker.ColorPicker
-        android:id="@+id/colorDialog_picker"
+        android:id="@+id/dialog_color_picker"
         android:layout_width="wrap_content"
         android:layout_gravity="center_horizontal"
         android:padding="5dp"

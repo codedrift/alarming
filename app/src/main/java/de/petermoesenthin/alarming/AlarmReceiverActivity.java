@@ -32,6 +32,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -149,6 +150,12 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         });
         mAlarms = PrefUtil.getAlarms(this);
         mAlarmGson = PrefUtil.findAlarmWithID(mAlarms, mAlarmId);
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.layout_bg_alarm_receiver);
+        int color = mAlarmGson.getColor();
+        if(color == -1){
+            color = getResources().getColor(R.color.material_yellow);
+        }
+        rl.setBackgroundColor(color);
         textView_alarmMessage.setText(mAlarmGson.getMessage());
     }
 
@@ -162,7 +169,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         super.onResume();
         if (D) {Log.d(DEBUG_TAG, "onResume()");}
         playAlarmSound();
-        disableKeyguard();
+        //disableKeyguard();
         if(mAlarmGson.doesVibrate()){
             startVibration();
         }
@@ -207,7 +214,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         // Stop vibration
         stopVibration();
         // System
-        reEnableKeyGuard();
+        //reEnableKeyGuard();
         // Finish Activity
         if (D) {Log.d(DEBUG_TAG, "Finishing Activity.");}
         finish();

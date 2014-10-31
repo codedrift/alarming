@@ -38,13 +38,8 @@
     <!-- ActionBar -->
     <style
         name="alarming_actionbar"
-        parent="Theme.AppCompat.Light">
-        <item name="android:titleTextStyle">@style/alarming_actionbar_title</item>
-    </style>
-
-    <style name="alarming_actionbar_title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">20sp</item>
+        parent="Theme.AppCompat">
+        <item name="android:background">@color/material_yellow</item>
     </style>
 
     <style name="alarming_edit_text" parent="AppTheme">

@@ -26,7 +26,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/material_black"
         android:text="@string/textView_soundTitle"
@@ -117,22 +117,24 @@
         android:padding="5dp"
         android:background="#ffe6e6e6">
 
-        <Button
+        <ImageButton
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_play"
+            android:contentDescription="@string/button_play"
             android:id="@+id/button_play_pause"
+            android:src="@drawable/ic_play"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             />
 
-        <Button
+        <ImageButton
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_stop"
             android:layout_height="wrap_content"
-            android:text="@string/button_stop"
+            android:contentDescription="@string/button_stop"
             android:id="@+id/button_stop"
             android:layout_toRightOf="@id/button_play_pause"
             android:layout_toEndOf="@id/button_play_pause"
@@ -145,7 +147,7 @@
             android:id="@+id/textView_currentPosition"
             android:textColor="@color/material_black"
             android:text="@string/textView_alarmTime"
-            android:textSize="35sp"
+            android:textSize="36sp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"

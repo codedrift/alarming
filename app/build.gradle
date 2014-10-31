@@ -29,6 +29,7 @@ dependencies {
             'com.github.markushi:circlebutton:1.1',
             'com.pkmmte.view:circularimageview:1.1',
             'com.edmodo:rangebar:1.0.0',
+            'com.github.flavienlaurent.datetimepicker:library:0.0.2',
             'com.android.support:cardview-v7:+',
             'com.android.support:appcompat-v7:21+'
     )

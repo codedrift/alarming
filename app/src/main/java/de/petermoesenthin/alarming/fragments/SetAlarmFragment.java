@@ -19,6 +19,8 @@ package de.petermoesenthin.alarming.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
@@ -37,6 +39,9 @@ import java.util.Random;
 
 import at.markushi.ui.CircleButton;
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
+import com.larswerkman.holocolorpicker.ColorPicker;
+import com.sleepbot.datetimepicker.time.RadialPickerLayout;
+import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmCardArrayAdapter;
 import de.petermoesenthin.alarming.pref.AlarmGson;
@@ -214,13 +219,12 @@ public class SetAlarmFragment extends Fragment implements
                         if (!alarm.getMessage().isEmpty()) {
                             viewHolder.alarmText.setText(alarm.getMessage());
                         }
-                        //TODO mViewHolder.chooseColor
-                        /*
-                        if(position == 0 && mFlag_create_new){
-                            mFlag_create_new = false;
-                            showTimePicker(position, viewHolder);
+                        View v = viewHolder.chooseColor.findViewById(R.id.view_color_indicator);
+                        int color = alarm.getColor();
+                        if(color == -1){
+                            color = getResources().getColor(R.color.material_yellow);
                         }
-                        */
+                        v.setBackgroundColor(color);
                         return viewHolder;
                     }
 
@@ -230,7 +234,7 @@ public class SetAlarmFragment extends Fragment implements
                         if (D) {
                             Log.d(DEBUG_TAG, "AlarmTimeClick  at " + position);
                         }
-                        //showTimePicker(position, viewHolder);
+                        showTimePicker(position, viewHolder);
                     }
 
                     @Override
@@ -291,7 +295,7 @@ public class SetAlarmFragment extends Fragment implements
                         if (D) {
                             Log.d(DEBUG_TAG, "ChooseColorClick at " + position);
                         }
-                        showColorPickerDialog(position);
+                        showColorPickerDialog(viewHolder, position);
                     }
 
                     @Override
@@ -339,14 +343,29 @@ public class SetAlarmFragment extends Fragment implements
         });
     }
 
-    private void showColorPickerDialog(int position) {
-        LDialog dialog = new LDialog(mContext,
-                new LDialogView(mContext, R.layout.dialog_content_color_picker,
-                        R.string.dialog_title_set_alarm_color));
+    private void showColorPickerDialog(final AlarmCardArrayAdapter.ViewHolder viewHolder,
+                                       final int position) {
+        LDialogView dialogView = new LDialogView(mContext,
+                R.layout.dialog_content_color_picker,
+                R.string.dialog_title_set_alarm_color);
+        final LDialog dialog = new LDialog(mContext,dialogView);
+        final ColorPicker cp = (ColorPicker) dialogView.getView().findViewById(R.id.dialog_color_picker);
+        final AlarmGson alg = mAlarms.get(position);
+        int color = alg.getColor();
+        if(color == -1){
+            color = getResources().getColor(R.color.material_yellow);
+        }
+        cp.setOldCenterColor(color);
+
         dialog.setPositiveButtonListener(
                 new LDialog.LClickListener() {
                     @Override
                     public void onClick(AlertDialog dialog) {
+                        int colorChoice = cp.getColor();
+                        alg.setColor(colorChoice);
+                        View v = viewHolder.chooseColor.findViewById(R.id.view_color_indicator);
+                        v.setBackgroundColor(colorChoice);
+                        PrefUtil.setAlarms(mContext, mAlarms);
                         dialog.dismiss();
                     }
                 });
@@ -394,37 +413,25 @@ public class SetAlarmFragment extends Fragment implements
                 });
         dialog.show();
     }
-    /*
 
-         * Show a time picker to set the alarm time
-         *
-         * @param position   Reference to the current position in the list view
-         * @param viewHolder Associated views in within the alarm card
-
-    private void showTimePicker(int position, final AlarmCardArrayAdapter.ViewHolder viewHolder) {
-        if (D) {
-            Log.d(DEBUG_TAG, "Showing time picker dialog.");
-        }
-        TimePickerBuilder tpb = new TimePickerBuilder()
-                .setFragmentManager(getChildFragmentManager())
-                .setStyleResId(R.style.BetterPicker_Alarming)
-                .setReference(position)
-                .addTimePickerDialogHandler(new DialogTimeHandler() {
+    private void showTimePicker(final int position, final AlarmCardArrayAdapter.ViewHolder viewHolder){
+        Calendar cal = Calendar.getInstance();
+        String[] time = StringUtil.getTimeFormattedSystem(mContext, 13, 0).split(" ");
+        boolean is24h = time.length < 2;
+        final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
+                new TimePickerDialog.OnTimeSetListener() {
                     @Override
-                    public void onDialogTimeSet(int reference, int hourOfDay, int minute) {
-                        setAlarmTime(reference, hourOfDay, minute);
-                        setAlarmTimeView(viewHolder.alarmTime, viewHolder.am_pm, hourOfDay,
-                                minute);
-                        activateAlarm(viewHolder, reference);
+                    public void onTimeSet(RadialPickerLayout radialPickerLayout, int h, int m) {
+                        setAlarmTime(position, h, m);
+                        setAlarmTimeView(viewHolder.alarmTime, viewHolder.am_pm, h,
+                                m);
+                        activateAlarm(viewHolder, position);
                     }
-                });
-        tpb.show();
+                },
+                cal.get(Calendar.HOUR_OF_DAY) ,
+                cal.get(Calendar.MINUTE),
+                is24h,
+                false);
+        timePickerDialog.show(getActivity().getSupportFragmentManager(), null);
     }
-*/
-    /*
-    private interface DialogTimeHandler extends TimePickerDialogFragment.TimePickerDialogHandler {
-        @Override
-        public void onDialogTimeSet(int reference, int hourOfDay, int minute);
-    }
-    */
 }

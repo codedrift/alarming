@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,9 +63,9 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
     private TextView textView_soundStart;
     private TextView textView_soundEnd;
     private TextView textView_currentPosition;
-    private Button button_play_pause;
+    private ImageButton button_play_pause;
     private boolean audioPlaying = false;
-    private Button button_stop;
+    private ImageButton button_stop;
     private FloatingActionButton mFAB;
 
     private Handler mHandler = new Handler();
@@ -362,8 +363,8 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
         textView_soundEnd = (TextView) findViewById(R.id.textView_endTime);
         textView_currentPosition = (TextView) findViewById(R.id.textView_currentPosition);
         rangeBar_soundSelector = (RangeBar) findViewById(R.id.rangebar_audiosection);
-        button_play_pause = (Button) findViewById(R.id.button_play_pause);
-        button_stop = (Button) findViewById(R.id.button_stop);
+        button_play_pause = (ImageButton) findViewById(R.id.button_play_pause);
+        button_stop = (ImageButton) findViewById(R.id.button_stop);
     }
 
     private void resetPlaybackPosition(){
@@ -385,14 +386,18 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    button_play_pause.setText(R.string.button_pause);
+                    button_play_pause.setImageResource(R.drawable.ic_pause);
+                    button_play_pause.setContentDescription(getResources().getString(R.string
+                            .button_pause));
                 }
             });
         }else {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    button_play_pause.setText(R.string.button_play);
+                    button_play_pause.setImageResource(R.drawable.ic_play);
+                    button_play_pause.setContentDescription(getResources().getString(R.string
+                            .button_play));
                 }
             });
         }
