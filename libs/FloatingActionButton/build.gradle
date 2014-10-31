@@ -25,6 +25,7 @@ android {
 }
 
 dependencies {
-    compile 'com.nineoldandroids:library:2.4.0'
-
+    compile ('com.nineoldandroids:library:2.4.0'){
+        exclude module: 'support-v4'
+    }
 }

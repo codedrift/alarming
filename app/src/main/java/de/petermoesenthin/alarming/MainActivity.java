@@ -19,10 +19,10 @@ package de.petermoesenthin.alarming;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,12 +38,11 @@ import de.petermoesenthin.alarming.adapter.DrawerItemArrayAdapter;
 import de.petermoesenthin.alarming.fragments.SetAlarmFragment;
 import de.petermoesenthin.alarming.fragments.SoundManagerFragment;
 import de.petermoesenthin.alarming.pref.PrefKey;
-import de.petermoesenthin.alarming.ui.AlarmingDrawerToggle;
 import de.petermoesenthin.alarming.ui.DrawerItem;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends ActionBarActivity {
 
     // Navigation Drawer
     private String[] mDrawerTitles;
@@ -70,15 +69,14 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpNavigationDrawer();
-        if(getActionBar() != null) {
-            getActionBar().setDisplayShowCustomEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            getActionBar().setHomeButtonEnabled(true);
-        }
+
+            getSupportActionBar().setDisplayShowCustomEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+
         transactNewFragment(new SetAlarmFragment());
         checkFirstStart();
     }
-
     private void checkFirstStart() {
         boolean firstStart = PrefUtil.getBoolean(this, PrefKey.APP_FIRST_START, true);
         if(firstStart){
@@ -109,9 +107,7 @@ public class MainActivity extends FragmentActivity {
 
     public void setTitle(CharSequence title) {
         this.mTitle = title;
-        if(getActionBar() != null) {
-            getActionBar().setTitle(this.mTitle);
-        }
+        getSupportActionBar().setTitle(this.mTitle);
     }
 
     /**
@@ -125,13 +121,8 @@ public class MainActivity extends FragmentActivity {
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        // Set Actionbar toggle
-        mDrawerToggle = new AlarmingDrawerToggle(this,
-                mDrawerLayout,
-                R.drawable.ic_drawer,
-                R.string.drawer_open, // "open drawer" description
-                R.string.drawer_close // "close drawer" description
-        ){
+        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.drawer_open,
+                R.string.drawer_close){
             public void onDrawerClosed(View view) {setTitle(mTitle);}
             public void onDrawerOpened(View drawerView) {setTitle(mDrawerTitle);}
         };
@@ -190,6 +181,11 @@ public class MainActivity extends FragmentActivity {
                 .replace(R.id.content_frame, fragment)
                 .commit();
     }
+
+
+    //----------------------------------------------------------------------------------------------
+    //                                      DRAWER
+    //----------------------------------------------------------------------------------------------
 
 
     /**

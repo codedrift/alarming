@@ -37,12 +37,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import de.petermoesenthin.alarming.AlarmSoundEditActivity;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmSoundListAdapter;
@@ -87,6 +87,7 @@ public class SoundManagerFragment extends Fragment implements
         mContext = container.getContext();
         View rootView = inflater.inflate(R.layout.fragment_sound_manager, container, false);
         mListView = (ListView) rootView.findViewById(R.id.listView_alarmSounds);
+
         mFAB = (FloatingActionButton) rootView.findViewById(R.id.fab_add_sound);
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +96,7 @@ public class SoundManagerFragment extends Fragment implements
             }
         });
         mFAB.listenTo(mListView);
+
         mProgressBar =
                 (CircularProgressBar) rootView.findViewById(R.id.circleProgressBar_SoundList);
         setHasOptionsMenu(true);

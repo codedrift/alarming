@@ -100,7 +100,7 @@
         android:id="@+id/linearLayout_setSnoozeTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_basic_yellow"
+        android:background="?android:attr/selectableItemBackground"
         android:orientation="horizontal"
         android:padding="5dp">
 
@@ -136,7 +136,7 @@
         android:id="@+id/linearLayout_setAlarmVolume"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_basic_yellow"
+        android:background="?android:attr/selectableItemBackground"
         android:orientation="horizontal"
         android:padding="5dp">
 

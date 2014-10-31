@@ -59,7 +59,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
         android:clickable="true"
-        app:color="@color/material_yellow"
+        app:fabcolor="@color/material_yellow"
         app:drawable="@drawable/ic_plus"/>
 
 </RelativeLayout>

@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
@@ -35,7 +36,7 @@ import de.petermoesenthin.alarming.ui.LDialogView;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity  extends ActionBarActivity {
 
     public static final String DEBUG_TAG = "SettingsActivity";
     public static final boolean D = true;
@@ -48,10 +49,8 @@ public class SettingsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        if (getActionBar() != null) {
-            getActionBar().setHomeButtonEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.activity_title_settings);
         setUpUi();
     }

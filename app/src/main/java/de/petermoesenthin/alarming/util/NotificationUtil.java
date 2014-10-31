@@ -22,7 +22,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import de.petermoesenthin.alarming.MainActivity;
@@ -59,7 +58,7 @@ public class NotificationUtil {
         intent.putExtra("id", id);
         //Build and show Notification
         String alarmFormatted = StringUtil.getTimeFormattedSystem(context, hour, minute);
-        NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
+        Notification.Builder notBuilder = new Notification.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_alarmclock_light)
                 .setOngoing(true)
                 .setContentTitle(
@@ -83,7 +82,7 @@ public class NotificationUtil {
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         String alarmFormatted = StringUtil.getTimeFormatted(hour, minute);
-        NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
+        Notification.Builder notBuilder = new Notification.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_alarmclock_light)
                 .setOngoing(true)
                 .setContentTitle(

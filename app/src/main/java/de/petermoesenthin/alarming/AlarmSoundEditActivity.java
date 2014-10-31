@@ -22,6 +22,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,18 +30,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.edmodo.rangebar.RangeBar;
-import com.faizmalkani.floatingactionbutton.FloatingActionButton;
-
 import java.io.IOException;
 
+import com.edmodo.rangebar.RangeBar;
+import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
 
-public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPreparedListener,
+public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener{
 
     public static final String DEBUG_TAG = "AlarmSoundEditActivity";
@@ -79,10 +79,8 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
         super.onCreate(savedInstanceState);
         // UI
         setContentView(R.layout.activity_alarm_sound_edit);
-        if(getActionBar() != null){
-            this.getActionBar().setHomeButtonEnabled(true);
-            this.getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         loadUiResources();
         setTitle(R.string.activity_title_alarmSoundEdit);
         // call after ui setup to load all variables
@@ -114,6 +112,7 @@ public class AlarmSoundEditActivity extends Activity implements MediaPlayer.OnPr
                 stopAudio();
             }
         });
+
         mFAB = (FloatingActionButton) findViewById(R.id.fab_save_config);
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override

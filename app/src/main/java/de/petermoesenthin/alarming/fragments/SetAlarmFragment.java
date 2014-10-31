@@ -30,16 +30,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.doomonafireball.betterpickers.timepicker.TimePickerBuilder;
-import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment;
-import com.faizmalkani.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
 import at.markushi.ui.CircleButton;
+import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmCardArrayAdapter;
 import de.petermoesenthin.alarming.pref.AlarmGson;
@@ -73,6 +70,7 @@ public class SetAlarmFragment extends Fragment implements
         mContext = getActivity();
         View rootView = inflater.inflate(R.layout.fragment_set_alarm, container, false);
         mAlarmListView = (ListView) rootView.findViewById(R.id.cardListView_alarm);
+
         mFAB = (FloatingActionButton) rootView.findViewById(R.id.fab_add_alarm);
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +79,7 @@ public class SetAlarmFragment extends Fragment implements
             }
         });
         mFAB.listenTo(mAlarmListView);
+
         setUpListView();
         PrefUtil.getApplicationPrefs(mContext)
                 .registerOnSharedPreferenceChangeListener(this);
@@ -231,7 +230,7 @@ public class SetAlarmFragment extends Fragment implements
                         if (D) {
                             Log.d(DEBUG_TAG, "AlarmTimeClick  at " + position);
                         }
-                        showTimePicker(position, viewHolder);
+                        //showTimePicker(position, viewHolder);
                     }
 
                     @Override
@@ -395,13 +394,13 @@ public class SetAlarmFragment extends Fragment implements
                 });
         dialog.show();
     }
+    /*
 
-    /**
-     * Show a time picker to set the alarm time
-     *
-     * @param position   Reference to the current position in the list view
-     * @param viewHolder Associated views in within the alarm card
-     */
+         * Show a time picker to set the alarm time
+         *
+         * @param position   Reference to the current position in the list view
+         * @param viewHolder Associated views in within the alarm card
+
     private void showTimePicker(int position, final AlarmCardArrayAdapter.ViewHolder viewHolder) {
         if (D) {
             Log.d(DEBUG_TAG, "Showing time picker dialog.");
@@ -421,9 +420,11 @@ public class SetAlarmFragment extends Fragment implements
                 });
         tpb.show();
     }
-
+*/
+    /*
     private interface DialogTimeHandler extends TimePickerDialogFragment.TimePickerDialogHandler {
         @Override
         public void onDialogTimeSet(int reference, int hourOfDay, int minute);
     }
+    */
 }

@@ -21,6 +21,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,12 +32,9 @@ import android.widget.ListView;
 import de.petermoesenthin.alarming.ui.OpenFontLicense;
 import de.psdev.licensesdialog.LicenseResolver;
 import de.psdev.licensesdialog.LicensesDialog;
-import de.psdev.licensesdialog.licenses.License;
-import de.psdev.licensesdialog.model.Notice;
-import de.psdev.licensesdialog.model.Notices;
 
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends ActionBarActivity {
 
     private ListView mListView;
     public static final String DEBUG_TAG = "AboutActivity";
@@ -46,10 +44,8 @@ public class AboutActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        if(getActionBar() != null) {
-            this.getActionBar().setHomeButtonEnabled(true);
-            this.getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mListView = (ListView) findViewById(R.id.listView_about);
         setUpListView();
     }

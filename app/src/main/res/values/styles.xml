@@ -17,14 +17,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
-        <item name="android:actionBarStyle">@style/AlarmingActionBar</item>
-        <item name="android:actionBarSize">@dimen/action_bar_height</item>
-        <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="android:actionBarStyle">@style/alarming_actionbar</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_ab_up_compat</item>
-        <item name="android:editTextBackground">@drawable/alarming_edit_text_holo_light</item>
-        <item name="android:listChoiceIndicatorMultiple">@drawable/alarming_btn_check_holo_light</item>
         <item name="android:seekBarStyle">@style/alarming_seek_bar</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="colorPrimary">@color/material_yellow</item>
+        <item name="colorPrimaryDark">@color/material_yellow_accent</item>
+
+    </style>
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
     </style>
 
     <!-- Alarm receiver -->
@@ -33,29 +37,14 @@
 
     <!-- ActionBar -->
     <style
-        name="AlarmingActionBar"
-        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/material_yellow</item>
-        <item name="android:icon">@drawable/actionbar_icon_placeholder_compat</item>
-        <item name="android:titleTextStyle">@style/AppTheme_ActionBar_Title</item>
+        name="alarming_actionbar"
+        parent="Theme.AppCompat.Light">
+        <item name="android:titleTextStyle">@style/alarming_actionbar_title</item>
     </style>
 
-    <style name="AppTheme_ActionBar_Title" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
+    <style name="alarming_actionbar_title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">20sp</item>
-    </style>
-
-    <style name="BetterPicker_Alarming">
-        <item name="bpDialogBackground">@drawable/dialog_full_holo_light</item>
-        <item name="bpTitleColor">@color/dialog_text_color_holo_light</item>
-        <item name="bpTextColor">@color/dialog_text_color_holo_light</item>
-        <item name="bpDeleteIcon">@drawable/ic_backspace_light</item>
-        <item name="bpCheckIcon">@drawable/selector_basic_yellow</item>
-        <item name="bpKeyBackground">@drawable/selector_basic_yellow</item>
-        <item name="bpButtonBackground">@drawable/selector_basic_yellow</item>
-        <item name="bpTitleDividerColor">@color/material_yellow</item>
-        <item name="bpDividerColor">@color/default_divider_color_light</item>
-        <item name="bpKeyboardIndicatorColor">@color/material_yellow</item>
     </style>
 
     <style name="alarming_edit_text" parent="AppTheme">
