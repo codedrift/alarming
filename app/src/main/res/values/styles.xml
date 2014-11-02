@@ -17,40 +17,39 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/alarming_actionbar</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_ab_up_compat</item>
         <item name="android:seekBarStyle">@style/alarming_seek_bar</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <!-- ActionBar shadow -->
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- Appcompat v7 Color style -->
         <item name="colorPrimary">@color/material_yellow</item>
-        <item name="colorPrimaryDark">@color/material_yellow_accent</item>
-
+        <item name="colorPrimaryDark">@color/material_yellow_dark</item>
+        <item name="colorAccent">@color/material_yellow</item>
     </style>
+
+    <!-- Drawer Arrow -->
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
     </style>
 
     <!-- Alarm receiver -->
-    <style name="AlarmReceiverTheme" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen">
+    <style name="AlarmReceiverTheme" parent="AppTheme">
     </style>
 
     <!-- ActionBar -->
-    <style
-        name="alarming_actionbar"
-        parent="Theme.AppCompat">
+    <style name="alarming_actionbar" parent="Base.Widget.AppCompat.Light.ActionBar">
         <item name="android:background">@color/material_yellow</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="alarming_edit_text" parent="AppTheme">
-        <item name="android:editTextBackground">@drawable/alarming_edit_text_holo_light</item>
-    </style>
-
+    <!-- SeekBar -->
     <style name="alarming_seek_bar" parent="android:Widget.Holo.Light.SeekBar">
-    <item name="android:progressDrawable">@drawable/alarming_scrubber_progress_horizontal_holo_light</item>
-    <item name="android:indeterminateDrawable">@drawable/alarming_scrubber_progress_horizontal_holo_light</item>
-    <item name="android:thumb">@drawable/alarming_scrubber_control_selector_holo_light</item>
-</style>
-
+        <item name="android:progressDrawable">@drawable/alarming_scrubber_progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/alarming_scrubber_progress_horizontal_holo_light</item>
+        <item name="android:thumb">@drawable/alarming_scrubber_control_selector_holo_light</item>
+    </style>
 
 </resources>

@@ -69,7 +69,6 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:background="?android:attr/actionBarItemBackground"
             android:src="@drawable/ic_bell_outline"
             app:cb_color="@color/veryLightGray"
             app:cb_pressedRingWidth="8dip"

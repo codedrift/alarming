@@ -33,6 +33,7 @@ import android.widget.SeekBar;
 import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.ui.LDialog;
 import de.petermoesenthin.alarming.ui.LDialogView;
+import de.petermoesenthin.alarming.util.NotificationUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
 
