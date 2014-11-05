@@ -36,13 +36,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
+import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import de.petermoesenthin.alarming.AlarmSoundEditActivity;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmSoundListAdapter;
@@ -50,7 +51,6 @@ import de.petermoesenthin.alarming.ui.AlarmSoundListItem;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
-import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 
 public class SoundManagerFragment extends Fragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -72,7 +72,7 @@ public class SoundManagerFragment extends Fragment implements
                     }
                 }
             };
-    private CircularProgressBar mProgressBar;
+    private ProgressBar mProgressBar;
     private Handler mHandler = new Handler();
     private Context mContext;
     private FloatingActionButton mFAB;
@@ -98,7 +98,7 @@ public class SoundManagerFragment extends Fragment implements
         mFAB.listenTo(mListView);
 
         mProgressBar =
-                (CircularProgressBar) rootView.findViewById(R.id.circleProgressBar_SoundList);
+                (ProgressBar) rootView.findViewById(R.id.circleProgressBar_SoundList);
         setHasOptionsMenu(true);
         setupListView();
         return rootView;

@@ -19,8 +19,6 @@ package de.petermoesenthin.alarming.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
@@ -32,16 +30,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.faizmalkani.floatingactionbutton.FloatingActionButton;
+import com.larswerkman.holocolorpicker.ColorPicker;
+import com.sleepbot.datetimepicker.time.RadialPickerLayout;
+import com.sleepbot.datetimepicker.time.TimePickerDialog;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
 import at.markushi.ui.CircleButton;
-import com.faizmalkani.floatingactionbutton.FloatingActionButton;
-import com.larswerkman.holocolorpicker.ColorPicker;
-import com.sleepbot.datetimepicker.time.RadialPickerLayout;
-import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmCardArrayAdapter;
 import de.petermoesenthin.alarming.pref.AlarmGson;
@@ -337,8 +336,7 @@ public class SetAlarmFragment extends Fragment implements
         mAlarmListView.post(new Runnable() {
             @Override
             public void run() {
-                // Select the last row so it will scroll into view...
-                mAlarmListView.setSelection(mAlarmCardArrayAdapter.getCount() - 1);
+                mAlarmListView.smoothScrollToPosition(mAlarmCardArrayAdapter.getCount() - 1);
             }
         });
     }

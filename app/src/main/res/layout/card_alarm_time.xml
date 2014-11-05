@@ -155,7 +155,7 @@
 
             <TextView
                 android:id="@+id/textView_alarmText"
-                android:theme="@style/AppTheme"
+                android:theme="@style/AlarmingBaseTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.8"

@@ -69,10 +69,13 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpNavigationDrawer();
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setElevation(1);
 
-            getSupportActionBar().setDisplayShowCustomEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
+
+        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.material_yellow_dark));
 
         transactNewFragment(new SetAlarmFragment());
         checkFirstStart();
@@ -120,7 +123,7 @@ public class MainActivity extends ActionBarActivity {
         mDrawerListView = (ListView) findViewById(R.id.drawer_listView);
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
+        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.material_yellow_dark));
         mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.drawer_open,
                 R.string.drawer_close){
             public void onDrawerClosed(View view) {setTitle(mTitle);}

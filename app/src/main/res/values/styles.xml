@@ -17,12 +17,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AlarmingBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/alarming_actionbar</item>
         <item name="android:seekBarStyle">@style/alarming_seek_bar</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <!-- ActionBar shadow -->
         <item name="android:windowContentOverlay">@null</item>
+
         <!-- Appcompat v7 Color style -->
         <item name="colorPrimary">@color/material_yellow</item>
         <item name="colorPrimaryDark">@color/material_yellow_dark</item>
@@ -36,7 +37,7 @@
     </style>
 
     <!-- Alarm receiver -->
-    <style name="AlarmReceiverTheme" parent="AppTheme">
+    <style name="AlarmReceiverTheme" parent="AlarmingBaseTheme">
     </style>
 
     <!-- ActionBar -->

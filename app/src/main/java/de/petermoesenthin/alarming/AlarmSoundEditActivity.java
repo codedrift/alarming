@@ -16,7 +16,6 @@
 
 package de.petermoesenthin.alarming;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -26,15 +25,15 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-
 import com.edmodo.rangebar.RangeBar;
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
+
+import java.io.IOException;
+
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
@@ -82,6 +81,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
         setContentView(R.layout.activity_alarm_sound_edit);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setElevation(1);
         loadUiResources();
         setTitle(R.string.activity_title_alarmSoundEdit);
         // call after ui setup to load all variables

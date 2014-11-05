@@ -16,7 +16,6 @@
 
 package de.petermoesenthin.alarming;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -46,6 +45,7 @@ public class AboutActivity extends ActionBarActivity {
         setContentView(R.layout.activity_about);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setElevation(1);
         mListView = (ListView) findViewById(R.id.listView_about);
         setUpListView();
     }
