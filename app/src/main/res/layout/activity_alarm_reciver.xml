@@ -18,8 +18,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/layout_bg_alarm_receiver"
-                android:keepScreenOn="true"
                 android:background="@color/material_yellow"
+                android:keepScreenOn="true"
     >
 
     <LinearLayout

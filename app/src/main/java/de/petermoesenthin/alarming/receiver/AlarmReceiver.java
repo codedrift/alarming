@@ -16,15 +16,14 @@
 
 package de.petermoesenthin.alarming.receiver;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
-import de.petermoesenthin.alarming.AlarmReceiverActivity;
-import de.petermoesenthin.alarming.util.AlarmUtil;
+import de.petermoesenthin.alarming.service.AlarmService;
 
-public class AlarmReceiver extends BroadcastReceiver {
+public class AlarmReceiver extends WakefulBroadcastReceiver {
 
     public static final String DEBUG_TAG = "AlarmReceiver";
     private static final boolean D = true;
@@ -33,9 +32,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent){
         int alarmID = intent.getIntExtra("id", -1);
         if (D) {Log.d(DEBUG_TAG,"Received alarm intent for id " + alarmID);}
-        Intent i = new Intent(context, AlarmReceiverActivity.class);
-        i.putExtra("id", alarmID);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(i);
+        Intent in = new Intent(context, AlarmService.class);
+        in.putExtra("id", alarmID);
+        startWakefulService(context, in);
     }
 }

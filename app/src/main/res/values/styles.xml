@@ -36,10 +36,6 @@
         <item name="color">@android:color/white</item>
     </style>
 
-    <!-- Alarm receiver -->
-    <style name="AlarmReceiverTheme" parent="AlarmingBaseTheme">
-    </style>
-
     <!-- ActionBar -->
     <style name="alarming_actionbar" parent="Base.Widget.AppCompat.Light.ActionBar">
         <item name="android:background">@color/material_yellow</item>

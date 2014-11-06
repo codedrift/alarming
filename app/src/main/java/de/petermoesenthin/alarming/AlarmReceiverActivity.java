@@ -53,20 +53,25 @@ import de.petermoesenthin.alarming.util.PrefUtil;
 public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnSeekCompleteListener{
 
+    //Audio
     private MediaPlayer mMediaPlayer;
     private Thread mPlayerPositionUpdateThread;
     private boolean mAudioPlaying = false;
     private int mStartMillis;
     private int mEndMillis;
     private String mDataSource;
+
+    //Alarm
     private int mAlarmId;
     private AlarmGson mAlarmGson;
     private List<AlarmGson> mAlarms;
+    private boolean flag_user_call = false;
 
+    //System
     private KeyguardManager mKeyGuardManager;
     private KeyguardManager.KeyguardLock mKeyguardLock;
-
     private Vibrator mVibrator;
+    private PowerManager.WakeLock mWakeLock;
 
     public static final String DEBUG_TAG = "AlarmReceiverActivity";
     public static final boolean D = true;
@@ -83,102 +88,46 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        if (D) {Log.d(DEBUG_TAG, "onCreate()");}
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        /*
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
-        */
+        if (D) {Log.d(DEBUG_TAG, "onCreate called");}
+        setWindowSettings();
         setContentView(R.layout.activity_alarm_reciver);
-
-        int currentOrientation = getResources().getConfiguration().orientation;
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        }
-        else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        }
         layout_buttons = (LinearLayout) findViewById(R.id.layout_dismiss_snooze);
         button_dismiss = (TextView) findViewById(R.id.button_dismiss);
         button_snooze = (TextView) findViewById(R.id.button_snooze);
         textView_alarmMessage = (TextView) findViewById(R.id.textView_alarm_message);
-
-        Intent intent = getIntent();
-        mAlarmId = intent.getIntExtra("id", -1);
-        if (D) {Log.d(DEBUG_TAG, "Received alarm intent for id " + mAlarmId);}
-
-        button_dismiss.setOnTouchListener(new SwipeToDismissTouchListener(button_dismiss, null,
-                new SwipeToDismissTouchListener.DismissCallbacks(){
-                    @Override
-                    public boolean canDismiss(Object token) {
-                        return true;
-                    }
-
-                    @Override
-                    public void onDismiss(View view, Object token) {
-                        if (D) {Log.d(DEBUG_TAG, "Alarm has been dismissed.");}
-                        clearAlarmSet();
-                        button_snooze.setVisibility(View.GONE);
-                        layout_buttons.removeView(button_dismiss);
-                        finishThis();
-                    }
-                }
-                ));
-        int snoozeTime  = PrefUtil.getInt(this, PrefKey.SNOOZE_TIME, 10);
-        String text_snooze = getResources().getString(R.string.button_snooze);
-        String formatted = String.format(text_snooze, snoozeTime);
-        if(snoozeTime == 1){
-            formatted += " " + getResources().getString(R.string.minute);
-        } else {
-            formatted += " " + getResources().getString(R.string.minutes);
-        }
-
-        button_snooze.setText(formatted);
-        button_snooze.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (D) {Log.d(DEBUG_TAG, "Alarm has been snoozed. ya biscuit.");}
-                setSnooze();
-                finishThis();
-            }
-        });
+        readIntent();
         mAlarms = PrefUtil.getAlarms(this);
         mAlarmGson = PrefUtil.findAlarmWithID(mAlarms, mAlarmId);
-        RelativeLayout rl = (RelativeLayout) findViewById(R.id.layout_bg_alarm_receiver);
-        int color = mAlarmGson.getColor();
-        if(color == -1){
-            color = getResources().getColor(R.color.material_yellow);
-        }
-        rl.setBackgroundColor(color);
-        textView_alarmMessage.setText(mAlarmGson.getMessage());
-    }
-
-    @Override
-    public void onAttachedToWindow() {
-        if (D) {Log.d(DEBUG_TAG, "onAttachedToWindow()");}
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        if (D) {Log.d(DEBUG_TAG, "onResume()");}
-        playAlarmSound();
+        setUpViews();
+        //acquireWakeLock();
         //disableKeyguard();
+        playAlarmSound();
         if(mAlarmGson.doesVibrate()){
             startVibration();
         }
     }
 
+    private void readIntent() {
+        Intent intent = getIntent();
+        mAlarmId = intent.getIntExtra("id", -1);
+        if (D) {Log.d(DEBUG_TAG, "Received alarm intent for id " + mAlarmId);}
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        if (D) {Log.d(DEBUG_TAG, "onAttachedToWindow called");}
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (D) {Log.d(DEBUG_TAG, "onResume called");}
+    }
+
     @Override
     public void onStop(){
         super.onStop();
-        if (D) {Log.d(DEBUG_TAG, "onStop()");}
+        if (D) {Log.d(DEBUG_TAG, "onStop called");}
         if(mPlayerPositionUpdateThread != null){
             mPlayerPositionUpdateThread.interrupt();
             mPlayerPositionUpdateThread = null;
@@ -187,36 +136,34 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
-        // Media volume
         MediaUtil.resetSystemMediaVolume(this);
+        clearWindowSettings();
+        reEnableKeyGuard();
+        releaseWakeLock();
+        if(!flag_user_call){
+            if (D) {Log.d(DEBUG_TAG, "Activity was not paused by user. snoozing");}
+            snoozeAlarm();
+        }
 
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        if (D) {Log.d(DEBUG_TAG, "onPause()");}
-        if(mMediaPlayer != null){
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
+        if (D) {Log.d(DEBUG_TAG, "onPause called");}
+
     }
 
     /**
-     * Does additional work to finish this activity
+     * Does work to finish this activity
      */
-    public void finishThis(){
+    public void finishActivity(){
+        if (D) {Log.d(DEBUG_TAG, "Preparing to finish the Activity");}
         // Stop vibration
         stopVibration();
         // System
-        //reEnableKeyGuard();
         // Finish Activity
-        if (D) {Log.d(DEBUG_TAG, "Finishing Activity.");}
+        if (D) {Log.d(DEBUG_TAG, "Finishing Activity");}
         finish();
         this.overridePendingTransition(android.R.anim.fade_out, android.R.anim.fade_out);
     }
@@ -225,11 +172,8 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     //                                      SYSTEM
     //----------------------------------------------------------------------------------------------
 
-    /**
-     * Disables the keyguard.
-     */
     private void disableKeyguard(){
-        if (D) {Log.d(DEBUG_TAG, "Disabling Keyguard.");}
+        if (D) {Log.d(DEBUG_TAG, "Disabling Keyguard");}
         mKeyGuardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         mKeyguardLock = mKeyGuardManager.newKeyguardLock("Alarming_Keyguard");
         if (mKeyGuardManager.inKeyguardRestrictedInputMode()){
@@ -238,14 +182,33 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     }
 
     private void reEnableKeyGuard(){
-        if (D) {Log.d(DEBUG_TAG, "Reenabling keyguard.");}
+        if (D) {Log.d(DEBUG_TAG, "Reenabling keyguard");}
         if(mKeyguardLock != null){
             mKeyguardLock.reenableKeyguard();
         }
     }
 
+    public void acquireWakeLock() {
+        if (D) {Log.d(DEBUG_TAG, "Acquiring wakelock");}
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWakeLock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP
+                | PowerManager.ON_AFTER_RELEASE
+                | PowerManager.PARTIAL_WAKE_LOCK, "alarming_wakelock");
+        mWakeLock.acquire();
+    }
+
+    public void releaseWakeLock() {
+        if (D) {Log.d(DEBUG_TAG, "Releasing wakelock");}
+        if(mWakeLock != null){
+            if(mWakeLock.isHeld()){
+                mWakeLock.release();
+                mWakeLock = null;
+            }
+        }
+    }
+
     private void startVibration(){
-        if (D) {Log.d(DEBUG_TAG, "Starting vibration.");}
+        if (D) {Log.d(DEBUG_TAG, "Starting vibration");}
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         // Start without a delay
         // Vibrate for 500 milliseconds
@@ -257,33 +220,75 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
     }
 
     private void stopVibration(){
-        if (D) {Log.d(DEBUG_TAG, "Stopping vibration.");}
+        if (D) {Log.d(DEBUG_TAG, "Stopping vibration");}
         if(mVibrator != null){
             mVibrator.cancel();
         }
+    }
+
+    private void setWindowSettings(){
+        if (D) {Log.d(DEBUG_TAG, "Setting window parameters");}
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        /* This requires an extra tap for the activity to regain focus
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+        */
+        int currentOrientation = getResources().getConfiguration().orientation;
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        }
+        else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
+    }
+
+    private void clearWindowSettings(){
+        if (D) {Log.d(DEBUG_TAG, "Clearing window parameters");}
+        //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
     }
 
     //----------------------------------------------------------------------------------------------
     //                                      ALARM
     //----------------------------------------------------------------------------------------------
 
-    private void clearAlarmSet(){
-        // Clear any pending notifications
-        NotificationUtil.clearAlarmNotifcation(this, mAlarmId);
-        NotificationUtil.clearSnoozeNotification(this, mAlarmId);
-        AlarmUtil.deactivateSnooze(this, mAlarmId);
-        // Unset alarm from preferences
-        mAlarmGson.setAlarmSet(false);
-        PrefUtil.setAlarms(this, mAlarms);
-    }
-
-    private void setSnooze(){
-        clearAlarmSet();
+    private void snoozeAlarm(){
+        if (D) {Log.d(DEBUG_TAG, "snoozeAlarm called");}
+        clearAlarmSetting();
         int snoozeTime  = PrefUtil.getInt(this, PrefKey.SNOOZE_TIME, 10);
         Calendar snoozetime = Calendar.getInstance();
         snoozetime.setTimeInMillis(System.currentTimeMillis());
         snoozetime.add(Calendar.MINUTE, snoozeTime);
         AlarmUtil.setSnooze(this, snoozetime, mAlarmId);
+        finishActivity();
+    }
+
+    private void dismissAlarm(){
+        if (D) {Log.d(DEBUG_TAG, "dismissAlarm called");}
+        clearAlarmSetting();
+        finishActivity();
+    }
+
+
+    private void clearAlarmSetting(){
+        if (D) {Log.d(DEBUG_TAG, "Clearing alarm setting.");}
+        // Clear any pending notifications
+        NotificationUtil.clearAlarmNotifcation(this, mAlarmId);
+        NotificationUtil.clearSnoozeNotification(this, mAlarmId);
+        NotificationUtil.clearSnoozeNotification(this, mAlarmId);
+        AlarmUtil.deactivateSnooze(this, mAlarmId);
+        // Unset alarm from preferences
+        mAlarmGson.setAlarmSet(false);
+        PrefUtil.setAlarms(this, mAlarms);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -294,6 +299,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
      * Prepares alarm sound playback
      */
     private void playAlarmSound(){
+        if (D) {Log.d(DEBUG_TAG, "Play alarm sound");}
         MediaUtil.saveSystemMediaVolume(this);
         MediaUtil.setAlarmVolumeFromPreference(this);
         String[] uris = PrefUtil.getAlarmSoundUris(this);
@@ -327,7 +333,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         if (D) {Log.d(DEBUG_TAG, "Starting media player.");}
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-        //mMediaPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
+        mMediaPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
         try {
             mMediaPlayer.setDataSource(mDataSource);
         } catch (IOException e) {
@@ -397,4 +403,57 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
         createPlayerPositionUpdateThread();
         mPlayerPositionUpdateThread.start();
     }
+
+
+    //----------------------------------------------------------------------------------------------
+    //                                      UI
+    //----------------------------------------------------------------------------------------------
+
+    private void setUpViews(){
+        button_dismiss.setOnTouchListener(new SwipeToDismissTouchListener(button_dismiss, null,
+                new SwipeToDismissTouchListener.DismissCallbacks(){
+                    @Override
+                    public boolean canDismiss(Object token) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onDismiss(View view, Object token) {
+                        if (D) {Log.d(DEBUG_TAG, "Alarm has been dismissed");}
+                        flag_user_call = true;
+                        button_snooze.setVisibility(View.GONE);
+                        layout_buttons.removeView(button_dismiss);
+                        dismissAlarm();
+                    }
+                }
+        ));
+        int snoozeTime  = PrefUtil.getInt(this, PrefKey.SNOOZE_TIME, 10);
+        String text_snooze = getResources().getString(R.string.button_snooze);
+        String formatted = String.format(text_snooze, snoozeTime);
+        if(snoozeTime == 1){
+            formatted += " " + getResources().getString(R.string.minute);
+        } else {
+            formatted += " " + getResources().getString(R.string.minutes);
+        }
+
+        button_snooze.setText(formatted);
+        button_snooze.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (D) {Log.d(DEBUG_TAG, "Alarm has been snoozed. ya biscuit");}
+                flag_user_call = true;
+                snoozeAlarm();
+            }
+        });
+
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.layout_bg_alarm_receiver);
+        int color = mAlarmGson.getColor();
+        if(color == -1){
+            color = getResources().getColor(R.color.material_yellow);
+        }
+        rl.setBackgroundColor(color);
+        textView_alarmMessage.setText(mAlarmGson.getMessage());
+    }
+
+
 }
