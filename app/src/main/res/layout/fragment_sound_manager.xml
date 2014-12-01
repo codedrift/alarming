@@ -21,6 +21,7 @@
                 android:layout_height="match_parent"
                 tools:context=".MainActivity$PlaceholderFragment">
 
+
     <ProgressBar
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="50dp"

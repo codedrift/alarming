@@ -14,39 +14,46 @@ package de.petermoesenthin.alarming.service;/*
  * limitations under the License.
  */
 
-import android.app.IntentService;
-import android.app.KeyguardManager;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+
+import com.fima.glowpadview.GlowPadView;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-import de.petermoesenthin.alarming.AlarmReceiverActivity;
+import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
-import de.petermoesenthin.alarming.receiver.AlarmReceiver;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
-public class AlarmService extends IntentService implements MediaPlayer.OnPreparedListener,
-        MediaPlayer.OnSeekCompleteListener{
+public class AlarmService extends Service implements MediaPlayer.OnPreparedListener,
+        MediaPlayer.OnSeekCompleteListener, GlowPadView.OnTriggerListener {
 
     public static final String DEBUG_TAG = "AlarmService";
     public static final boolean D = true;
     private Context mContext;
-    private KeyguardManager mKeyGuardManager;
-    private KeyguardManager.KeyguardLock mKeyguardLock;
+    private WindowManager mWindowManager;
+    private View mView;
     private Vibrator mVibrator;
     private MediaPlayer mMediaPlayer;
     private Thread mPlayerPositionUpdateThread;
@@ -55,78 +62,119 @@ public class AlarmService extends IntentService implements MediaPlayer.OnPrepare
     private int mEndMillis;
     private String mDataSource;
 
+    private Animation mAnimation;
+
+    private GlowPadView mGlowPadView;
+
     //Alarm
     private int mAlarmId;
     private AlarmGson mAlarmGson;
     private List<AlarmGson> mAlarms;
 
-    public AlarmService() {
-        super(DEBUG_TAG);
-        mContext = this;
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
+        if (D) {Log.d(DEBUG_TAG, "onBind called");}
         return null;
     }
 
+
     @Override
-    protected void onHandleIntent(Intent intent) {
-        if (D) {Log.d(DEBUG_TAG, "onHandleEvent called");}
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i(DEBUG_TAG, "onStartCommand called");
         mAlarmId = intent.getIntExtra("id", -1);
-        registerScreenOnReceiver();
-        //disableKeyguard();
-        playAlarmSound();
-        AlarmReceiver.completeWakefulIntent(intent);
+        mContext = this;
+        registerSystemActionReceiver();
+        //playAlarmSound();
+        //AlarmReceiver.completeWakefulIntent(intent);
+        //showLockScreenView();
+        return START_STICKY_COMPATIBILITY;
     }
 
-    private void registerScreenOnReceiver() {
+
+    private void showLockScreenView() {
+        Log.i(DEBUG_TAG, "Showing LockScreen view");
+        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        mView = inflater.inflate(R.layout.lock_screen_view, null);
+        mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideLockScreenView();
+                unregisterSystemActionReceiver();
+                stopSelf();
+            }
+        });
+
+
+        //SetUp GlowPadView
+        mGlowPadView = (GlowPadView) mView.findViewById(R.id.glow_pad_view);
+
+        mGlowPadView.setOnTriggerListener(this);
+
+
+
+        final WindowManager.LayoutParams mLayoutParams = new WindowManager.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT, 0, 0,
+                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                        | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                PixelFormat.RGBA_8888);
+
+
+        mView.setVisibility(View.VISIBLE);
+        mAnimation = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in);
+        mView.setAnimation(mAnimation);
+        mWindowManager.addView(mView, mLayoutParams);
+    }
+
+    private void hideLockScreenView() {
+        Log.i(DEBUG_TAG, "Hiding LockScreen view");
+        if (mView != null && mWindowManager != null) {
+            mWindowManager.removeView(mView);
+            mView = null;
+        }
+    }
+
+
+    private void registerSystemActionReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
-        registerReceiver(screenOnReceiver, filter);
+        registerReceiver(systemActionReceiver, filter);
     }
 
     @Override
     public void onDestroy() {
         if (D) {Log.d(DEBUG_TAG, "onDestroy called");}
-        unregisterScreenOnReceiver();
-        //reEnableKeyGuard();
+        unregisterSystemActionReceiver();
         super.onDestroy();
     }
 
-    private void unregisterScreenOnReceiver() {
-        unregisterReceiver(screenOnReceiver);
+    private void unregisterSystemActionReceiver() {
+        hideLockScreenView();
+        unregisterReceiver(systemActionReceiver);
     }
 
-    private BroadcastReceiver screenOnReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver systemActionReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(Intent.ACTION_SCREEN_ON)) {
                 if (D) {Log.d(DEBUG_TAG, "Received ACTION_SCREEN_ON");}
-                Intent i = new Intent(context, AlarmReceiverActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                i.putExtra("id", mAlarmId);
-                context.startActivity(i);
+                showLockScreenView();
+            }else if (action.equals(Intent.ACTION_USER_PRESENT)) {
+                if (D) {Log.d(DEBUG_TAG, "Received ACTION_USER_PRESENT");}
+                hideLockScreenView();
+            }
+            else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+                if (D) {Log.d(DEBUG_TAG, "Received ACTION_SCREEN_OFF");}
+                hideLockScreenView();
             }
         }
     };
-
-    private void disableKeyguard(){
-        if (D) {Log.d(DEBUG_TAG, "Disabling Keyguard");}
-        mKeyGuardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-        mKeyguardLock = mKeyGuardManager.newKeyguardLock("Alarming_Keyguard");
-        if (mKeyGuardManager.inKeyguardRestrictedInputMode()){
-            mKeyguardLock.disableKeyguard();
-        }
-    }
-
-    private void reEnableKeyGuard(){
-        if (D) {Log.d(DEBUG_TAG, "Reenabling keyguard");}
-        if(mKeyguardLock != null){
-            mKeyguardLock.reenableKeyguard();
-        }
-    }
 
     private void startVibration(){
         if (D) {Log.d(DEBUG_TAG, "Starting vibration");}
@@ -147,11 +195,15 @@ public class AlarmService extends IntentService implements MediaPlayer.OnPrepare
         }
     }
 
+    //----------------------------------------------------------------------------------------------
+    //                                      AUDIO PLAYBACk
+    //----------------------------------------------------------------------------------------------
+
     /**
      * Prepares alarm sound playback
      */
     private void playAlarmSound(){
-        if (D) {Log.d(DEBUG_TAG, "Play alarm sound");}
+        if (D) {Log.d(DEBUG_TAG, "Playing alarm sound");}
         MediaUtil.saveSystemMediaVolume(this);
         MediaUtil.setAlarmVolumeFromPreference(this);
         String[] uris = PrefUtil.getAlarmSoundUris(this);
@@ -256,4 +308,35 @@ public class AlarmService extends IntentService implements MediaPlayer.OnPrepare
         mPlayerPositionUpdateThread.start();
     }
 
+    //----------------------------------------------------------------------------------------------
+    //                                      GLOWPAD
+    //----------------------------------------------------------------------------------------------
+
+
+
+    @Override
+    public void onGrabbed(View v, int handle) {
+        if (D) {Log.d(DEBUG_TAG, "onGrabbed");}
+    }
+
+    @Override
+    public void onReleased(View v, int handle) {
+        if (D) {Log.d(DEBUG_TAG, "onReleased");}
+        mGlowPadView.ping();
+    }
+
+    @Override
+    public void onTrigger(View v, int target) {
+        if (D) {Log.d(DEBUG_TAG, "onTrigger");}
+    }
+
+    @Override
+    public void onGrabbedStateChange(View v, int handle) {
+        if (D) {Log.d(DEBUG_TAG, "onGrabbedStateChange");}
+    }
+
+    @Override
+    public void onFinishFinalAnimation() {
+        if (D) {Log.d(DEBUG_TAG, "onFinishFinalAnimation");}
+    }
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/layout_bg_alarm_receiver"
+                android:background="@color/material_yellow"
+                android:keepScreenOn="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/layout_dismiss_snooze"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_weight="0.2"
+            android:id="@+id/imageView_bell"
+            android:src="@drawable/ic_bell_ring"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/textView_alarmText"
+            android:layout_weight="0.8"
+            android:padding="16dp"
+            android:id="@+id/textView_alarm_message"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <com.fima.glowpadview.GlowPadView
+        android:id="@+id/glow_pad_view"
+        xmlns:glowpad="http://schemas.android.com/apk/res-auto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="@dimen/glowpadview_margin_bottom"
+        android:focusable="true"
+        android:gravity="center"
+        glowpad:directionDescriptions="@array/snooze_dismiss_direction_descriptions"
+        glowpad:feedbackCount="1"
+        glowpad:glowRadius="@dimen/glowpadview_glow_radius"
+        glowpad:handleDrawable="@drawable/ic_alarm_alert_touch_handle"
+        glowpad:innerRadius="@dimen/glowpadview_inner_radius"
+        glowpad:outerRadius="@dimen/glowpadview_target_placement_radius"
+        glowpad:outerRingDrawable="@drawable/ic_alarm_alert_outerring"
+        glowpad:pointDrawable="@drawable/ic_lockscreen_glowdot"
+        glowpad:snapMargin="@dimen/glowpadview_snap_margin"
+        glowpad:targetDescriptions="@array/snooze_dismiss_descriptions"
+        glowpad:targetDrawables="@array/snooze_dismiss_drawables"
+        glowpad:vibrationDuration="20"/>
+
+</RelativeLayout>

@@ -4,8 +4,8 @@ android {
     buildToolsVersion "21.1.1"
 
     defaultConfig {
-        applicationId 'com.faizmalkani.floatingactionbutton'
-        minSdkVersion 7
+        applicationId 'com.fima.glowpadview'
+        minSdkVersion 15
         targetSdkVersion 21
         versionName "1.0"
         versionCode 1
@@ -25,7 +25,4 @@ android {
 }
 
 dependencies {
-    compile ('com.nineoldandroids:library:2.4.0'){
-        exclude module: 'support-v4'
-    }
 }
