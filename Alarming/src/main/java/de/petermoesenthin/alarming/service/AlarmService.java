@@ -96,7 +96,7 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        mView = inflater.inflate(R.layout.lock_screen_view, null);
+        mView = inflater.inflate(R.layout.alarm_alert, null);
         mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

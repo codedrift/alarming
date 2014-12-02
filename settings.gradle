@@ -1,4 +1,4 @@
-include ':app'
+include ':Alarming'
 include ':libs:FloatingActionButton'
 include ':libs:GlowPadView'
 
