@@ -6,7 +6,7 @@ Set up all your songs and Alarming will pick one. Never be annoyed by your alarm
 
 Version
 ----
-0.6alpha
+0.7.1alpha
 
 Libraries
 -----------
