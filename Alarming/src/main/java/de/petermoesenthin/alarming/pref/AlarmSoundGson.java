@@ -18,67 +18,67 @@ package de.petermoesenthin.alarming.pref;
 
 public class AlarmSoundGson {
 
-    private String path = "";
-    private String metaTitle = "";
-    private String metaArtist = "";
-    private int startMillis = 0;
-    private int endMillis = 0;
-    private int length = 0;
-    private int hash = 0;
+	private String path = "";
+	private String metaTitle = "";
+	private String metaArtist = "";
+	private int startMillis = 0;
+	private int endMillis = 0;
+	private int length = 0;
+	private int hash = 0;
 
-    public String getPath() {
-        return path;
-    }
+	public String getPath() {
+		return path;
+	}
 
-    public void setPath(String path) {
-        this.path = path;
-    }
+	public void setPath(String path) {
+		this.path = path;
+	}
 
-    public int getStartMillis() {
-        return startMillis;
-    }
+	public int getStartMillis() {
+		return startMillis;
+	}
 
-    public void setStartMillis(int startMillis) {
-        this.startMillis = startMillis;
-    }
+	public void setStartMillis(int startMillis) {
+		this.startMillis = startMillis;
+	}
 
-    public int getEndMillis() {
-        return endMillis;
-    }
+	public int getEndMillis() {
+		return endMillis;
+	}
 
-    public void setEndMillis(int endMillis) {
-        this.endMillis = endMillis;
-    }
+	public void setEndMillis(int endMillis) {
+		this.endMillis = endMillis;
+	}
 
-    public int getHash() {
-        return hash;
-    }
+	public int getHash() {
+		return hash;
+	}
 
-    public void setHash(int hash) {
-        this.hash = hash;
-    }
+	public void setHash(int hash) {
+		this.hash = hash;
+	}
 
-    public String getMetaTitle() {
-        return metaTitle;
-    }
+	public String getMetaTitle() {
+		return metaTitle;
+	}
 
-    public void setMetaTitle(String metaTitle) {
-        this.metaTitle = metaTitle;
-    }
+	public void setMetaTitle(String metaTitle) {
+		this.metaTitle = metaTitle;
+	}
 
-    public String getMetaArtist() {
-        return metaArtist;
-    }
+	public String getMetaArtist() {
+		return metaArtist;
+	}
 
-    public void setMetaArtist(String metaArtist) {
-        this.metaArtist = metaArtist;
-    }
+	public void setMetaArtist(String metaArtist) {
+		this.metaArtist = metaArtist;
+	}
 
-    public int getLength() {
-        return length;
-    }
+	public int getLength() {
+		return length;
+	}
 
-    public void setLength(int length) {
-        this.length = length;
-    }
+	public void setLength(int length) {
+		this.length = length;
+	}
 }

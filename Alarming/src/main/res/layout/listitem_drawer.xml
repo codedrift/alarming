@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,32 +14,31 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_height="wrap_content"
-                android:minHeight="64dp"
-                android:layout_width="wrap_content">
+	android:layout_height="wrap_content"
+	android:minHeight="64dp"
+	android:layout_width="wrap_content">
 
 
-    <ImageView
-        android:id="@+id/drawer_listItem_ImageView"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_centerVertical="true">
-    </ImageView>
+	<ImageView
+		android:id="@+id/drawer_listItem_ImageView"
+		android:layout_width="36dp"
+		android:layout_height="36dp"
+		android:layout_marginLeft="20dp"
+		android:layout_marginStart="20dp"
+		android:layout_centerVertical="true"></ImageView>
 
-    <TextView
-        android:id="@+id/drawer_listItem_TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:textSize="@dimen/textSize_drawerItem"
-        android:alpha="0.9"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:textAppearance="?android:attr/textAppearanceListItem"
-        android:textColor="@color/material_black"
-        android:layout_toRightOf="@id/drawer_listItem_ImageView"
-        android:layout_toEndOf="@id/drawer_listItem_ImageView"/>
+	<TextView
+		android:id="@+id/drawer_listItem_TextView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"
+		android:textSize="@dimen/textSize_drawerItem"
+		android:alpha="0.9"
+		android:layout_marginLeft="16dp"
+		android:layout_marginStart="16dp"
+		android:textAppearance="?android:attr/textAppearanceListItem"
+		android:textColor="@color/material_black"
+		android:layout_toRightOf="@id/drawer_listItem_ImageView"
+		android:layout_toEndOf="@id/drawer_listItem_ImageView" />
 
 </RelativeLayout>

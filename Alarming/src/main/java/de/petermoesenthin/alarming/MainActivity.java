@@ -44,204 +44,216 @@ import de.petermoesenthin.alarming.util.PrefUtil;
 
 public class MainActivity extends ActionBarActivity {
 
-    // Navigation Drawer
-    private String[] mDrawerTitles;
-    private ListView mDrawerListView;
-    private DrawerLayout mDrawerLayout;
-    private CharSequence mTitle;
-    private CharSequence mDrawerTitle;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private static final int[] mDrawerImages = {
-            R.drawable.ic_drawer_bell,
-            R.drawable.ic_drawer_sound};
+	// Navigation Drawer
+	private String[] mDrawerTitles;
+	private ListView mDrawerListView;
+	private DrawerLayout mDrawerLayout;
+	private CharSequence mTitle;
+	private CharSequence mDrawerTitle;
+	private ActionBarDrawerToggle mDrawerToggle;
+	private static final int[] mDrawerImages = {
+			R.drawable.ic_drawer_bell,
+			R.drawable.ic_drawer_sound};
 
-    // Debug
-    public static final String DEBUG_TAG = "MainActivity";
-    public static final boolean D = true;
-
-
-
-    //----------------------------------------------------------------------------------------------
-    //                                      LIFECYCLE
-    //----------------------------------------------------------------------------------------------
-
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        setUpNavigationDrawer();
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setElevation(1);
+	// Debug
+	public static final String DEBUG_TAG = "MainActivity";
+	public static final boolean D = true;
 
 
-        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.material_yellow_dark));
+	//----------------------------------------------------------------------------------------------
+	//                                      LIFECYCLE
+	//----------------------------------------------------------------------------------------------
 
-        transactNewFragment(new SetAlarmFragment());
-        checkFirstStart();
-    }
-    private void checkFirstStart() {
-        boolean firstStart = PrefUtil.getBoolean(this, PrefKey.APP_FIRST_START, true);
-        if(firstStart){
-            if(D) {Log.d(DEBUG_TAG, "First start detected.");}
-            PrefUtil.updateAlarmSoundUris(this);
-            PrefUtil.putBoolean(this, PrefKey.APP_FIRST_START, false);
-        }
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    //----------------------------------------------------------------------------------------------
-    //                                      UI
-    //----------------------------------------------------------------------------------------------
-
-    public void setTitle(CharSequence title) {
-        this.mTitle = title;
-        getSupportActionBar().setTitle(this.mTitle);
-    }
-
-    /**
-     * Sets up everything needed for the navigation drawer
-     */
-    private void setUpNavigationDrawer(){
-        if(D) {Log.d(DEBUG_TAG, "Setting up navigation drawer.");}
-        mDrawerTitles = getResources()
-                .getStringArray(R.array.nav_drawer_titles);
-        mDrawerListView = (ListView) findViewById(R.id.drawer_listView);
-        mTitle = mDrawerTitle = getTitle();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.material_yellow_dark));
-        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.drawer_open,
-                R.string.drawer_close){
-            public void onDrawerClosed(View view) {setTitle(mTitle);}
-            public void onDrawerOpened(View drawerView) {setTitle(mDrawerTitle);}
-        };
-
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        List<DrawerItem> mDrawerItemList = new ArrayList<DrawerItem>();
-        for(int i = 0; i < mDrawerTitles.length; i++){
-            DrawerItem drawerItem = new DrawerItem(mDrawerImages[i], mDrawerTitles[i]);
-            mDrawerItemList.add(drawerItem);
-        }
-        mDrawerListView.setAdapter(new DrawerItemArrayAdapter(this,
-                R.layout.listitem_drawer,
-                mDrawerItemList));
-        DrawerItemClickListener drawerItemClickListener =
-                new DrawerItemClickListener();
-        mDrawerListView.setOnItemClickListener(drawerItemClickListener);
-
-        RelativeLayout settingsButton = (RelativeLayout) findViewById(R.id.drawer_button_settings);
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSettingsActivity();
-                mDrawerLayout.closeDrawers();
-            }
-        });
-
-        RelativeLayout aboutButton = (RelativeLayout) findViewById(R.id.drawer_button_about);
-        aboutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAboutActivity();
-                mDrawerLayout.closeDrawers();
-            }
-        });
-    }
-
-    private void showAboutActivity() {
-        Intent i = new Intent(this, AboutActivity.class);
-        startActivity(i);
-    }
-
-    private void showSettingsActivity() {
-        Intent i = new Intent(this, SettingsActivity.class);
-        startActivity(i);
-    }
-
-    /**
-     * Replaces the the content of the MainActivity content area with a new fragment.
-     * @param fragment
-     */
-    public void transactNewFragment(Fragment fragment){
-        if(D) {Log.d(DEBUG_TAG, "Transacting new fragment.");}
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
-    }
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		setUpNavigationDrawer();
+		getSupportActionBar().setDisplayShowCustomEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setElevation(1);
 
 
-    //----------------------------------------------------------------------------------------------
-    //                                      DRAWER
-    //----------------------------------------------------------------------------------------------
+		mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.material_yellow_dark));
+
+		transactNewFragment(new SetAlarmFragment());
+		checkFirstStart();
+	}
+
+	private void checkFirstStart() {
+		boolean firstStart = PrefUtil.getBoolean(this, PrefKey.APP_FIRST_START, true);
+		if (firstStart) {
+			if (D) {
+				Log.d(DEBUG_TAG, "First start detected.");
+			}
+			PrefUtil.updateAlarmSoundUris(this);
+			PrefUtil.putBoolean(this, PrefKey.APP_FIRST_START, false);
+		}
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//                                      UI
+	//----------------------------------------------------------------------------------------------
+
+	public void setTitle(CharSequence title) {
+		this.mTitle = title;
+		getSupportActionBar().setTitle(this.mTitle);
+	}
+
+	/**
+	 * Sets up everything needed for the navigation drawer
+	 */
+	private void setUpNavigationDrawer() {
+		if (D) {
+			Log.d(DEBUG_TAG, "Setting up navigation drawer.");
+		}
+		mDrawerTitles = getResources()
+				.getStringArray(R.array.nav_drawer_titles);
+		mDrawerListView = (ListView) findViewById(R.id.drawer_listView);
+		mTitle = mDrawerTitle = getTitle();
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.material_yellow_dark));
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open,
+				R.string.drawer_close) {
+			public void onDrawerClosed(View view) {
+				setTitle(mTitle);
+			}
+
+			public void onDrawerOpened(View drawerView) {
+				setTitle(mDrawerTitle);
+			}
+		};
+
+		mDrawerToggle.setDrawerIndicatorEnabled(true);
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		List<DrawerItem> mDrawerItemList = new ArrayList<DrawerItem>();
+		for (int i = 0; i < mDrawerTitles.length; i++) {
+			DrawerItem drawerItem = new DrawerItem(mDrawerImages[i], mDrawerTitles[i]);
+			mDrawerItemList.add(drawerItem);
+		}
+		mDrawerListView.setAdapter(new DrawerItemArrayAdapter(this,
+				R.layout.listitem_drawer,
+				mDrawerItemList));
+		DrawerItemClickListener drawerItemClickListener =
+				new DrawerItemClickListener();
+		mDrawerListView.setOnItemClickListener(drawerItemClickListener);
+
+		RelativeLayout settingsButton = (RelativeLayout) findViewById(R.id.drawer_button_settings);
+		settingsButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showSettingsActivity();
+				mDrawerLayout.closeDrawers();
+			}
+		});
+
+		RelativeLayout aboutButton = (RelativeLayout) findViewById(R.id.drawer_button_about);
+		aboutButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showAboutActivity();
+				mDrawerLayout.closeDrawers();
+			}
+		});
+	}
+
+	private void showAboutActivity() {
+		Intent i = new Intent(this, AboutActivity.class);
+		startActivity(i);
+	}
+
+	private void showSettingsActivity() {
+		Intent i = new Intent(this, SettingsActivity.class);
+		startActivity(i);
+	}
+
+	/**
+	 * Replaces the the content of the MainActivity content area with a new fragment.
+	 *
+	 * @param fragment
+	 */
+	public void transactNewFragment(Fragment fragment) {
+		if (D) {
+			Log.d(DEBUG_TAG, "Transacting new fragment.");
+		}
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.content_frame, fragment)
+				.commit();
+	}
 
 
-    /**
-     *
-     * Handles click events in the navigation drawer.
-     */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+	//----------------------------------------------------------------------------------------------
+	//                                      DRAWER
+	//----------------------------------------------------------------------------------------------
 
-        private ListView drawerListView;
 
-        public DrawerItemClickListener(){
-            drawerListView = mDrawerListView;
-        }
+	/**
+	 * Handles click events in the navigation drawer.
+	 */
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 
-        private void setDrawerItemTypefaceDefault() {
-            TextView textView;
-            for(int i = 0; i < drawerListView.getChildCount(); i++){
-                textView = (TextView) drawerListView
-                        .getChildAt(i).findViewById(R.id.drawer_listItem_TextView);
-                textView.setTypeface(null, Typeface.NORMAL);
-            }
-        }
+		private ListView drawerListView;
 
-        /**
-         * Swaps Fragments in the main content view
-         * @param position The selected position
-         */
-        private void selectItem(int position) {
-            // Create/Load Fragment
-            Fragment fragment = null;
-            switch (position) {
-                case 0:
-                    fragment = new SetAlarmFragment();
-                    break;
-                case 1:
-                    fragment = new SoundManagerFragment();
-                    break;
-            }
+		public DrawerItemClickListener() {
+			drawerListView = mDrawerListView;
+		}
 
-            drawerListView.setItemChecked(position, true);
-            transactNewFragment(fragment);
-            setTitle(mDrawerTitles[position]);
-            mDrawerLayout.closeDrawers();
-        }
+		private void setDrawerItemTypefaceDefault() {
+			TextView textView;
+			for (int i = 0; i < drawerListView.getChildCount(); i++) {
+				textView = (TextView) drawerListView
+						.getChildAt(i).findViewById(R.id.drawer_listItem_TextView);
+				textView.setTypeface(null, Typeface.NORMAL);
+			}
+		}
 
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            setDrawerItemTypefaceDefault();
-            TextView tv = (TextView) view.findViewById(
-                    R.id.drawer_listItem_TextView);
-            tv.setTypeface(null, Typeface.BOLD);
-            selectItem(position);
-        }
-    }
+		/**
+		 * Swaps Fragments in the main content view
+		 *
+		 * @param position The selected position
+		 */
+		private void selectItem(int position) {
+			// Create/Load Fragment
+			Fragment fragment = null;
+			switch (position) {
+				case 0:
+					fragment = new SetAlarmFragment();
+					break;
+				case 1:
+					fragment = new SoundManagerFragment();
+					break;
+			}
+
+			drawerListView.setItemChecked(position, true);
+			transactNewFragment(fragment);
+			setTitle(mDrawerTitles[position]);
+			mDrawerLayout.closeDrawers();
+		}
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			setDrawerItemTypefaceDefault();
+			TextView tv = (TextView) view.findViewById(
+					R.id.drawer_listItem_TextView);
+			tv.setTypeface(null, Typeface.BOLD);
+			selectItem(position);
+		}
+	}
 
 }

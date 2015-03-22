@@ -24,46 +24,46 @@ import de.petermoesenthin.alarming.R;
 
 public class LDialogView {
 
-    private int mDialogTitleResource;
-    private Context mContext;
-    private TextView mPositiveButton;
-    private TextView mNegativeButton;
-    private View mLayout;
+	private int mDialogTitleResource;
+	private Context mContext;
+	private TextView mPositiveButton;
+	private TextView mNegativeButton;
+	private View mLayout;
 
-    public LDialogView(Context context, int contentView, int dialogTitleResource) {
-        mContext = context;
-        mDialogTitleResource = dialogTitleResource;
-        init(contentView);
-    }
+	public LDialogView(Context context, int contentView, int dialogTitleResource) {
+		mContext = context;
+		mDialogTitleResource = dialogTitleResource;
+		init(contentView);
+	}
 
-    private void init(int contentView){
-        LayoutInflater inflater = (LayoutInflater) mContext
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mLayout = inflater.inflate(R.layout.l_dialog_view, null);
-        View v = inflater.inflate(contentView, null);
+	private void init(int contentView) {
+		LayoutInflater inflater = (LayoutInflater) mContext
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mLayout = inflater.inflate(R.layout.l_dialog_view, null);
+		View v = inflater.inflate(contentView, null);
 
-        TextView dialogTitle = (TextView) mLayout.findViewById(R.id.l_dialog_textView_title);
-        String title = mContext.getResources().getString(mDialogTitleResource);
-        dialogTitle.setText(mDialogTitleResource);
-        mPositiveButton = (TextView) mLayout.findViewById(R.id.l_textView_positive_button);
-        mNegativeButton = (TextView) mLayout.findViewById(R.id.l_textView_negative_button);
-        ViewStub stub = (ViewStub) mLayout.findViewById(R.id.l_dialog_content_stub);
-        stub.setLayoutResource(contentView);
-        stub.inflate();
+		TextView dialogTitle = (TextView) mLayout.findViewById(R.id.l_dialog_textView_title);
+		String title = mContext.getResources().getString(mDialogTitleResource);
+		dialogTitle.setText(mDialogTitleResource);
+		mPositiveButton = (TextView) mLayout.findViewById(R.id.l_textView_positive_button);
+		mNegativeButton = (TextView) mLayout.findViewById(R.id.l_textView_negative_button);
+		ViewStub stub = (ViewStub) mLayout.findViewById(R.id.l_dialog_content_stub);
+		stub.setLayoutResource(contentView);
+		stub.inflate();
 
-    }
+	}
 
-    public View getView(){
-        return mLayout;
-    }
+	public View getView() {
+		return mLayout;
+	}
 
-    public void setPositiveButtonOnClickListener(View.OnClickListener onClickListener){
-        mPositiveButton.setOnClickListener(onClickListener);
-    }
+	public void setPositiveButtonOnClickListener(View.OnClickListener onClickListener) {
+		mPositiveButton.setOnClickListener(onClickListener);
+	}
 
-    public void setNegativeButtonOnClickListener(View.OnClickListener onClickListener){
-        mNegativeButton.setOnClickListener(onClickListener);
-    }
+	public void setNegativeButtonOnClickListener(View.OnClickListener onClickListener) {
+		mNegativeButton.setOnClickListener(onClickListener);
+	}
 
 
 }

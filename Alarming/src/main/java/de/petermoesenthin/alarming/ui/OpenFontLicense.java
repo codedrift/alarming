@@ -22,30 +22,30 @@ import de.psdev.licensesdialog.licenses.License;
 
 public class OpenFontLicense extends License {
 
-    private static final long serialVersionUID = 4854000061990891449L;
+	private static final long serialVersionUID = 4854000061990891449L;
 
-    @Override
-    public String getName() {
-        return "SIL OPEN FONT LICENSE Version 1.1";
-    }
+	@Override
+	public String getName() {
+		return "SIL OPEN FONT LICENSE Version 1.1";
+	}
 
-    @Override
-    public String getSummaryText(Context context) {
-        return getContent(context, R.raw.ofl_1_1);
-    }
+	@Override
+	public String getSummaryText(Context context) {
+		return getContent(context, R.raw.ofl_1_1);
+	}
 
-    @Override
-    public String getFullText(Context context) {
-        return getContent(context, R.raw.ofl_1_1);
-    }
+	@Override
+	public String getFullText(Context context) {
+		return getContent(context, R.raw.ofl_1_1);
+	}
 
-    @Override
-    public String getVersion() {
-        return "1.1";
-    }
+	@Override
+	public String getVersion() {
+		return "1.1";
+	}
 
-    @Override
-    public String getUrl() {
-        return "http://scripts.sil.org/OFL";
-    }
+	@Override
+	public String getUrl() {
+		return "http://scripts.sil.org/OFL";
+	}
 }

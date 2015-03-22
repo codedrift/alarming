@@ -30,41 +30,41 @@ import de.petermoesenthin.alarming.ui.AlarmSoundListItem;
 
 public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
 
-    private Context mContext;
+	private Context mContext;
 
-    public AlarmSoundListAdapter(Context context, int layoutId, List<AlarmSoundListItem> itemList) {
-        super(context, layoutId, itemList);
-        this.mContext = context;
-    }
+	public AlarmSoundListAdapter(Context context, int layoutId, List<AlarmSoundListItem> itemList) {
+		super(context, layoutId, itemList);
+		this.mContext = context;
+	}
 
-    //==========================================================================
-    // Methods
-    //==========================================================================
+	//==========================================================================
+	// Methods
+	//==========================================================================
 
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = null;
-        AlarmSoundListItem listItem = getItem(position);
-        View v = convertView;
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder viewHolder = null;
+		AlarmSoundListItem listItem = getItem(position);
+		View v = convertView;
 
-        if (v == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) mContext
-                    .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            v = layoutInflater.inflate(R.layout.listitem_alarm_sound, null);
-            viewHolder = new ViewHolder();
-            viewHolder.itemTitle = (TextView) v.findViewById(R.id.listItem_textView_soundTitle);
-            viewHolder.itemArtist = (TextView) v.findViewById(R.id.listItem_textView_soundArtist);
-            v.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) v.getTag();
-        }
-        viewHolder.itemTitle.setText(listItem.getTitle());
-        viewHolder.itemArtist.setText(listItem.getArtist());
+		if (v == null) {
+			LayoutInflater layoutInflater = (LayoutInflater) mContext
+					.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+			v = layoutInflater.inflate(R.layout.listitem_alarm_sound, null);
+			viewHolder = new ViewHolder();
+			viewHolder.itemTitle = (TextView) v.findViewById(R.id.listItem_textView_soundTitle);
+			viewHolder.itemArtist = (TextView) v.findViewById(R.id.listItem_textView_soundArtist);
+			v.setTag(viewHolder);
+		} else {
+			viewHolder = (ViewHolder) v.getTag();
+		}
+		viewHolder.itemTitle.setText(listItem.getTitle());
+		viewHolder.itemArtist.setText(listItem.getArtist());
 
-        return v;
-    }
+		return v;
+	}
 
-    private class ViewHolder {
-        TextView itemTitle;
-        TextView itemArtist;
-    }
+	private class ViewHolder {
+		TextView itemTitle;
+		TextView itemArtist;
+	}
 }

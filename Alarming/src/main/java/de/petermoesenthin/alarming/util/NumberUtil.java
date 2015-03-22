@@ -20,24 +20,27 @@ import android.util.Log;
 
 public class NumberUtil {
 
-    public static final String DEBUG_TAG = "NumberUtil";
-    private static final boolean D = false;
+	public static final String DEBUG_TAG = "NumberUtil";
+	private static final boolean D = false;
 
-    /**
-     * Parses a long number to an integer and caps it to MIN/MAX Integer values
-     * @param number
-     * @return
-     */
-    public static int parseLongToCappedInt(long number){
-        if (D) { Log.d(DEBUG_TAG, "Parsing Long to int");}
-        int maxInt = Integer.MAX_VALUE;
-        int minInt = Integer.MIN_VALUE;
-        if (number >= maxInt){
-            return maxInt;
-        } else if (number <= minInt){
-            return minInt;
-        } else {
-            return (int) number;
-        }
-    }
+	/**
+	 * Parses a long number to an integer and caps it to MIN/MAX Integer values
+	 *
+	 * @param number
+	 * @return
+	 */
+	public static int parseLongToCappedInt(long number) {
+		if (D) {
+			Log.d(DEBUG_TAG, "Parsing Long to int");
+		}
+		int maxInt = Integer.MAX_VALUE;
+		int minInt = Integer.MIN_VALUE;
+		if (number >= maxInt) {
+			return maxInt;
+		} else if (number <= minInt) {
+			return minInt;
+		} else {
+			return (int) number;
+		}
+	}
 }

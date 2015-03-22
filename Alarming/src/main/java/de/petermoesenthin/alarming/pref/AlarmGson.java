@@ -17,79 +17,79 @@ package de.petermoesenthin.alarming.pref;
 
 public class AlarmGson {
 
-    private int hour = 0;
-    private int minute = 0;
-    private boolean alarmSet = false;
-    private boolean repeatAlarm = false;
-    private boolean vibrate = true;
-    private String message = "";
-    private int color = -1;
-    private int id = 0;
+	private int hour = 0;
+	private int minute = 0;
+	private boolean alarmSet = false;
+	private boolean repeatAlarm = false;
+	private boolean vibrate = true;
+	private String message = "";
+	private int color = -1;
+	private int id = 0;
 
-    public AlarmGson(){
-    }
+	public AlarmGson() {
+	}
 
-    public int getHour() {
-        return hour;
-    }
+	public int getHour() {
+		return hour;
+	}
 
-    public void setHour(int hour) {
-        this.hour = hour;
-    }
+	public void setHour(int hour) {
+		this.hour = hour;
+	}
 
-    public int getMinute() {
-        return minute;
-    }
+	public int getMinute() {
+		return minute;
+	}
 
-    public void setMinute(int minute) {
-        this.minute = minute;
-    }
+	public void setMinute(int minute) {
+		this.minute = minute;
+	}
 
-    public boolean isAlarmSet() {
-        return alarmSet;
-    }
+	public boolean isAlarmSet() {
+		return alarmSet;
+	}
 
-    public void setAlarmSet(boolean alarmSet) {
-        this.alarmSet = alarmSet;
-    }
+	public void setAlarmSet(boolean alarmSet) {
+		this.alarmSet = alarmSet;
+	}
 
-    public boolean doesVibrate() {
-        return vibrate;
-    }
+	public boolean doesVibrate() {
+		return vibrate;
+	}
 
-    public void setVibrate(boolean vibrate) {
-        this.vibrate = vibrate;
-    }
+	public void setVibrate(boolean vibrate) {
+		this.vibrate = vibrate;
+	}
 
-    public boolean doesRepeat() {
-        return repeatAlarm;
-    }
+	public boolean doesRepeat() {
+		return repeatAlarm;
+	}
 
-    public void setRepeat(boolean repeatAlarm) {
-        this.repeatAlarm = repeatAlarm;
-    }
+	public void setRepeat(boolean repeatAlarm) {
+		this.repeatAlarm = repeatAlarm;
+	}
 
-    public int getColor() {
-        return color;
-    }
+	public int getColor() {
+		return color;
+	}
 
-    public void setColor(int color) {
-        this.color = color;
-    }
+	public void setColor(int color) {
+		this.color = color;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,79 +14,76 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/layout_bg_alarm_receiver"
-                android:background="@color/material_yellow"
-                android:keepScreenOn="true"
-    >
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:id="@+id/layout_bg_alarm_receiver"
+	android:background="@color/material_yellow"
+	android:keepScreenOn="true">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layout_dismiss_snooze"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_above="@+id/layout_dismiss_snooze"
+		android:layout_alignParentTop="true"
+		android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_weight="0.2"
-            android:id="@+id/imageView_bell"
-            android:src="@drawable/ic_bell_ring"
-            android:layout_gravity="center"/>
+		<ImageView
+			android:layout_width="64dp"
+			android:layout_height="64dp"
+			android:layout_weight="0.2"
+			android:id="@+id/imageView_bell"
+			android:src="@drawable/ic_bell_ring"
+			android:layout_gravity="center" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/textView_alarmText"
-            android:layout_weight="0.8"
-            android:padding="16dp"
-            android:id="@+id/textView_alarm_message"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:text="@string/textView_alarmText"
+			android:layout_weight="0.8"
+			android:padding="16dp"
+			android:id="@+id/textView_alarm_message"
+			android:layout_gravity="center" />
+	</LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="48dp"
-        android:orientation="vertical"
-        android:alpha="0.8"
-        android:background="@color/veryLightGray"
-        android:id="@+id/layout_dismiss_snooze"
-        android:layout_height="wrap_content">
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_alignParentBottom="true"
+		android:layout_marginBottom="48dp"
+		android:orientation="vertical"
+		android:alpha="0.8"
+		android:background="@color/veryLightGray"
+		android:id="@+id/layout_dismiss_snooze"
+		android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:background="@drawable/selector_basic"
-            android:text="@string/button_dismiss"
-            android:id="@+id/button_dismiss"
-            />
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="80dp"
+			android:gravity="center"
+			android:textSize="20sp"
+			android:textStyle="bold"
+			android:clickable="true"
+			android:background="@drawable/selector_basic"
+			android:text="@string/button_dismiss"
+			android:id="@+id/button_dismiss" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/lightGray"
-            android:id="@+id/view_divider_small"/>
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:background="@color/lightGray"
+			android:id="@+id/view_divider_small" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:background="@drawable/selector_basic"
-            android:text="@string/button_snooze"
-            android:id="@+id/button_snooze"
-            />
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="80dp"
+			android:gravity="center"
+			android:textSize="20sp"
+			android:textStyle="bold"
+			android:clickable="true"
+			android:background="@drawable/selector_basic"
+			android:text="@string/button_snooze"
+			android:id="@+id/button_snooze" />
 
-    </LinearLayout>
+	</LinearLayout>
 </RelativeLayout>

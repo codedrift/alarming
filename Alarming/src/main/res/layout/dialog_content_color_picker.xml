@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,22 +14,22 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
-    <com.larswerkman.holocolorpicker.ColorPicker
-        android:id="@+id/dialog_color_picker"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:padding="5dp"
-        android:layout_height="wrap_content"/>
-<!--
-    <com.larswerkman.holocolorpicker.SVBar
-        android:id="@+id/colorDialog_svBar"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
--->
+	<com.larswerkman.holocolorpicker.ColorPicker
+		android:id="@+id/dialog_color_picker"
+		android:layout_width="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:padding="5dp"
+		android:layout_height="wrap_content" />
+	<!--
+		<com.larswerkman.holocolorpicker.SVBar
+			android:id="@+id/colorDialog_svBar"
+			android:layout_gravity="center_horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+	-->
 
 </LinearLayout>

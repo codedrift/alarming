@@ -29,21 +29,21 @@ import de.petermoesenthin.alarming.util.PrefUtil;
 
 public class AlarmStateBootReceiver extends BroadcastReceiver {
 
-    //================================================================================
-    // Lifecycle
-    //================================================================================
+	//================================================================================
+	// Lifecycle
+	//================================================================================
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            List<AlarmGson> alarms = PrefUtil.getAlarms(context);
-            for(AlarmGson alg : alarms){
-                if(alg.isAlarmSet()){
-                    Calendar calendar = AlarmUtil
-                            .getNextAlarmTimeAbsolute(alg.getHour(),alg.getMinute());
-                    AlarmUtil.setAlarm(context, calendar, alg.getId());
-                }
-            }
-        }
-    }
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+			List<AlarmGson> alarms = PrefUtil.getAlarms(context);
+			for (AlarmGson alg : alarms) {
+				if (alg.isAlarmSet()) {
+					Calendar calendar = AlarmUtil
+							.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
+					AlarmUtil.setAlarm(context, calendar, alg.getId());
+				}
+			}
+		}
+	}
 }

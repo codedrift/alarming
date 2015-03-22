@@ -22,57 +22,59 @@ import java.util.Calendar;
 public class StringUtil {
 
 	public static String getZeroPaddedString(int number) {
-        if (number >= 10)
-            return String.valueOf(number);
-        else
-            return "0" + String.valueOf(number);
-    }
+		if (number >= 10)
+			return String.valueOf(number);
+		else
+			return "0" + String.valueOf(number);
+	}
 
-    public static String getZeroPaddedString(long number){
-        if (number >= 10)
-            return String.valueOf(number);
-        else
-            return "0" + String.valueOf(number);
-    }
+	public static String getZeroPaddedString(long number) {
+		if (number >= 10)
+			return String.valueOf(number);
+		else
+			return "0" + String.valueOf(number);
+	}
 
-    public static String getTimeFormatted(int hourOfDay, int minute){
-        String alarmTimeFormatted = "";
-        alarmTimeFormatted += getZeroPaddedString(hourOfDay)
-                + ":" + getZeroPaddedString(minute);
-        return alarmTimeFormatted;
-    }
+	public static String getTimeFormatted(int hourOfDay, int minute) {
+		String alarmTimeFormatted = "";
+		alarmTimeFormatted += getZeroPaddedString(hourOfDay)
+				+ ":" + getZeroPaddedString(minute);
+		return alarmTimeFormatted;
+	}
 
-    public static String getTimeFormattedSystem(Context context, int hour, int minute){
-        Calendar c = AlarmUtil.getNextAlarmTimeAbsolute(hour, minute);
-        return android.text.format.DateFormat.getTimeFormat(context).format(c.getTime());
-    }
+	public static String getTimeFormattedSystem(Context context, int hour, int minute) {
+		Calendar c = AlarmUtil.getNextAlarmTimeAbsolute(hour, minute);
+		return android.text.format.DateFormat.getTimeFormat(context).format(c.getTime());
+	}
 
-    /**
-     * Returns a formatted time string in the form of (hh:)mm:ss generated from seconds
-     * @param seconds
-     * @return
-     */
-    public static String getTimeFormattedFromSeconds(int seconds){
-        return getTimeFormattedFromMillis(seconds * 1000);
-    }
+	/**
+	 * Returns a formatted time string in the form of (hh:)mm:ss generated from seconds
+	 *
+	 * @param seconds
+	 * @return
+	 */
+	public static String getTimeFormattedFromSeconds(int seconds) {
+		return getTimeFormattedFromMillis(seconds * 1000);
+	}
 
-    /**
-     * Returns a formatted time string in the form of (hh:)mm:ss generated from milliseconds
-     * @param millis
-     * @return
-     */
-    public static String getTimeFormattedFromMillis(long millis){
-        long duration = millis / 1000;
-        long h = duration / 3600;
-        long m = (duration - h * 3600) / 60;
-        long s = duration - (h * 3600 + m * 60);
-        String durationString = "";
-        if(h != 0) {
-            durationString += StringUtil.getZeroPaddedString(h) + ":";
-        }
-        durationString += StringUtil.getZeroPaddedString(m) + ":";
-        durationString += StringUtil.getZeroPaddedString(s);
-        return durationString;
-    }
+	/**
+	 * Returns a formatted time string in the form of (hh:)mm:ss generated from milliseconds
+	 *
+	 * @param millis
+	 * @return
+	 */
+	public static String getTimeFormattedFromMillis(long millis) {
+		long duration = millis / 1000;
+		long h = duration / 3600;
+		long m = (duration - h * 3600) / 60;
+		long s = duration - (h * 3600 + m * 60);
+		String durationString = "";
+		if (h != 0) {
+			durationString += StringUtil.getZeroPaddedString(h) + ":";
+		}
+		durationString += StringUtil.getZeroPaddedString(m) + ":";
+		durationString += StringUtil.getZeroPaddedString(s);
+		return durationString;
+	}
 
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,156 +14,150 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:paddingTop="5dp"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:paddingTop="5dp"
+	android:layout_marginLeft="@dimen/activity_horizontal_margin"
+	android:layout_marginRight="@dimen/activity_horizontal_margin">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/material_black"
-        android:text="@string/textView_soundTitle"
-        android:id="@+id/textView_soundTitle"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:paddingTop="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
-        />
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="20sp"
+		android:textStyle="bold"
+		android:textColor="@color/material_black"
+		android:text="@string/textView_soundTitle"
+		android:id="@+id/textView_soundTitle"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:paddingTop="5dp"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:paddingStart="5dp"
+		android:paddingEnd="5dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/textView_soundArtist"
-        android:textSize="16sp"
-        android:id="@+id/textView_soundArtist"
-        android:layout_below="@+id/textView_soundTitle"
-        android:layout_alignLeft="@+id/textView_soundTitle"
-        android:layout_alignStart="@+id/textView_soundTitle"
-        android:paddingLeft="5dp"
-        android:paddingStart="5dp"
-        android:paddingRight="5dp"
-        android:paddingEnd="5dp"/>
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/textView_soundArtist"
+		android:textSize="16sp"
+		android:id="@+id/textView_soundArtist"
+		android:layout_below="@+id/textView_soundTitle"
+		android:layout_alignLeft="@+id/textView_soundTitle"
+		android:layout_alignStart="@+id/textView_soundTitle"
+		android:paddingLeft="5dp"
+		android:paddingStart="5dp"
+		android:paddingRight="5dp"
+		android:paddingEnd="5dp" />
 
-    <!-- ######### Divider ######### -->
+	<!-- ######### Divider ######### -->
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/veryLightGray"
-        android:layout_below="@+id/textView_soundArtist"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:id="@+id/view_divider1"/>
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="2dp"
+		android:background="@color/veryLightGray"
+		android:layout_below="@+id/textView_soundArtist"
+		android:layout_marginTop="5dp"
+		android:layout_marginBottom="5dp"
+		android:id="@+id/view_divider1" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView_startTime"
-        android:text="@string/textView_soundStart"
-        android:padding="5dp"
-        android:textSize="14sp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/view_divider1"/>
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/textView_startTime"
+		android:text="@string/textView_soundStart"
+		android:padding="5dp"
+		android:textSize="14sp"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:layout_below="@id/view_divider1" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView_endTime"
-        android:text="@string/textView_soundEnd"
-        android:textSize="14sp"
-        android:padding="5dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/view_divider1"/>
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/textView_endTime"
+		android:text="@string/textView_soundEnd"
+		android:textSize="14sp"
+		android:padding="5dp"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:layout_below="@id/view_divider1" />
 
-    <com.edmodo.rangebar.RangeBar
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/rangebar_audiosection"
-        android:layout_width="match_parent"
-        android:layout_below="@id/textView_startTime"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        custom:tickHeight="0dp"
-        custom:tickCount="100"
-        custom:barColor="@color/lightGray"
-        custom:connectingLineColor="@color/material_yellow"
-        custom:thumbColorNormal="@color/material_yellow"
-        custom:thumbColorPressed="@color/yellow_darker"
-        />
+	<com.edmodo.rangebar.RangeBar xmlns:custom="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/rangebar_audiosection"
+		android:layout_width="match_parent"
+		android:layout_below="@id/textView_startTime"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp"
+		custom:tickHeight="0dp"
+		custom:tickCount="100"
+		custom:barColor="@color/lightGray"
+		custom:connectingLineColor="@color/material_yellow"
+		custom:thumbColorNormal="@color/material_yellow"
+		custom:thumbColorPressed="@color/yellow_darker" />
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rangebar_audiosection"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:padding="5dp"
-        android:background="#ffe6e6e6">
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/rangebar_audiosection"
+		android:layout_marginTop="10dp"
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp"
+		android:padding="5dp"
+		android:background="#ffe6e6e6">
 
-        <ImageButton
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/button_play"
-            android:id="@+id/button_play_pause"
-            android:src="@drawable/ic_play"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            />
+		<ImageButton
+			style="?android:attr/buttonStyleSmall"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/button_play"
+			android:id="@+id/button_play_pause"
+			android:src="@drawable/ic_play"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_centerVertical="true" />
 
-        <ImageButton
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:src="@drawable/ic_stop"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/button_stop"
-            android:id="@+id/button_stop"
-            android:layout_toRightOf="@id/button_play_pause"
-            android:layout_toEndOf="@id/button_play_pause"
-            android:layout_centerVertical="true"
-            />
+		<ImageButton
+			style="?android:attr/buttonStyleSmall"
+			android:layout_width="wrap_content"
+			android:src="@drawable/ic_stop"
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/button_stop"
+			android:id="@+id/button_stop"
+			android:layout_toRightOf="@id/button_play_pause"
+			android:layout_toEndOf="@id/button_play_pause"
+			android:layout_centerVertical="true" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_currentPosition"
-            android:textColor="@color/material_black"
-            android:text="@string/textView_alarmTime"
-            android:textSize="36sp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            />
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/textView_currentPosition"
+			android:textColor="@color/material_black"
+			android:text="@string/textView_alarmTime"
+			android:textSize="36sp"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true" />
 
-    </RelativeLayout>
+	</RelativeLayout>
 
-    <com.faizmalkani.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_save_config"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        app:fabcolor="@color/material_yellow"
-        app:drawable="@drawable/ic_action_save_white"/>
+	<com.faizmalkani.floatingactionbutton.FloatingActionButton
+		android:id="@+id/fab_save_config"
+		android:layout_width="72dp"
+		android:layout_height="72dp"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		android:layout_marginBottom="16dp"
+		android:clickable="true"
+		app:fabcolor="@color/material_yellow"
+		app:drawable="@drawable/ic_action_save_white" />
 
 </RelativeLayout>

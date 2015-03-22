@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,11 +14,11 @@
 -->
 
 <resources>
-    <dimen name="activity_horizontal_margin">8dp</dimen>
-    <dimen name="textSize_drawerItem">24sp</dimen>
-    <dimen name="textSize_drawerAdditionalItem">16sp</dimen>
-    <dimen name="textSize_drawerItemSelected">24sp</dimen>
-    <dimen name="separator_container_margin">10dp</dimen>
-    <dimen name="action_bar_height">56dp</dimen>
-    <dimen name="l_button_corner_radius">4dp</dimen>
+	<dimen name="activity_horizontal_margin">8dp</dimen>
+	<dimen name="textSize_drawerItem">24sp</dimen>
+	<dimen name="textSize_drawerAdditionalItem">16sp</dimen>
+	<dimen name="textSize_drawerItemSelected">24sp</dimen>
+	<dimen name="separator_container_margin">10dp</dimen>
+	<dimen name="action_bar_height">56dp</dimen>
+	<dimen name="l_button_corner_radius">4dp</dimen>
 </resources>

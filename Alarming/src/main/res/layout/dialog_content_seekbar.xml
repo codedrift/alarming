@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,19 +14,19 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:padding="10dp"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+	android:orientation="vertical"
+	android:padding="10dp"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/seekBar"
-        android:layout_gravity="center"
-        android:layout_marginTop="24dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="24dp"/>
+	<SeekBar
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/seekBar"
+		android:layout_gravity="center"
+		android:layout_marginTop="24dp"
+		android:layout_marginLeft="8dp"
+		android:layout_marginRight="8dp"
+		android:layout_marginBottom="24dp" />
 
 </LinearLayout>

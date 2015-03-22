@@ -14,29 +14,30 @@
  * limitations under the License.
  */
 package de.petermoesenthin.alarming.ui;
+
 public class DrawerItem {
-    private String title;
-    private int imageId;
+	private String title;
+	private int imageId;
 
-    public DrawerItem(int imageId, String title){
-        this.imageId = imageId;
-        this.title = title;
-    }
+	public DrawerItem(int imageId, String title) {
+		this.imageId = imageId;
+		this.title = title;
+	}
 
-    public String getTitle(){
-        return this.title;
-    }
+	public String getTitle() {
+		return this.title;
+	}
 
-    public void setTitle(String title){
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public int getImageId(){
-        return this.imageId;
-    }
+	public int getImageId() {
+		return this.imageId;
+	}
 
-    public void setImageId(int imageId){
-        this.imageId = imageId;
-    }
+	public void setImageId(int imageId) {
+		this.imageId = imageId;
+	}
 
 }

@@ -25,56 +25,56 @@ import de.petermoesenthin.alarming.R;
 
 public class LDialog {
 
-    private LDialogView mDialogView;
-    private Context mContext;
-    private AlertDialog mDialog;
-    private LClickListener mPositiveButtonListener;
-    private LClickListener mNegativeButtonListener;
+	private LDialogView mDialogView;
+	private Context mContext;
+	private AlertDialog mDialog;
+	private LClickListener mPositiveButtonListener;
+	private LClickListener mNegativeButtonListener;
 
-    public LDialog(Context context, LDialogView dialogView) {
-        mContext = context;
-        mDialogView = dialogView;
-    }
+	public LDialog(Context context, LDialogView dialogView) {
+		mContext = context;
+		mDialogView = dialogView;
+	}
 
-    public interface LClickListener{
-        void onClick(AlertDialog dialog);
-    }
+	public interface LClickListener {
+		void onClick(AlertDialog dialog);
+	}
 
-    public void show(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setView(mDialogView.getView());
-        builder.setCancelable(true);
-        mDialog = builder.create();
-        mDialog.setCanceledOnTouchOutside(true);
-        mDialog.show();
-    }
+	public void show() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setView(mDialogView.getView());
+		builder.setCancelable(true);
+		mDialog = builder.create();
+		mDialog.setCanceledOnTouchOutside(true);
+		mDialog.show();
+	}
 
-    public void setPositiveButtonListener(LClickListener listener){
-        mPositiveButtonListener = listener;
-        if(listener != null){
-            mDialogView.setPositiveButtonOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(mPositiveButtonListener != null){
-                        mPositiveButtonListener.onClick(mDialog);
-                    }
-                }
-            });
-        }
-    }
+	public void setPositiveButtonListener(LClickListener listener) {
+		mPositiveButtonListener = listener;
+		if (listener != null) {
+			mDialogView.setPositiveButtonOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (mPositiveButtonListener != null) {
+						mPositiveButtonListener.onClick(mDialog);
+					}
+				}
+			});
+		}
+	}
 
-    public void setNegativeButtonListener(LClickListener listener){
-        mNegativeButtonListener = listener;
-        if(listener != null){
-            mDialogView.setNegativeButtonOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(mNegativeButtonListener != null){
-                        mNegativeButtonListener.onClick(mDialog);
-                    }
-                }
-            });
-        }
-    }
+	public void setNegativeButtonListener(LClickListener listener) {
+		mNegativeButtonListener = listener;
+		if (listener != null) {
+			mDialogView.setNegativeButtonOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (mNegativeButtonListener != null) {
+						mNegativeButtonListener.onClick(mDialog);
+					}
+				}
+			});
+		}
+	}
 
 }

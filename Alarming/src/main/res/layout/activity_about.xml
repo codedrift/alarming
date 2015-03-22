@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,19 +14,19 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="de.petermoesenthin.alarming.AboutActivity">
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context="de.petermoesenthin.alarming.AboutActivity">
 
-    <ListView
-        android:id="@+id/listView_about"
-        android:layout_width="fill_parent"
-        android:fadeScrollbars="true"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:scrollbarStyle="outsideInset"
-        android:layout_height="wrap_content">
-    </ListView>
+	<ListView
+		android:id="@+id/listView_about"
+		android:layout_width="fill_parent"
+		android:fadeScrollbars="true"
+		android:paddingLeft="15dp"
+		android:paddingRight="15dp"
+		android:scrollbarStyle="outsideInset"
+		android:layout_height="wrap_content">
+	</ListView>
 
 </RelativeLayout>

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,62 +14,61 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".MainActivity$PlaceholderFragment">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".MainActivity$PlaceholderFragment">
 
 
-    <ProgressBar
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="30dp"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/circleProgressBar_SoundList"
-        android:indeterminate="true"
-        android:layout_gravity="center"/>
-<!--
-    <fr.castorflex.android.circularprogressbar.CircularProgressBar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="30dp"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/circleProgressBar_SoundList"
-        android:indeterminate="true"
-        app:cpb_color="@color/material_yellow"
-        app:cpb_rotation_speed="1.0"
-        app:cpb_sweep_speed="1.0"
-        app:cpb_stroke_width="4dp"
-        app:cpb_min_sweep_angle="10"
-        app:cpb_max_sweep_angle="300"
-        />
--->
-    <ListView
-        android:id="@+id/listView_alarmSounds"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:scrollbarStyle="outsideOverlay"
-        android:paddingRight="@dimen/activity_horizontal_margin">
-    </ListView>
+	<ProgressBar
+		style="@style/Widget.AppCompat.ProgressBar"
+		android:layout_width="50dp"
+		android:layout_height="50dp"
+		android:layout_marginTop="30dp"
+		android:layout_centerHorizontal="true"
+		android:id="@+id/circleProgressBar_SoundList"
+		android:indeterminate="true"
+		android:layout_gravity="center" />
+	<!--
+		<fr.castorflex.android.circularprogressbar.CircularProgressBar
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			xmlns:app="http://schemas.android.com/apk/res-auto"
+			android:layout_width="50dp"
+			android:layout_height="50dp"
+			android:layout_marginTop="30dp"
+			android:layout_centerHorizontal="true"
+			android:id="@+id/circleProgressBar_SoundList"
+			android:indeterminate="true"
+			app:cpb_color="@color/material_yellow"
+			app:cpb_rotation_speed="1.0"
+			app:cpb_sweep_speed="1.0"
+			app:cpb_stroke_width="4dp"
+			app:cpb_min_sweep_angle="10"
+			app:cpb_max_sweep_angle="300"
+			/>
+	-->
+	<ListView
+		android:id="@+id/listView_alarmSounds"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:visibility="gone"
+		android:paddingLeft="@dimen/activity_horizontal_margin"
+		android:scrollbarStyle="outsideOverlay"
+		android:paddingRight="@dimen/activity_horizontal_margin"></ListView>
 
-    <com.faizmalkani.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_sound"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
-        android:clickable="true"
-        app:fabcolor="@color/material_yellow"
-        app:drawable="@drawable/ic_plus"/>
+	<com.faizmalkani.floatingactionbutton.FloatingActionButton
+		android:id="@+id/fab_add_sound"
+		android:layout_width="72dp"
+		android:layout_height="72dp"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		android:layout_marginBottom="16dp"
+		android:layout_marginRight="16dp"
+		android:layout_marginEnd="16dp"
+		android:clickable="true"
+		app:fabcolor="@color/material_yellow"
+		app:drawable="@drawable/ic_plus" />
 
 </RelativeLayout>

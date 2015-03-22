@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,156 +13,149 @@
      limitations under the License.
 -->
 
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/drawer_layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
-    <!-- As the main content view, the view below consumes the entire
-         space available using match_parent in both dimensions. -->
-    <FrameLayout
-        android:id="@+id/content_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+	<!-- As the main content view, the view below consumes the entire
+		 space available using match_parent in both dimensions. -->
+	<FrameLayout
+		android:id="@+id/content_frame"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" />
 
-    <!-- android:layout_gravity="start" tells DrawerLayout to treat
-         this as a sliding drawer on the left side for left-to-right
-         languages and on the right side for right-to-left languages.
-         The drawer is given a fixed width in dp and extends the full height of
-         the container. A solid background is used for contrast
-         with the content view. -->
+	<!-- android:layout_gravity="start" tells DrawerLayout to treat
+		 this as a sliding drawer on the left side for left-to-right
+		 languages and on the right side for right-to-left languages.
+		 The drawer is given a fixed width in dp and extends the full height of
+		 the container. A solid background is used for contrast
+		 with the content view. -->
 
-    <LinearLayout
-        android:layout_gravity="start"
-        android:id="@+id/left_drawer"
-        android:layout_width="304dp"
-        android:layout_height="match_parent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="1dp"
-        android:background="#ffececec"
-        android:orientation="vertical">
+	<LinearLayout
+		android:layout_gravity="start"
+		android:id="@+id/left_drawer"
+		android:layout_width="304dp"
+		android:layout_height="match_parent"
+		android:divider="@android:color/transparent"
+		android:dividerHeight="1dp"
+		android:background="#ffececec"
+		android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/drawer_listView"
-            android:layout_width="304dp"
-            android:dividerHeight="0dp"
-            android:divider="@null"
-            android:animateLayoutChanges="true"
-            android:layout_height="wrap_content"
-            android:choiceMode="singleChoice"
-            >
-        </ListView>
+		<ListView
+			android:id="@+id/drawer_listView"
+			android:layout_width="304dp"
+			android:dividerHeight="0dp"
+			android:divider="@null"
+			android:animateLayoutChanges="true"
+			android:layout_height="wrap_content"
+			android:choiceMode="singleChoice"></ListView>
 
 
-        <!-- Additional Buttons -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:id="@+id/drawer_additional_options_frame"
-            android:minHeight="50dp"
-            android:layout_height="match_parent">
+		<!-- Additional Buttons -->
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:id="@+id/drawer_additional_options_frame"
+			android:minHeight="50dp"
+			android:layout_height="match_parent">
 
-            <View
-                android:id="@+id/view_divider1"
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_above="@+id/drawer_button_settings"
-                android:background="@android:color/darker_gray"
-                />
+			<View
+				android:id="@+id/view_divider1"
+				android:layout_width="fill_parent"
+				android:layout_height="1dp"
+				android:layout_above="@+id/drawer_button_settings"
+				android:background="@android:color/darker_gray" />
 
-            <!-- Settings -->
-            <RelativeLayout
-                android:layout_height="wrap_content"
-                android:id="@+id/drawer_button_settings"
-                android:clickable="true"
-                android:focusable="true"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:layout_above="@+id/view_divider2"
-                android:background="?android:attr/selectableItemBackground"
-                android:layout_width="match_parent">
+			<!-- Settings -->
+			<RelativeLayout
+				android:layout_height="wrap_content"
+				android:id="@+id/drawer_button_settings"
+				android:clickable="true"
+				android:focusable="true"
+				android:paddingTop="5dp"
+				android:paddingBottom="5dp"
+				android:layout_above="@+id/view_divider2"
+				android:background="?android:attr/selectableItemBackground"
+				android:layout_width="match_parent">
 
-                <ImageView
-                    android:id="@+id/drawer_ImageView_Settings"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_action_settings"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:alpha="0.8"
-                    android:duplicateParentState="true"
-                    android:layout_centerVertical="true">
-                </ImageView>
+				<ImageView
+					android:id="@+id/drawer_ImageView_Settings"
+					android:layout_width="32dp"
+					android:layout_height="32dp"
+					android:src="@drawable/ic_action_settings"
+					android:layout_marginLeft="10dp"
+					android:layout_marginStart="10dp"
+					android:layout_marginTop="10dp"
+					android:alpha="0.8"
+					android:duplicateParentState="true"
+					android:layout_centerVertical="true"></ImageView>
 
-                <TextView
-                    android:id="@+id/drawer_TextView_Settings"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:textSize="@dimen/textSize_drawerAdditionalItem"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginStart="15dp"
-                    android:text="@string/textView_drawer_settings"
-                    android:textAllCaps="true"
-                    android:textAppearance="?android:attr/textAppearanceListItem"
-                    android:textColor="@color/drawer_additional_button_text_color"
-                    android:layout_toRightOf="@id/drawer_ImageView_Settings"
-                    android:duplicateParentState="true"
-                    android:layout_toEndOf="@id/drawer_ImageView_Settings"/>
-            </RelativeLayout>
+				<TextView
+					android:id="@+id/drawer_TextView_Settings"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_centerVertical="true"
+					android:textSize="@dimen/textSize_drawerAdditionalItem"
+					android:layout_marginLeft="15dp"
+					android:layout_marginStart="15dp"
+					android:text="@string/textView_drawer_settings"
+					android:textAllCaps="true"
+					android:textAppearance="?android:attr/textAppearanceListItem"
+					android:textColor="@color/drawer_additional_button_text_color"
+					android:layout_toRightOf="@id/drawer_ImageView_Settings"
+					android:duplicateParentState="true"
+					android:layout_toEndOf="@id/drawer_ImageView_Settings" />
+			</RelativeLayout>
 
-            <View
-                android:id="@+id/view_divider2"
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_above="@+id/drawer_button_about"
-                android:background="@android:color/darker_gray"
-                />
+			<View
+				android:id="@+id/view_divider2"
+				android:layout_width="fill_parent"
+				android:layout_height="1dp"
+				android:layout_above="@+id/drawer_button_about"
+				android:background="@android:color/darker_gray" />
 
-            <!-- About -->
-            <RelativeLayout
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:clickable="true"
-                android:focusable="true"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:id="@+id/drawer_button_about"
-                android:background="?android:attr/selectableItemBackground"
-                android:layout_width="match_parent">
+			<!-- About -->
+			<RelativeLayout
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:clickable="true"
+				android:focusable="true"
+				android:paddingTop="5dp"
+				android:paddingBottom="5dp"
+				android:id="@+id/drawer_button_about"
+				android:background="?android:attr/selectableItemBackground"
+				android:layout_width="match_parent">
 
-                <ImageView
-                    android:id="@+id/drawer_ImageView_About"
-                    android:layout_width="32dp"
-                    android:src="@drawable/ic_action_about"
-                    android:layout_height="32dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:alpha="0.8"
-                    android:duplicateParentState="true"
-                    android:layout_centerVertical="true">
-                </ImageView>
+				<ImageView
+					android:id="@+id/drawer_ImageView_About"
+					android:layout_width="32dp"
+					android:src="@drawable/ic_action_about"
+					android:layout_height="32dp"
+					android:layout_marginLeft="10dp"
+					android:layout_marginStart="10dp"
+					android:layout_marginTop="10dp"
+					android:alpha="0.8"
+					android:duplicateParentState="true"
+					android:layout_centerVertical="true"></ImageView>
 
-                <TextView
-                    android:id="@+id/drawer_TextView_About"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:textSize="@dimen/textSize_drawerAdditionalItem"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginStart="15dp"
-                    android:text="@string/textView_drawer_about"
-                    android:textAllCaps="true"
-                    android:duplicateParentState="true"
-                    android:textAppearance="?android:attr/textAppearanceListItem"
-                    android:textColor="@color/drawer_additional_button_text_color"
-                    android:layout_toRightOf="@id/drawer_ImageView_About"
-                    android:layout_toEndOf="@id/drawer_ImageView_About"/>
-            </RelativeLayout>
-        </RelativeLayout>
+				<TextView
+					android:id="@+id/drawer_TextView_About"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_centerVertical="true"
+					android:textSize="@dimen/textSize_drawerAdditionalItem"
+					android:layout_marginLeft="15dp"
+					android:layout_marginStart="15dp"
+					android:text="@string/textView_drawer_about"
+					android:textAllCaps="true"
+					android:duplicateParentState="true"
+					android:textAppearance="?android:attr/textAppearanceListItem"
+					android:textColor="@color/drawer_additional_button_text_color"
+					android:layout_toRightOf="@id/drawer_ImageView_About"
+					android:layout_toEndOf="@id/drawer_ImageView_About" />
+			</RelativeLayout>
+		</RelativeLayout>
 
-    </LinearLayout>
+	</LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

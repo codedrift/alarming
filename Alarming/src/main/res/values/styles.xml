@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,37 +15,41 @@
 
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AlarmingBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/alarming_actionbar</item>
-        <item name="android:seekBarStyle">@style/alarming_seek_bar</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <!-- ActionBar shadow -->
-        <item name="android:windowContentOverlay">@null</item>
+	<!-- Base application theme. -->
+	<style name="AlarmingBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+		<item name="android:actionBarStyle">@style/alarming_actionbar</item>
+		<item name="android:seekBarStyle">@style/alarming_seek_bar</item>
+		<item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+		<!-- ActionBar shadow -->
+		<item name="android:windowContentOverlay">@null</item>
 
-        <!-- Appcompat v7 Color style -->
-        <item name="colorPrimary">@color/material_yellow</item>
-        <item name="colorPrimaryDark">@color/material_yellow_dark</item>
-        <item name="colorAccent">@color/material_yellow</item>
-    </style>
+		<!-- Appcompat v7 Color style -->
+		<item name="colorPrimary">@color/material_yellow</item>
+		<item name="colorPrimaryDark">@color/material_yellow_dark</item>
+		<item name="colorAccent">@color/material_yellow</item>
+	</style>
 
-    <!-- Drawer Arrow -->
-    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="spinBars">true</item>
-        <item name="color">@android:color/white</item>
-    </style>
+	<!-- Drawer Arrow -->
+	<style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+		<item name="spinBars">true</item>
+		<item name="color">@android:color/white</item>
+	</style>
 
-    <!-- ActionBar -->
-    <style name="alarming_actionbar" parent="Base.Widget.AppCompat.Light.ActionBar">
-        <item name="android:background">@color/material_yellow</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
+	<!-- ActionBar -->
+	<style name="alarming_actionbar" parent="Base.Widget.AppCompat.Light.ActionBar">
+		<item name="android:background">@color/material_yellow</item>
+		<item name="android:windowContentOverlay">@null</item>
+	</style>
 
-    <!-- SeekBar -->
-    <style name="alarming_seek_bar" parent="android:Widget.Holo.Light.SeekBar">
-        <item name="android:progressDrawable">@drawable/alarming_scrubber_progress_horizontal_holo_light</item>
-        <item name="android:indeterminateDrawable">@drawable/alarming_scrubber_progress_horizontal_holo_light</item>
-        <item name="android:thumb">@drawable/alarming_scrubber_control_selector_holo_light</item>
-    </style>
+	<!-- SeekBar -->
+	<style name="alarming_seek_bar" parent="android:Widget.Holo.Light.SeekBar">
+		<item name="android:progressDrawable">
+			@drawable/alarming_scrubber_progress_horizontal_holo_light
+		</item>
+		<item name="android:indeterminateDrawable">
+			@drawable/alarming_scrubber_progress_horizontal_holo_light
+		</item>
+		<item name="android:thumb">@drawable/alarming_scrubber_control_selector_holo_light</item>
+	</style>
 
 </resources>
