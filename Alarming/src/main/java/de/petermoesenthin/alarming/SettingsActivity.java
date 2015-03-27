@@ -38,7 +38,6 @@ import de.petermoesenthin.alarming.util.PrefUtil;
 public class SettingsActivity extends ActionBarActivity {
 
 	public static final String DEBUG_TAG = "SettingsActivity";
-	public static final boolean D = true;
 
 	//----------------------------------------------------------------------------------------------
 	//                                      LIFECYCLE
@@ -80,16 +79,13 @@ public class SettingsActivity extends ActionBarActivity {
 				new CompoundButton.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-						Log.d(DEBUG_TAG, "Setting " + PrefKey.SHOW_ALARM_NOTIFICATION + " to " +
-								isChecked);
-						PrefUtil.putBoolean(getApplicationContext(),
-								PrefKey.SHOW_ALARM_NOTIFICATION, isChecked);
+						Log.d(DEBUG_TAG, "Setting " + PrefKey.SHOW_ALARM_NOTIFICATION + " to " + isChecked);
+						PrefUtil.putBoolean(getApplicationContext(), PrefKey.SHOW_ALARM_NOTIFICATION, isChecked);
 					}
 				});
 		boolean showNotification = PrefUtil.getBoolean(this, PrefKey.SHOW_ALARM_NOTIFICATION, true);
 		checkBox_showNotification.setChecked(showNotification);
-		LinearLayout linearLayout_setAlarmVolume = (LinearLayout) findViewById(
-				R.id.linearLayout_setAlarmVolume);
+		LinearLayout linearLayout_setAlarmVolume = (LinearLayout) findViewById(R.id.linearLayout_setAlarmVolume);
 		linearLayout_setAlarmVolume.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -97,8 +93,7 @@ public class SettingsActivity extends ActionBarActivity {
 			}
 		});
 
-		LinearLayout linearLayout_setSnoozeTime = (LinearLayout) findViewById(
-				R.id.linearLayout_setSnoozeTime);
+		LinearLayout linearLayout_setSnoozeTime = (LinearLayout) findViewById(R.id.linearLayout_setSnoozeTime);
 		linearLayout_setSnoozeTime.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -108,13 +103,12 @@ public class SettingsActivity extends ActionBarActivity {
 	}
 
 	private void showSetSnoozeTimeDialog() {
-		LDialogView dialogView = new LDialogView(this, R.layout.dialog_content_edit_text,
+		LDialogView dialogView = new LDialogView(this,
+				R.layout.dialog_content_edit_text,
 				R.string.dialog_title_set_snooze_time);
-		LDialog dialog = new LDialog(this,
-				dialogView);
+		LDialog dialog = new LDialog(this, dialogView);
 		int snoozeTime = PrefUtil.getInt(this, PrefKey.SNOOZE_TIME, 10);
-		final EditText editText_snoozeTime = (EditText) dialogView.getView().findViewById(R.id
-				.editText);
+		final EditText editText_snoozeTime = (EditText) dialogView.getView().findViewById(R.id.editText);
 		editText_snoozeTime.setText(String.valueOf(snoozeTime));
 		editText_snoozeTime.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
@@ -124,8 +118,7 @@ public class SettingsActivity extends ActionBarActivity {
 					public void onClick(AlertDialog dialog) {
 						String text = editText_snoozeTime.getText().toString();
 						int number = Integer.parseInt(text);
-						PrefUtil.putInt(getApplicationContext(),
-								PrefKey.SNOOZE_TIME, Math.abs(number));
+						PrefUtil.putInt(getApplicationContext(), PrefKey.SNOOZE_TIME, Math.abs(number));
 						dialog.dismiss();
 					}
 				});
@@ -140,13 +133,12 @@ public class SettingsActivity extends ActionBarActivity {
 	}
 
 	private void showVolumeSetDialog() {
-		LDialogView dialogView = new LDialogView(this, R.layout.dialog_content_seekbar,
+		LDialogView dialogView = new LDialogView(this,
+				R.layout.dialog_content_seekbar,
 				R.string.dialog_title_alarm_sound_volume);
-		LDialog dialog = new LDialog(this,
-				dialogView);
+		LDialog dialog = new LDialog(this, dialogView);
 		int volume = PrefUtil.getInt(this, PrefKey.ALARM_SOUND_VOLUME, 80);
-		final SeekBar seekBar_volume = (SeekBar) dialogView.getView().findViewById(R.id
-				.seekBar);
+		final SeekBar seekBar_volume = (SeekBar) dialogView.getView().findViewById(R.id.seekBar);
 		seekBar_volume.setMax(100);
 		seekBar_volume.setProgress(volume);
 		seekBar_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -169,12 +161,8 @@ public class SettingsActivity extends ActionBarActivity {
 					@Override
 					public void onClick(AlertDialog dialog) {
 						int newVolume = seekBar_volume.getProgress();
-						if (D) {
-							Log.d(DEBUG_TAG, "Setting " + PrefKey.ALARM_SOUND_VOLUME + " to "
-									+ newVolume);
-						}
-						PrefUtil.putInt(getApplicationContext(), PrefKey.ALARM_SOUND_VOLUME,
-								newVolume);
+						Log.d(DEBUG_TAG, "Setting " + PrefKey.ALARM_SOUND_VOLUME + " to " + newVolume);
+						PrefUtil.putInt(getApplicationContext(), PrefKey.ALARM_SOUND_VOLUME, newVolume);
 						dialog.dismiss();
 					}
 				});

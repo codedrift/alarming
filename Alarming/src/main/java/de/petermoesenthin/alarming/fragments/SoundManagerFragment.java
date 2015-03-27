@@ -56,7 +56,6 @@ public class SoundManagerFragment extends Fragment implements
 		SharedPreferences.OnSharedPreferenceChangeListener {
 
 	public static final String DEBUG_TAG = "SoundManagerFragment";
-	private static final boolean D = true;
 
 	private ListView mListView;
 	private AlertDialog mOptionsDialog;
@@ -120,9 +119,7 @@ public class SoundManagerFragment extends Fragment implements
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Preferences changed");
-		}
+		Log.d(DEBUG_TAG, "Preferences changed");
 		setupListView();
 	}
 
@@ -131,9 +128,7 @@ public class SoundManagerFragment extends Fragment implements
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1) {
 			if (resultCode == Activity.RESULT_OK) {
-				if (D) {
-					Log.d(DEBUG_TAG, "File chosen");
-				}
+				Log.d(DEBUG_TAG, "File chosen");
 				//the selected audio file
 				Uri uri = data.getData();
 				if (!FileUtil.fileIsOK(mContext, uri.getPath())) {
@@ -170,9 +165,7 @@ public class SoundManagerFragment extends Fragment implements
 	 * @param itemPosition Selected item in parent listView
 	 */
 	private void showItemActionDialog(final int itemPosition) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Showing item options dialog");
-		}
+		Log.d(DEBUG_TAG, "Showing item options dialog");
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		final View dialogView = inflater.inflate(R.layout.dialog_alarm_sound_options, null);
@@ -190,18 +183,14 @@ public class SoundManagerFragment extends Fragment implements
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				switch (position) {
 					case 0:
-						if (D) {
-							Log.d(DEBUG_TAG, "Starting AlarmSoundEditActivity");
-						}
+						Log.d(DEBUG_TAG, "Starting AlarmSoundEditActivity");
 						Intent i = new Intent(mContext, AlarmSoundEditActivity.class);
 						i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						i.putExtra("audio_id", itemPosition);
 						mContext.startActivity(i);
 						break;
 					case 1:
-						if (D) {
-							Log.d(DEBUG_TAG, "Deleting sound file");
-						}
+						Log.d(DEBUG_TAG, "Deleting sound file");
 						showDeleteFileDialog(itemPosition);
 						break;
 				}
@@ -221,18 +210,14 @@ public class SoundManagerFragment extends Fragment implements
 	 * Start an intent to load an audio file
 	 */
 	private void startAudioFileIntent() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Starting file intent");
-		}
+		Log.d(DEBUG_TAG, "Starting file intent");
 		Intent audioIntent = new Intent();
 		audioIntent.setType("file/*");
 		audioIntent.setAction(Intent.ACTION_GET_CONTENT);
 		try {
 			startActivityForResult(audioIntent, 1);
 		} catch (ActivityNotFoundException e) {
-			if (D) {
-				Log.e(DEBUG_TAG, "No activity for file intents available", e);
-			}
+			Log.e(DEBUG_TAG, "No activity for file intents available", e);
 		}
 	}
 
@@ -240,9 +225,7 @@ public class SoundManagerFragment extends Fragment implements
 	 * Show a dialog to inform the user that a wrong file type has been selected
 	 */
 	private void showWrongFileTypeDialog() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Showing wrong file type dialog");
-		}
+		Log.d(DEBUG_TAG, "Showing wrong file type dialog");
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle(R.string.alertTitle_wrongFileType).setMessage(R.string.alert_wrongFileType)
 				.setCancelable(false)
@@ -258,9 +241,7 @@ public class SoundManagerFragment extends Fragment implements
 	}
 
 	private void showDeleteFileDialog(final int itemPosition) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Showing delete file type dialog");
-		}
+		Log.d(DEBUG_TAG, "Showing delete file type dialog");
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle(R.string.alertTitle_delete_file).setMessage(R.string.alert_delete_file)
 				.setCancelable(true)
@@ -289,9 +270,7 @@ public class SoundManagerFragment extends Fragment implements
 	 * Setup the listView containing all alarm sounds
 	 */
 	private void setupListView() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Setting up sound listView");
-		}
+		Log.d(DEBUG_TAG, "Setting up sound listView");
 		mListView.setVisibility(View.GONE);
 		mProgressBar.setVisibility(View.VISIBLE);
 		Thread listViewThread = new Thread(new Runnable() {

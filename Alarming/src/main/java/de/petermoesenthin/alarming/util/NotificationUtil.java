@@ -26,7 +26,6 @@ import android.util.Log;
 
 import de.petermoesenthin.alarming.MainActivity;
 import de.petermoesenthin.alarming.R;
-import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
 
 public class NotificationUtil {
@@ -39,7 +38,6 @@ public class NotificationUtil {
 
 
 	public static final String DEBUG_TAG = "NotificationUtil";
-	private static final boolean D = true;
 
 	/**
 	 * Shows a persistent notification indicating the alarm time if is set.
@@ -49,9 +47,7 @@ public class NotificationUtil {
 		boolean showNotification = PrefUtil.getBoolean(context,
 				PrefKey.SHOW_ALARM_NOTIFICATION, true);
 		if (!showNotification) {
-			if (D) {
-				Log.d(DEBUG_TAG, "Notifications disabled. Returning.");
-			}
+			Log.d(DEBUG_TAG, "Notifications disabled. Returning.");
 			return;
 		}
 		// Build dismiss intent

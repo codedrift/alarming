@@ -42,7 +42,6 @@ import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 public class FileUtil {
 
 	public static final String DEBUG_TAG = "FileUtil";
-	private static final boolean D = true;
 
 	public static final String APP_EXT_STORAGE_FOLDER = "alarming";
 	public static final String AUDIO_METADATA_FILE_EXTENSION = "alarmingmeta";
@@ -69,11 +68,9 @@ public class FileUtil {
 		if (!noMedia.exists()) {
 			try {
 				noMedia.createNewFile();
-				if (D) {
-					Log.e(DEBUG_TAG, "Created .nomedia file in: " + noMedia.getAbsolutePath());
-				}
+				Log.e(DEBUG_TAG, "Created .nomedia file in: " + noMedia.getAbsolutePath());
 			} catch (IOException e) {
-				if (D) Log.e(DEBUG_TAG, "Unable to create .nomedia file", e);
+				Log.e(DEBUG_TAG, "Unable to create .nomedia file", e);
 			}
 		}
 
@@ -81,15 +78,10 @@ public class FileUtil {
 		final File destinationFile = new File(applicationDirectory.getPath() + File.separatorChar
 				+ fileName);
 
-		if (D) {
 			Log.d(DEBUG_TAG, "Source file name: " + fileName);
-		}
-		if (D) {
 			Log.d(DEBUG_TAG, "Source file uri: " + uri.toString());
-		}
-		if (D) {
 			Log.d(DEBUG_TAG, "Destination file: " + destinationFile.getPath());
-		}
+
 
 		Thread copyThread = new Thread(new Runnable() {
 			@Override
@@ -108,14 +100,14 @@ public class FileUtil {
 							bos.write(buf);
 						}
 					} catch (IOException e) {
-						if (D) Log.e(DEBUG_TAG, "Unable to copy file from URI", e);
+						Log.e(DEBUG_TAG, "Unable to copy file from URI", e);
 
 					} finally {
 						try {
 							if (bis != null) bis.close();
 							if (bos != null) bos.close();
 						} catch (IOException e) {
-							if (D) Log.e(DEBUG_TAG, "Unable to close buffers", e);
+							Log.e(DEBUG_TAG, "Unable to close buffers", e);
 						}
 					}
 				}
@@ -176,13 +168,9 @@ public class FileUtil {
 	public static void deleteFile(String path) {
 		File file = new File(path);
 		if (file.delete()) {
-			if (D) {
-				Log.d(DEBUG_TAG, file.getName() + " is deleted!");
-			}
+			Log.d(DEBUG_TAG, file.getName() + " is deleted!");
 		} else {
-			if (D) {
-				Log.d(DEBUG_TAG, "Delete operation is failed.");
-			}
+			Log.d(DEBUG_TAG, "Delete operation is failed.");
 		}
 	}
 
@@ -255,9 +243,7 @@ public class FileUtil {
 	 * @param alsg          the configuration in form of a AlarmSoundGson object
 	 */
 	public static void writeSoundConfigurationFile(String soundFilePath, AlarmSoundGson alsg) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Writing sound configuration file");
-		}
+		Log.d(DEBUG_TAG, "Writing sound configuration file");
 		String configFilePath =
 				getMetaFilePath(soundFilePath);
 		File configFile = getFile(configFilePath);
@@ -266,9 +252,7 @@ public class FileUtil {
 		try {
 			FileUtils.write(configFile, js, "UTF-8");
 		} catch (IOException e) {
-			if (D) {
-				Log.e(DEBUG_TAG, "Could not write audio configuration file", e);
-			}
+			Log.e(DEBUG_TAG, "Could not write audio configuration file", e);
 		}
 	}
 
@@ -279,9 +263,7 @@ public class FileUtil {
 	 * @return
 	 */
 	public static AlarmSoundGson readSoundConfigurationFile(String soundFilePath) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Reading sound configuration file");
-		}
+		Log.d(DEBUG_TAG, "Reading sound configuration file");
 		Gson gs = new Gson();
 		String metaFilePath = getMetaFilePath(soundFilePath);
 		File f = getFile(metaFilePath);
@@ -289,10 +271,10 @@ public class FileUtil {
 		try {
 			js = FileUtils.readFileToString(f, "UTF-8");
 		} catch (FileNotFoundException e) {
-			if (D) Log.e(DEBUG_TAG, "Could not find configuration file");
+			Log.e(DEBUG_TAG, "Could not find configuration file");
 			return null;
 		} catch (IOException e) {
-			if (D) Log.e(DEBUG_TAG, "Unable to read file");
+			Log.e(DEBUG_TAG, "Unable to read file");
 			return null;
 		}
 		return gs.fromJson(js, AlarmSoundGson.class);
@@ -315,19 +297,17 @@ public class FileUtil {
 		String mimeType;
 		mimeType = FileUtil.getMimeType(context, path);
 		if (mimeType == null) {
-			if (D) Log.d(DEBUG_TAG, "No MIME type found. Returning.");
+			Log.d(DEBUG_TAG, "No MIME type found. Returning.");
 			return false;
 		}
 		if (!mimeType.startsWith("audio")) {
-			if (D) Log.d(DEBUG_TAG, "FileCheck: MIME type does not match requirements");
+			Log.d(DEBUG_TAG, "FileCheck: MIME type does not match requirements");
 			return false;
 		}
 		try {
 			MediaUtil.getBasicMetaData(path);
 		} catch (RuntimeException e) {
-			if (D) {
-				Log.e(DEBUG_TAG, "Cannot read file");
-			}
+			Log.e(DEBUG_TAG, "Cannot read file");
 			return false;
 		}
 		return true;
@@ -340,21 +320,18 @@ public class FileUtil {
 	 * @return Null if no MIME type is found.
 	 */
 	public static String getMimeType(Context context, String path) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Checking mime type for " + path);
-		}
+		Log.d(DEBUG_TAG, "Checking mime type for " + path);
 		String mimeType = null;
 		String extension = FilenameUtils.getExtension(path);
 		if (extension != null) {
 			MimeTypeMap mime = MimeTypeMap.getSingleton();
 			mimeType = mime.getMimeTypeFromExtension(extension);
-			if (D)
-				Log.d(DEBUG_TAG, "MimeTypeMap found " + mimeType + " for extension " + extension);
+			Log.d(DEBUG_TAG, "MimeTypeMap found " + mimeType + " for extension " + extension);
 		}
 		if (mimeType == null) {
 			ContentResolver contentResolver = context.getContentResolver();
 			mimeType = contentResolver.getType(Uri.parse(path));
-			if (D) Log.d(DEBUG_TAG, "ContentResolver found " + mimeType + ".");
+			Log.d(DEBUG_TAG, "ContentResolver found " + mimeType + ".");
 		}
 		return mimeType;
 	}

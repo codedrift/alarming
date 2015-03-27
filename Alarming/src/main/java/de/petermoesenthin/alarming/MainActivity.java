@@ -57,7 +57,6 @@ public class MainActivity extends ActionBarActivity {
 
 	// Debug
 	public static final String DEBUG_TAG = "MainActivity";
-	public static final boolean D = true;
 
 
 	//----------------------------------------------------------------------------------------------
@@ -73,7 +72,6 @@ public class MainActivity extends ActionBarActivity {
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setElevation(1);
 
-
 		mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.material_yellow_dark));
 
 		transactNewFragment(new SetAlarmFragment());
@@ -83,9 +81,7 @@ public class MainActivity extends ActionBarActivity {
 	private void checkFirstStart() {
 		boolean firstStart = PrefUtil.getBoolean(this, PrefKey.APP_FIRST_START, true);
 		if (firstStart) {
-			if (D) {
-				Log.d(DEBUG_TAG, "First start detected.");
-			}
+			Log.d(DEBUG_TAG, "First start detected.");
 			PrefUtil.updateAlarmSoundUris(this);
 			PrefUtil.putBoolean(this, PrefKey.APP_FIRST_START, false);
 		}
@@ -119,17 +115,13 @@ public class MainActivity extends ActionBarActivity {
 	 * Sets up everything needed for the navigation drawer
 	 */
 	private void setUpNavigationDrawer() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Setting up navigation drawer.");
-		}
-		mDrawerTitles = getResources()
-				.getStringArray(R.array.nav_drawer_titles);
+		Log.d(DEBUG_TAG, "Setting up navigation drawer.");
+		mDrawerTitles = getResources().getStringArray(R.array.nav_drawer_titles);
 		mDrawerListView = (ListView) findViewById(R.id.drawer_listView);
 		mTitle = mDrawerTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.material_yellow_dark));
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open,
-				R.string.drawer_close) {
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 			public void onDrawerClosed(View view) {
 				setTitle(mTitle);
 			}
@@ -147,11 +139,8 @@ public class MainActivity extends ActionBarActivity {
 			DrawerItem drawerItem = new DrawerItem(mDrawerImages[i], mDrawerTitles[i]);
 			mDrawerItemList.add(drawerItem);
 		}
-		mDrawerListView.setAdapter(new DrawerItemArrayAdapter(this,
-				R.layout.listitem_drawer,
-				mDrawerItemList));
-		DrawerItemClickListener drawerItemClickListener =
-				new DrawerItemClickListener();
+		mDrawerListView.setAdapter(new DrawerItemArrayAdapter(this, R.layout.listitem_drawer, mDrawerItemList));
+		DrawerItemClickListener drawerItemClickListener = new DrawerItemClickListener();
 		mDrawerListView.setOnItemClickListener(drawerItemClickListener);
 
 		RelativeLayout settingsButton = (RelativeLayout) findViewById(R.id.drawer_button_settings);
@@ -189,9 +178,7 @@ public class MainActivity extends ActionBarActivity {
 	 * @param fragment
 	 */
 	public void transactNewFragment(Fragment fragment) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Transacting new fragment.");
-		}
+		Log.d(DEBUG_TAG, "Transacting new fragment.");
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.content_frame, fragment)
 				.commit();

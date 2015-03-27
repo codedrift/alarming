@@ -29,18 +29,13 @@ import de.petermoesenthin.alarming.receiver.AlarmReceiver;
 public class AlarmUtil {
 
 	public static final String DEBUG_TAG = "AlarmUtil";
-	private static final boolean D = true;
 
 
 	public static void setAlarm(Context context, Calendar calendar, int id) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Activating Alarming: Time=" + calendar.getTime() + ".");
-		}
+		Log.d(DEBUG_TAG, "Activating Alarming: Time=" + calendar.getTime() + ".");
 		Calendar now = Calendar.getInstance();
 		if (now.after(calendar)) {
-			if (D) {
-				Log.d(DEBUG_TAG, "Alarm was not set. Cannot set alarm in the past.");
-			}
+			Log.d(DEBUG_TAG, "Alarm was not set. Cannot set alarm in the past.");
 		} else {
 			setRTCWakeup(context, calendar, id, false);
 			NotificationUtil.showAlarmSetNotification(context, calendar.get(Calendar.HOUR_OF_DAY),
@@ -49,14 +44,10 @@ public class AlarmUtil {
 	}
 
 	public static void setSnooze(Context context, Calendar calendar, int id) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Activating Snooze: Time=" + calendar.getTime() + ".");
-		}
+		Log.d(DEBUG_TAG, "Activating Snooze: Time=" + calendar.getTime() + ".");
 		Calendar now = Calendar.getInstance();
 		if (now.after(calendar)) {
-			if (D) {
-				Log.d(DEBUG_TAG, "Snooze was not set. Cannot set snooze in the past.");
-			}
+			Log.d(DEBUG_TAG, "Snooze was not set. Cannot set snooze in the past.");
 		} else {
 			setRTCWakeup(context, calendar, id, true);
 			NotificationUtil.showSnoozeNotification(context, calendar.get(Calendar.HOUR_OF_DAY),
@@ -76,18 +67,14 @@ public class AlarmUtil {
 	}
 
 	public static void deactivateAlarm(Context context, int id) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Canceling alarm.");
-		}
+		Log.d(DEBUG_TAG, "Canceling alarm.");
 		PendingIntent.getBroadcast(context, id, getAlarmIntent(context, id, false),
 				PendingIntent.FLAG_CANCEL_CURRENT);
 		NotificationUtil.clearAlarmNotifcation(context, id);
 	}
 
 	public static void deactivateSnooze(Context context, int id) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Canceling snooze.");
-		}
+		Log.d(DEBUG_TAG, "Canceling snooze.");
 		PendingIntent.getBroadcast(context, id, getAlarmIntent(context, id, true),
 				PendingIntent.FLAG_CANCEL_CURRENT);
 		NotificationUtil.clearAlarmNotifcation(context, id);

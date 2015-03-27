@@ -44,7 +44,6 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 		MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
 	public static final String DEBUG_TAG = "AlarmSoundEditActivity";
-	private static final boolean D = true;
 
 	// MediaPlayer
 	private MediaPlayer mMediaPlayer;
@@ -99,9 +98,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 		button_play_pause.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (D) {
-					Log.d(DEBUG_TAG, "Play button clicked");
-				}
+				Log.d(DEBUG_TAG, "Play button clicked");
 				if (audioPlaying) {
 					pauseAudio();
 				} else {
@@ -169,14 +166,10 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 		Intent intent = getIntent();
 		int audioId = intent.getIntExtra("audio_id", -1);
 		if (audioId == -1) {
-			if (D) {
-				Log.d(DEBUG_TAG, "Intent was empty / did not pass a uri");
-			}
+			Log.d(DEBUG_TAG, "Intent was empty / did not pass a uri");
 		} else {
 			intentUri = PrefUtil.getAlarmSoundUris(this)[audioId];
-			if (D) {
-				Log.d(DEBUG_TAG, "Building activity for: " + intentUri);
-			}
+			Log.d(DEBUG_TAG, "Building activity for: " + intentUri);
 		}
 		return intentUri;
 	}
@@ -185,9 +178,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 	 * Reads the sound file configuration for this activity.
 	 */
 	private void readConfig() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Reading configuration.");
-		}
+		Log.d(DEBUG_TAG, "Reading configuration.");
 		AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(mSoundFilePath);
 		if (alsg == null) {
 			mStartMillis = 0;
@@ -202,9 +193,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 	 * Saves the configuration for this activity.
 	 */
 	private void saveConfig() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Saving configuration.");
-		}
+		Log.d(DEBUG_TAG, "Saving configuration.");
 		AlarmSoundGson alsg = new AlarmSoundGson();
 		alsg.setStartMillis(mStartMillis);
 		alsg.setEndMillis(mEndMillis);
@@ -220,9 +209,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 
 
 	private void playAudio() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Playing audio.");
-		}
+		Log.d(DEBUG_TAG, "Playing audio.");
 		createPlayerPositionUpdateThread();
 		if (mCurrentPlayerMills > mStartMillis) {
 			mMediaPlayer.start();
@@ -235,17 +222,13 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 	}
 
 	private void setUpMediaPlayer() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Setting up MediaPlayer.");
-		}
+		Log.d(DEBUG_TAG, "Setting up MediaPlayer.");
 		mMediaPlayer = new MediaPlayer();
 		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		try {
 			mMediaPlayer.setDataSource(mSoundFilePath);
 		} catch (IOException e) {
-			if (D) {
-				Log.d(DEBUG_TAG, "Unable to set data source");
-			}
+			Log.d(DEBUG_TAG, "Unable to set data source");
 		}
 		mMediaPlayer.setOnErrorListener(this);
 		mMediaPlayer.setOnSeekCompleteListener(this);
@@ -255,17 +238,13 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 
 	@Override
 	public void onPrepared(MediaPlayer mediaPlayer) {
-		if (D) {
-			Log.d(DEBUG_TAG, "MediaPlayer is prepared.");
-		}
+		Log.d(DEBUG_TAG, "MediaPlayer is prepared.");
 		enablePlayPauseButton(true);
 	}
 
 	@Override
 	public void onSeekComplete(MediaPlayer mediaPlayer) {
-		if (D) {
-			Log.d(DEBUG_TAG, "MediaPlayer completed seek.");
-		}
+		Log.d(DEBUG_TAG, "MediaPlayer completed seek.");
 		mMediaPlayer.start();
 		startPlayerPositionThread();
 		setPlayPauseButtonPlaying(true);
@@ -275,9 +254,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 
 
 	private void startPlayerPositionThread() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Starting PlayerPositionThread");
-		}
+		Log.d(DEBUG_TAG, "Starting PlayerPositionThread");
 		if (mPlayerPositionUpdateThread != null && !mPlayerPositionUpdateThread.isAlive()) {
 			mPlayerPositionUpdateThread.start();
 		}
@@ -287,9 +264,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 	 * Pauses the audio playback and resets ui components
 	 */
 	private void pauseAudio() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Pausing audio.");
-		}
+		Log.d(DEBUG_TAG, "Pausing audio.");
 		if (mPlayerPositionUpdateThread != null) {
 			mPlayerPositionUpdateThread.interrupt();
 			mPlayerPositionUpdateThread = null;
@@ -306,9 +281,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 	}
 
 	private void stopAudio() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Stopping audio.");
-		}
+		Log.d(DEBUG_TAG, "Stopping audio.");
 		if (mPlayerPositionUpdateThread != null) {
 			mPlayerPositionUpdateThread.interrupt();
 			mPlayerPositionUpdateThread = null;
@@ -326,9 +299,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 
 	@Override
 	public void onCompletion(MediaPlayer mp) {
-		if (D) {
-			Log.d(DEBUG_TAG, "MediaPlayer completed playback");
-		}
+		Log.d(DEBUG_TAG, "MediaPlayer completed playback");
 		setPlayPauseButtonPlaying(false);
 		enableStopButton(false);
 		resetPlaybackPosition();
@@ -336,9 +307,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 
 	@Override
 	public boolean onError(MediaPlayer mp, int what, int extra) {
-		if (D) {
-			Log.d(DEBUG_TAG, "MediaPlayer encountered an error. Resetting");
-		}
+		Log.d(DEBUG_TAG, "MediaPlayer encountered an error. Resetting");
 		releaseMediaPlayer();
 		setUpMediaPlayer();
 		return false;
@@ -348,9 +317,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 		mPlayerPositionUpdateThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				if (D) {
-					Log.d(DEBUG_TAG, "Starting player position thread.");
-				}
+				Log.d(DEBUG_TAG, "Starting player position thread.");
 				if (mEndMillis == 0 || mEndMillis < mCurrentPlayerMills) {
 					return;
 				}
@@ -359,10 +326,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 					try {
 						currentPlayerMillis = mMediaPlayer.getCurrentPosition();
 					} catch (Exception e) {
-						if (D) {
-							Log.d(DEBUG_TAG, "Unable to update player position. Exiting " +
-									"thread");
-						}
+						Log.d(DEBUG_TAG, "Unable to update player position. Exiting thread");
 						setPlayPauseButtonPlaying(false);
 						return;
 					}
@@ -384,8 +348,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 					try {
 						Thread.sleep(50);
 					} catch (InterruptedException e) {
-						Log.d(DEBUG_TAG,
-								"Update thread for current position has been interrupted.");
+						Log.d(DEBUG_TAG, "Update thread for current position has been interrupted.");
 					}
 				}
 			}
@@ -409,9 +372,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 	}
 
 	private void resetPlaybackPosition() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Resetting Playback position");
-		}
+		Log.d(DEBUG_TAG, "Resetting Playback position");
 		mCurrentPlayerMills = 0;
 		mHandler.post(new Runnable() {
 			@Override
@@ -423,9 +384,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 	}
 
 	private void setPlayPauseButtonPlaying(boolean playing) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Setting PlayPauseButton to player state(" + playing + ")");
-		}
+		Log.d(DEBUG_TAG, "Setting PlayPauseButton to player state(" + playing + ")");
 		audioPlaying = playing;
 		if (playing) {
 			mHandler.post(new Runnable() {
@@ -449,9 +408,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 	}
 
 	private void setUpRangeBar() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Setting up RangeBar.");
-		}
+		Log.d(DEBUG_TAG, "Setting up RangeBar.");
 		int tickCount = mSoundMillis / 1000;
 		if (tickCount < 2) {
 			tickCount = 2;
@@ -483,9 +440,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 	}
 
 	private void enableStopButton(final boolean enabled) {
-		if (D) {
-			Log.d(DEBUG_TAG, "ButtonStop enabled: " + enabled);
-		}
+		Log.d(DEBUG_TAG, "ButtonStop enabled: " + enabled);
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
@@ -495,9 +450,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 	}
 
 	private void enablePlayPauseButton(final boolean enabled) {
-		if (D) {
-			Log.d(DEBUG_TAG, "ButtonPlayPause enabled: " + enabled);
-		}
+		Log.d(DEBUG_TAG, "ButtonPlayPause enabled: " + enabled);
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
@@ -506,7 +459,6 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 			}
 		});
 	}
-
 
 }
 

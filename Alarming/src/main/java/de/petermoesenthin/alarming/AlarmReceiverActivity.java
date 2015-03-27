@@ -74,7 +74,6 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	private PowerManager.WakeLock mWakeLock;
 
 	public static final String DEBUG_TAG = "AlarmReceiverActivity";
-	public static final boolean D = true;
 
 	private TextView button_snooze;
 	private TextView button_dismiss;
@@ -88,9 +87,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (D) {
-			Log.d(DEBUG_TAG, "onCreate called");
-		}
+		Log.d(DEBUG_TAG, "onCreate called");
 		setWindowSettings();
 		setContentView(R.layout.activity_alarm_reciver);
 		layout_buttons = (LinearLayout) findViewById(R.id.layout_dismiss_snooze);
@@ -112,32 +109,24 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	private void readIntent() {
 		Intent intent = getIntent();
 		mAlarmId = intent.getIntExtra("id", -1);
-		if (D) {
-			Log.d(DEBUG_TAG, "Received alarm intent for id " + mAlarmId);
-		}
+		Log.d(DEBUG_TAG, "Received alarm intent for id " + mAlarmId);
 	}
 
 	@Override
 	public void onAttachedToWindow() {
-		if (D) {
-			Log.d(DEBUG_TAG, "onAttachedToWindow called");
-		}
+		Log.d(DEBUG_TAG, "onAttachedToWindow called");
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (D) {
-			Log.d(DEBUG_TAG, "onResume called");
-		}
+		Log.d(DEBUG_TAG, "onResume called");
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		if (D) {
-			Log.d(DEBUG_TAG, "onStop called");
-		}
+		Log.d(DEBUG_TAG, "onStop called");
 		if (mPlayerPositionUpdateThread != null) {
 			mPlayerPositionUpdateThread.interrupt();
 			mPlayerPositionUpdateThread = null;
@@ -151,9 +140,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 		reEnableKeyGuard();
 		releaseWakeLock();
 		if (!flag_user_call) {
-			if (D) {
-				Log.d(DEBUG_TAG, "Activity was not paused by user. snoozing");
-			}
+			Log.d(DEBUG_TAG, "Activity was not paused by user. snoozing");
 			snoozeAlarm();
 		}
 
@@ -162,9 +149,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (D) {
-			Log.d(DEBUG_TAG, "onPause called");
-		}
+		Log.d(DEBUG_TAG, "onPause called");
 
 	}
 
@@ -172,16 +157,12 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	 * Does work to finish this activity
 	 */
 	public void finishActivity() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Preparing to finish the Activity");
-		}
+		Log.d(DEBUG_TAG, "Preparing to finish the Activity");
 		// Stop vibration
 		stopVibration();
 		// System
 		// Finish Activity
-		if (D) {
-			Log.d(DEBUG_TAG, "Finishing Activity");
-		}
+		Log.d(DEBUG_TAG, "Finishing Activity");
 		finish();
 		this.overridePendingTransition(android.R.anim.fade_out, android.R.anim.fade_out);
 	}
@@ -191,9 +172,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	//----------------------------------------------------------------------------------------------
 
 	private void disableKeyguard() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Disabling Keyguard");
-		}
+		Log.d(DEBUG_TAG, "Disabling Keyguard");
 		mKeyGuardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
 		mKeyguardLock = mKeyGuardManager.newKeyguardLock("Alarming_Keyguard");
 		if (mKeyGuardManager.inKeyguardRestrictedInputMode()) {
@@ -202,18 +181,14 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	}
 
 	private void reEnableKeyGuard() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Reenabling keyguard");
-		}
+		Log.d(DEBUG_TAG, "Reenabling keyguard");
 		if (mKeyguardLock != null) {
 			mKeyguardLock.reenableKeyguard();
 		}
 	}
 
 	public void acquireWakeLock() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Acquiring wakelock");
-		}
+		Log.d(DEBUG_TAG, "Acquiring wakelock");
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP
 				| PowerManager.ON_AFTER_RELEASE
@@ -222,9 +197,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	}
 
 	public void releaseWakeLock() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Releasing wakelock");
-		}
+		Log.d(DEBUG_TAG, "Releasing wakelock");
 		if (mWakeLock != null) {
 			if (mWakeLock.isHeld()) {
 				mWakeLock.release();
@@ -234,9 +207,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	}
 
 	private void startVibration() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Starting vibration");
-		}
+		Log.d(DEBUG_TAG, "Starting vibration");
 		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		// Start without a delay
 		// Vibrate for 500 milliseconds
@@ -248,18 +219,14 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	}
 
 	private void stopVibration() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Stopping vibration");
-		}
+		Log.d(DEBUG_TAG, "Stopping vibration");
 		if (mVibrator != null) {
 			mVibrator.cancel();
 		}
 	}
 
 	private void setWindowSettings() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Setting window parameters");
-		}
+		Log.d(DEBUG_TAG, "Setting window parameters");
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -281,9 +248,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	}
 
 	private void clearWindowSettings() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Clearing window parameters");
-		}
+		Log.d(DEBUG_TAG, "Clearing window parameters");
 		//getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 		//getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 		//getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -295,9 +260,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	//----------------------------------------------------------------------------------------------
 
 	private void snoozeAlarm() {
-		if (D) {
-			Log.d(DEBUG_TAG, "snoozeAlarm called");
-		}
+		Log.d(DEBUG_TAG, "snoozeAlarm called");
 		clearAlarmSetting();
 		int snoozeTime = PrefUtil.getInt(this, PrefKey.SNOOZE_TIME, 10);
 		Calendar snoozetime = Calendar.getInstance();
@@ -308,18 +271,14 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	}
 
 	private void dismissAlarm() {
-		if (D) {
-			Log.d(DEBUG_TAG, "dismissAlarm called");
-		}
+		Log.d(DEBUG_TAG, "dismissAlarm called");
 		clearAlarmSetting();
 		finishActivity();
 	}
 
 
 	private void clearAlarmSetting() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Clearing alarm setting.");
-		}
+		Log.d(DEBUG_TAG, "Clearing alarm setting.");
 		// Clear any pending notifications
 		NotificationUtil.clearAlarmNotifcation(this, mAlarmId);
 		NotificationUtil.clearSnoozeNotification(this, mAlarmId);
@@ -338,9 +297,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	 * Prepares alarm sound playback
 	 */
 	private void playAlarmSound() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Play alarm sound");
-		}
+		Log.d(DEBUG_TAG, "Play alarm sound");
 		MediaUtil.saveSystemMediaVolume(this);
 		MediaUtil.setAlarmVolumeFromPreference(this);
 		String[] uris = PrefUtil.getAlarmSoundUris(this);
@@ -348,10 +305,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 		if (uris != null && uris.length > 0) {
 			Random r = new Random();
 			int rand = r.nextInt(uris.length);
-			if (D) {
-				Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #"
-						+ rand + ".");
-			}
+			Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #" + rand + ".");
 			mDataSource = uris[rand];
 			fileOK = FileUtil.fileIsOK(this, mDataSource);
 			AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(mDataSource);
@@ -365,9 +319,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 			}
 		}
 		if (!fileOK) {
-			if (D) {
-				Log.d(DEBUG_TAG, "No uri available, playing default alarm sound.");
-			}
+			Log.d(DEBUG_TAG, "No uri available, playing default alarm sound.");
 			// Play default alarm sound
 			mDataSource = Settings.System.DEFAULT_ALARM_ALERT_URI.getPath();
 		}
@@ -375,18 +327,14 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	}
 
 	private void startMediaPlayer() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Starting media player.");
-		}
+		Log.d(DEBUG_TAG, "Starting media player.");
 		mMediaPlayer = new MediaPlayer();
 		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
 		mMediaPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
 		try {
 			mMediaPlayer.setDataSource(mDataSource);
 		} catch (IOException e) {
-			if (D) {
-				Log.d(DEBUG_TAG, "Unable to set data source");
-			}
+			Log.d(DEBUG_TAG, "Unable to set data source");
 		}
 		mMediaPlayer.setOnPreparedListener(this);
 		mMediaPlayer.setOnSeekCompleteListener(this);
@@ -397,9 +345,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 		mPlayerPositionUpdateThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				if (D) {
-					Log.d(DEBUG_TAG, "Starting player position thread.");
-				}
+				Log.d(DEBUG_TAG, "Starting player position thread.");
 				int currentPlayerMillis = 0;
 				if (mEndMillis == 0) {
 					mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -414,10 +360,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 					try {
 						currentPlayerMillis = mMediaPlayer.getCurrentPosition();
 					} catch (Exception e) {
-						if (D) {
-							Log.d(DEBUG_TAG, "Unable to update player position." +
-									" Exiting thread");
-						}
+						Log.d(DEBUG_TAG, "Unable to update player position. Exiting thread");
 						return;
 					}
 					if (currentPlayerMillis > mEndMillis) {
@@ -472,9 +415,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 
 					@Override
 					public void onDismiss(View view, Object token) {
-						if (D) {
-							Log.d(DEBUG_TAG, "Alarm has been dismissed");
-						}
+						Log.d(DEBUG_TAG, "Alarm has been dismissed");
 						flag_user_call = true;
 						button_snooze.setVisibility(View.GONE);
 						layout_buttons.removeView(button_dismiss);
@@ -495,9 +436,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 		button_snooze.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (D) {
-					Log.d(DEBUG_TAG, "Alarm has been snoozed. ya biscuit");
-				}
+				Log.d(DEBUG_TAG, "Alarm has been snoozed. ya biscuit");
 				flag_user_call = true;
 				snoozeAlarm();
 			}

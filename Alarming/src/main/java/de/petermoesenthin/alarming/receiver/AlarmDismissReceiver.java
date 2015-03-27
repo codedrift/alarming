@@ -30,19 +30,14 @@ import de.petermoesenthin.alarming.util.PrefUtil;
 public class AlarmDismissReceiver extends BroadcastReceiver {
 
 	public static final String DEBUG_TAG = "AlarmDismissReceiver";
-	private static final boolean D = true;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equals(NotificationUtil.ACTION_DISMISS_ALARM)) {
-			if (D) {
-				Log.d(DEBUG_TAG, "Received intent to dismiss alarm");
-			}
+			Log.d(DEBUG_TAG, "Received intent to dismiss alarm");
 			int id = intent.getIntExtra("id", -1);
 			if (id == -1) {
-				if (D) {
-					Log.d(DEBUG_TAG, "Received invalid id to dismiss alarm. Returning.");
-				}
+				Log.d(DEBUG_TAG, "Received invalid id to dismiss alarm. Returning.");
 				return;
 			}
 			AlarmUtil.deactivateAlarm(context, id);

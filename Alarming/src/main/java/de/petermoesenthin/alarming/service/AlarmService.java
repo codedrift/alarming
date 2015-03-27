@@ -50,7 +50,6 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 		MediaPlayer.OnSeekCompleteListener, GlowPadView.OnTriggerListener {
 
 	public static final String DEBUG_TAG = "AlarmService";
-	public static final boolean D = true;
 	private Context mContext;
 	private WindowManager mWindowManager;
 	private View mView;
@@ -73,9 +72,7 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		if (D) {
-			Log.d(DEBUG_TAG, "onBind called");
-		}
+		Log.d(DEBUG_TAG, "onBind called");
 		return null;
 	}
 
@@ -149,9 +146,7 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 
 	@Override
 	public void onDestroy() {
-		if (D) {
-			Log.d(DEBUG_TAG, "onDestroy called");
-		}
+		Log.d(DEBUG_TAG, "onDestroy called");
 		unregisterSystemActionReceiver();
 		super.onDestroy();
 	}
@@ -166,28 +161,20 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			if (action.equals(Intent.ACTION_SCREEN_ON)) {
-				if (D) {
-					Log.d(DEBUG_TAG, "Received ACTION_SCREEN_ON");
-				}
+				Log.d(DEBUG_TAG, "Received ACTION_SCREEN_ON");
 				showLockScreenView();
 			} else if (action.equals(Intent.ACTION_USER_PRESENT)) {
-				if (D) {
-					Log.d(DEBUG_TAG, "Received ACTION_USER_PRESENT");
-				}
+				Log.d(DEBUG_TAG, "Received ACTION_USER_PRESENT");
 				hideLockScreenView();
 			} else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
-				if (D) {
-					Log.d(DEBUG_TAG, "Received ACTION_SCREEN_OFF");
-				}
+				Log.d(DEBUG_TAG, "Received ACTION_SCREEN_OFF");
 				hideLockScreenView();
 			}
 		}
 	};
 
 	private void startVibration() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Starting vibration");
-		}
+		Log.d(DEBUG_TAG, "Starting vibration");
 		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		// Start without a delay
 		// Vibrate for 500 milliseconds
@@ -199,9 +186,7 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 	}
 
 	private void stopVibration() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Stopping vibration");
-		}
+		Log.d(DEBUG_TAG, "Stopping vibration");
 		if (mVibrator != null) {
 			mVibrator.cancel();
 		}
@@ -215,9 +200,7 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 	 * Prepares alarm sound playback
 	 */
 	private void playAlarmSound() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Playing alarm sound");
-		}
+		Log.d(DEBUG_TAG, "Playing alarm sound");
 		MediaUtil.saveSystemMediaVolume(this);
 		MediaUtil.setAlarmVolumeFromPreference(this);
 		String[] uris = PrefUtil.getAlarmSoundUris(this);
@@ -225,10 +208,7 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 		if (uris != null && uris.length > 0) {
 			Random r = new Random();
 			int rand = r.nextInt(uris.length);
-			if (D) {
-				Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #"
-						+ rand + ".");
-			}
+				Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #" + rand + ".");
 			mDataSource = uris[rand];
 			fileOK = FileUtil.fileIsOK(this, mDataSource);
 			AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(mDataSource);
@@ -242,9 +222,7 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 			}
 		}
 		if (!fileOK) {
-			if (D) {
-				Log.d(DEBUG_TAG, "No uri available, playing default alarm sound.");
-			}
+			Log.d(DEBUG_TAG, "No uri available, playing default alarm sound.");
 			// Play default alarm sound
 			mDataSource = Settings.System.DEFAULT_ALARM_ALERT_URI.getPath();
 		}
@@ -252,18 +230,14 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 	}
 
 	private void startMediaPlayer() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Starting media player.");
-		}
+		Log.d(DEBUG_TAG, "Starting media player.");
 		mMediaPlayer = new MediaPlayer();
 		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
 		//mMediaPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
 		try {
 			mMediaPlayer.setDataSource(mDataSource);
 		} catch (IOException e) {
-			if (D) {
-				Log.d(DEBUG_TAG, "Unable to set data source");
-			}
+			Log.d(DEBUG_TAG, "Unable to set data source");
 		}
 		mMediaPlayer.setOnPreparedListener(this);
 		mMediaPlayer.setOnSeekCompleteListener(this);
@@ -274,9 +248,7 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 		mPlayerPositionUpdateThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				if (D) {
-					Log.d(DEBUG_TAG, "Starting player position thread.");
-				}
+				Log.d(DEBUG_TAG, "Starting player position thread.");
 				int currentPlayerMillis = 0;
 				if (mEndMillis == 0) {
 					mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -291,10 +263,7 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 					try {
 						currentPlayerMillis = mMediaPlayer.getCurrentPosition();
 					} catch (Exception e) {
-						if (D) {
-							Log.d(DEBUG_TAG, "Unable to update player position." +
-									" Exiting thread");
-						}
+						Log.d(DEBUG_TAG, "Unable to update player position." +" Exiting thread");
 						return;
 					}
 					if (currentPlayerMillis > mEndMillis) {
@@ -341,37 +310,27 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 
 	@Override
 	public void onGrabbed(View v, int handle) {
-		if (D) {
-			Log.d(DEBUG_TAG, "onGrabbed");
-		}
+		Log.d(DEBUG_TAG, "onGrabbed");
 	}
 
 	@Override
 	public void onReleased(View v, int handle) {
-		if (D) {
-			Log.d(DEBUG_TAG, "onReleased");
-		}
+		Log.d(DEBUG_TAG, "onReleased");
 		mGlowPadView.ping();
 	}
 
 	@Override
 	public void onTrigger(View v, int target) {
-		if (D) {
-			Log.d(DEBUG_TAG, "onTrigger");
-		}
+		Log.d(DEBUG_TAG, "onTrigger");
 	}
 
 	@Override
 	public void onGrabbedStateChange(View v, int handle) {
-		if (D) {
-			Log.d(DEBUG_TAG, "onGrabbedStateChange");
-		}
+		Log.d(DEBUG_TAG, "onGrabbedStateChange");
 	}
 
 	@Override
 	public void onFinishFinalAnimation() {
-		if (D) {
-			Log.d(DEBUG_TAG, "onFinishFinalAnimation");
-		}
+		Log.d(DEBUG_TAG, "onFinishFinalAnimation");
 	}
 }

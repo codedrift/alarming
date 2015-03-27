@@ -27,19 +27,14 @@ import de.petermoesenthin.alarming.util.NotificationUtil;
 public class SnoozeDismissReceiver extends BroadcastReceiver {
 
 	public static final String DEBUG_TAG = "SnoozeDismissReceiver";
-	private static final boolean D = true;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equals(NotificationUtil.ACTION_DISMISS_SNOOZE)) {
-			if (D) {
-				Log.d(DEBUG_TAG, "Received intent to dismiss snooze");
-			}
+			Log.d(DEBUG_TAG, "Received intent to dismiss snooze");
 			int id = intent.getIntExtra("id", -1);
 			if (id == -1) {
-				if (D) {
-					Log.d(DEBUG_TAG, "Received invalid id to dismiss snooze. Returning.");
-				}
+				Log.d(DEBUG_TAG, "Received invalid id to dismiss snooze. Returning.");
 				return;
 			}
 			AlarmUtil.deactivateSnooze(context, id);

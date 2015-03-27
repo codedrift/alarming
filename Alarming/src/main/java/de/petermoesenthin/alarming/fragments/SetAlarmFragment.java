@@ -55,7 +55,6 @@ public class SetAlarmFragment extends Fragment implements
 		SharedPreferences.OnSharedPreferenceChangeListener {
 
 	public static final String DEBUG_TAG = "SetAlarmFragment";
-	private static final boolean D = true;
 
 	private Context mContext;
 	private ListView mAlarmListView;
@@ -110,9 +109,7 @@ public class SetAlarmFragment extends Fragment implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if (key.equals(PrefKey.ALARMS)) {
-			if (D) {
-				Log.d(DEBUG_TAG, "Preferences have changed");
-			}
+			Log.d(DEBUG_TAG, "Preferences have changed");
 			mAlarmCardArrayAdapter.notifyDataSetChanged();
 		}
 	}
@@ -122,9 +119,7 @@ public class SetAlarmFragment extends Fragment implements
 	//----------------------------------------------------------------------------------------------
 
 	private void addNewAlarm() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Add new alarm");
-		}
+		Log.d(DEBUG_TAG, "Add new alarm");
 		AlarmGson alarm = new AlarmGson();
 		int alarmID = PrefUtil.getInt(mContext, PrefKey.ALARM_ID_COUNTER, 0);
 		alarm.setId(alarmID);
@@ -143,9 +138,7 @@ public class SetAlarmFragment extends Fragment implements
 
 
 	private void activateAlarm(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Activate alarm " + position);
-		}
+		Log.d(DEBUG_TAG, "Activate alarm " + position);
 		AlarmGson alg = mAlarms.get(position);
 		alg.setAlarmSet(true);
 		Calendar calendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
@@ -154,18 +147,14 @@ public class SetAlarmFragment extends Fragment implements
 	}
 
 	private void deleteAlarm(int position) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Delete alarm " + position);
-		}
+		Log.d(DEBUG_TAG, "Delete alarm " + position);
 		mAlarms.remove(position);
 		PrefUtil.setAlarms(mContext, mAlarms);
 		mAlarmCardArrayAdapter.notifyDataSetChanged();
 	}
 
 	private void deactivateAlarm(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Deactivate alarm " + position);
-		}
+		Log.d(DEBUG_TAG, "Deactivate alarm " + position);
 		AlarmGson alg = mAlarms.get(position);
 		alg.setAlarmSet(false);
 		AlarmUtil.deactivateAlarm(mContext, alg.getId());
@@ -173,9 +162,7 @@ public class SetAlarmFragment extends Fragment implements
 	}
 
 	public void setAlarmTime(int position, int hourOfDay, int minute) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Time picker finished. Setting alarm time at " + position);
-		}
+		Log.d(DEBUG_TAG, "Time picker finished. Setting alarm time at " + position);
 		AlarmGson alg = mAlarms.get(position);
 		alg.setHour(hourOfDay);
 		alg.setMinute(minute);
@@ -186,9 +173,7 @@ public class SetAlarmFragment extends Fragment implements
 	//----------------------------------------------------------------------------------------------
 
 	private void setUpListView() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Set up list view");
-		}
+		Log.d(DEBUG_TAG, "Set up list view");
 		mAlarms = PrefUtil.getAlarms(mContext);
 		if (mAlarms.isEmpty()) {
 			mAlarms.add(new AlarmGson());
@@ -206,10 +191,7 @@ public class SetAlarmFragment extends Fragment implements
 					@Override
 					public AlarmCardArrayAdapter.ViewHolder onBuildView(
 							AlarmCardArrayAdapter.ViewHolder viewHolder, AlarmGson alarm) {
-						if (D) {
-							Log.d(DEBUG_TAG, "onBuildView for " + alarm.getId());
-						}
-
+						Log.d(DEBUG_TAG, "onBuildView for " + alarm.getId());
 						setAlarmTimeView(viewHolder.alarmTime, viewHolder.am_pm, alarm.getHour(),
 								alarm.getMinute());
 						setCircleButtonActive(viewHolder.alarmSet, alarm.isAlarmSet());
@@ -228,20 +210,14 @@ public class SetAlarmFragment extends Fragment implements
 					}
 
 					@Override
-					public void onAlarmTimeClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
-												 int position) {
-						if (D) {
-							Log.d(DEBUG_TAG, "AlarmTimeClick  at " + position);
-						}
+					public void onAlarmTimeClick(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
+						Log.d(DEBUG_TAG, "AlarmTimeClick  at " + position);
 						showTimePicker(position, viewHolder);
 					}
 
 					@Override
-					public void onAlarmSetClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
-												int position) {
-						if (D) {
-							Log.d(DEBUG_TAG, "AlarmSetClick at " + position);
-						}
+					public void onAlarmSetClick(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
+						Log.d(DEBUG_TAG, "AlarmSetClick at " + position);
 						AlarmGson alg = alarms.get(position);
 						boolean alarmSet = alg.isAlarmSet();
 						if (alarmSet) {
@@ -254,11 +230,8 @@ public class SetAlarmFragment extends Fragment implements
 					}
 
 					@Override
-					public void onVibrateClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
-											   int position) {
-						if (D) {
+					public void onVibrateClick(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
 							Log.d(DEBUG_TAG, "VibrateClick at " + position);
-						}
 						AlarmGson alg = mAlarms.get(position);
 						boolean doesVibrate = alg.doesVibrate();
 						alg.setVibrate(!doesVibrate);
@@ -269,9 +242,7 @@ public class SetAlarmFragment extends Fragment implements
 					@Override
 					public void onRepeatAlarmClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
 												   int position) {
-						if (D) {
-							Log.d(DEBUG_TAG, "RepeatAlarmClick at " + position);
-						}
+						Log.d(DEBUG_TAG, "RepeatAlarmClick at " + position);
 						AlarmGson alg = mAlarms.get(position);
 						boolean doesRepeat = alg.doesRepeat();
 						alg.setVibrate(!doesRepeat);
@@ -280,29 +251,20 @@ public class SetAlarmFragment extends Fragment implements
 					}
 
 					@Override
-					public void onAlarmTextClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
-												 int position) {
-						if (D) {
-							Log.d(DEBUG_TAG, "AlarmTextClick at " + position);
-						}
+					public void onAlarmTextClick(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
+						Log.d(DEBUG_TAG, "AlarmTextClick at " + position);
 						showAlarmMessageDialog(viewHolder, position);
 					}
 
 					@Override
-					public void onChooseColorClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
-												   int position) {
-						if (D) {
-							Log.d(DEBUG_TAG, "ChooseColorClick at " + position);
-						}
+					public void onChooseColorClick(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
+						Log.d(DEBUG_TAG, "ChooseColorClick at " + position);
 						showColorPickerDialog(viewHolder, position);
 					}
 
 					@Override
-					public void onDeleteAlarmClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
-												   int position) {
-						if (D) {
-							Log.d(DEBUG_TAG, "DeleteAlarmClick at " + position);
-						}
+					public void onDeleteAlarmClick(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
+						Log.d(DEBUG_TAG, "DeleteAlarmClick at " + position);
 						deactivateAlarm(viewHolder, position);
 						deleteAlarm(position);
 					}
@@ -377,11 +339,8 @@ public class SetAlarmFragment extends Fragment implements
 		dialog.show();
 	}
 
-	private void showAlarmMessageDialog(final AlarmCardArrayAdapter.ViewHolder viewHolder,
-										final int position) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Showing alarm message dialog");
-		}
+	private void showAlarmMessageDialog(final AlarmCardArrayAdapter.ViewHolder viewHolder, final int position) {
+		Log.d(DEBUG_TAG, "Showing alarm message dialog");
 		LDialogView dialogView = new LDialogView(mContext,
 				R.layout.dialog_content_edit_text,
 				R.string.dialog_title_set_alarm_message);

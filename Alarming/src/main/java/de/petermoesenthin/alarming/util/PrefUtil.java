@@ -33,7 +33,6 @@ import de.petermoesenthin.alarming.pref.PrefKey;
 public class PrefUtil {
 
 	public static final String DEBUG_TAG = "PrefUtil";
-	public static final boolean D = false;
 
 	//----------------------------------------------------------------------------------------------
 	//                                      WRITE
@@ -119,18 +118,14 @@ public class PrefUtil {
 
 	public static void updateAlarmSoundUris(Context context) {
 		File[] files = FileUtil.getAlarmDirectoryAudioFileList(context);
-		if (D) {
-			Log.d(DEBUG_TAG, files.length + " audio files found");
-		}
+		Log.d(DEBUG_TAG, files.length + " audio files found");
 		String[] fileUris;
 		if (files == null || files.length == 0) {
 			fileUris = new String[0];
 		} else {
 			fileUris = new String[files.length];
 			for (int i = 0; i < files.length; i++) {
-				if (D) {
-					Log.d(DEBUG_TAG, "File " + i + ":" + files[i].getAbsolutePath());
-				}
+				Log.d(DEBUG_TAG, "File " + i + ":" + files[i].getAbsolutePath());
 				fileUris[i] = files[i].getPath();
 			}
 		}

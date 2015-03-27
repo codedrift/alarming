@@ -26,14 +26,11 @@ import de.petermoesenthin.alarming.service.AlarmService;
 public class AlarmReceiver extends BroadcastReceiver {
 
 	public static final String DEBUG_TAG = "AlarmReceiver";
-	private static final boolean D = true;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		int alarmID = intent.getIntExtra("id", -1);
-		if (D) {
-			Log.d(DEBUG_TAG, "Received alarm intent for id " + alarmID);
-		}
+		Log.d(DEBUG_TAG, "Received alarm intent for id " + alarmID);
 		Intent in = new Intent(context, AlarmService.class);
 		in.putExtra("id", alarmID);
 		context.startService(in);

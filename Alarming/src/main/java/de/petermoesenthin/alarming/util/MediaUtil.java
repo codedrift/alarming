@@ -26,8 +26,6 @@ import de.petermoesenthin.alarming.pref.PrefKey;
 public class MediaUtil {
 
 	public static final String DEBUG_TAG = "MediaUtil";
-	private static final boolean D = true;
-
 
 	/**
 	 * Creates an array of basic information about an audio file obtained through the
@@ -42,9 +40,7 @@ public class MediaUtil {
 	 * @return String array with metadata.
 	 */
 	public static String[] getBasicMetaData(String filePath) {
-		if (D) {
-			Log.d(DEBUG_TAG, "Reading audio metadata for " + filePath);
-		}
+		Log.d(DEBUG_TAG, "Reading audio metadata for " + filePath);
 		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 		mmr.setDataSource(filePath);
 		String[] metaData = new String[3];
@@ -74,10 +70,7 @@ public class MediaUtil {
 		int percent = PrefUtil.getInt(context, PrefKey.ALARM_SOUND_VOLUME, 80);
 		int maxVolume = getAudioStreamMaxVolume(context);
 		int volume = Math.round(((float) percent / 100) * maxVolume);
-		if (D) {
-			Log.d(DEBUG_TAG, "Setting STREAM_ALARM volume (loaded from preference) to " + volume
-					+ " PERCENT=" + percent);
-		}
+		Log.d(DEBUG_TAG, "Setting STREAM_ALARM volume (loaded from preference) to " + volume + " PERCENT=" + percent);
 		setStreamMusicVolume(context, volume);
 	}
 
@@ -89,9 +82,7 @@ public class MediaUtil {
 	 */
 	public static void resetSystemMediaVolume(Context context) {
 		int originalVolume = PrefUtil.getInt(context, PrefKey.AUDIO_ORIGINAL_VOLUME, 0);
-		if (D) {
-			Log.d(DEBUG_TAG, "Resetting system STREAM_ALARM volume to " + originalVolume);
-		}
+		Log.d(DEBUG_TAG, "Resetting system STREAM_ALARM volume to " + originalVolume);
 		setStreamMusicVolume(context, originalVolume);
 	}
 
@@ -111,9 +102,7 @@ public class MediaUtil {
 	 */
 	public static void saveSystemMediaVolume(Context context) {
 		int currentVolume = getAudioManager(context).getStreamVolume(AudioManager.STREAM_ALARM);
-		if (D) {
-			Log.d(DEBUG_TAG, "Saving system STREAM_ALARM volume. Found " + currentVolume);
-		}
+		Log.d(DEBUG_TAG, "Saving system STREAM_ALARM volume. Found " + currentVolume);
 		PrefUtil.putInt(context, PrefKey.AUDIO_ORIGINAL_VOLUME, currentVolume);
 	}
 

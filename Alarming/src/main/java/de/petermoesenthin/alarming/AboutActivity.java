@@ -37,7 +37,6 @@ public class AboutActivity extends ActionBarActivity {
 
 	private ListView mListView;
 	public static final String DEBUG_TAG = "AboutActivity";
-	private static final boolean D = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +88,7 @@ public class AboutActivity extends ActionBarActivity {
 	}
 
 	private void setUpListView() {
-		if (D) {
-			Log.d(DEBUG_TAG, "Setting up listView");
-		}
+		Log.d(DEBUG_TAG, "Setting up listView");
 		final String[] aboutTitles = getResources().getStringArray(R.array.about_actions);
 		mListView.setAdapter(new ArrayAdapter<String>(this, R.layout.listitem_about,
 				aboutTitles));
