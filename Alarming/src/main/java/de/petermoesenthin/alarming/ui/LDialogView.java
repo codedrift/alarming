@@ -50,7 +50,6 @@ public class LDialogView {
 		ViewStub stub = (ViewStub) mLayout.findViewById(R.id.l_dialog_content_stub);
 		stub.setLayoutResource(contentView);
 		stub.inflate();
-
 	}
 
 	public View getView() {

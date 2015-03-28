@@ -35,10 +35,6 @@ public class LDialog {
 		mDialogView = dialogView;
 	}
 
-	public interface LClickListener {
-		void onClick(AlertDialog dialog);
-	}
-
 	public void show() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setView(mDialogView.getView());

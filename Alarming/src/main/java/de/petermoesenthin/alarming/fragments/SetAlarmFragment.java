@@ -45,6 +45,7 @@ import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmCardArrayAdapter;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.ui.LClickListener;
 import de.petermoesenthin.alarming.ui.LDialog;
 import de.petermoesenthin.alarming.ui.LDialogView;
 import de.petermoesenthin.alarming.util.AlarmUtil;
@@ -318,7 +319,7 @@ public class SetAlarmFragment extends Fragment implements
 		cp.setOldCenterColor(color);
 
 		dialog.setPositiveButtonListener(
-				new LDialog.LClickListener() {
+				new LClickListener() {
 					@Override
 					public void onClick(AlertDialog dialog) {
 						int colorChoice = cp.getColor();
@@ -330,7 +331,7 @@ public class SetAlarmFragment extends Fragment implements
 					}
 				});
 		dialog.setNegativeButtonListener(
-				new LDialog.LClickListener() {
+				new LClickListener() {
 					@Override
 					public void onClick(AlertDialog dialog) {
 						dialog.dismiss();
@@ -351,7 +352,7 @@ public class SetAlarmFragment extends Fragment implements
 		String prefText = mAlarms.get(position).getMessage();
 		editText.setText(prefText);
 		dialog.setPositiveButtonListener(
-				new LDialog.LClickListener() {
+				new LClickListener() {
 					@Override
 					public void onClick(AlertDialog dialog) {
 						String text = editText.getText().toString();
@@ -362,7 +363,7 @@ public class SetAlarmFragment extends Fragment implements
 					}
 				});
 		dialog.setNegativeButtonListener(
-				new LDialog.LClickListener() {
+				new LClickListener() {
 					@Override
 					public void onClick(AlertDialog dialog) {
 						dialog.dismiss();

@@ -57,6 +57,7 @@ public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
 		} else {
 			viewHolder = (ViewHolder) v.getTag();
 		}
+
 		viewHolder.itemTitle.setText(listItem.getTitle());
 		viewHolder.itemArtist.setText(listItem.getArtist());
 
