@@ -16,6 +16,7 @@
 package de.petermoesenthin.alarming.ui;
 
 public class DrawerItem {
+
 	private String title;
 	private int imageId;
 

@@ -18,7 +18,6 @@ package de.petermoesenthin.alarming.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 
 import de.petermoesenthin.alarming.R;

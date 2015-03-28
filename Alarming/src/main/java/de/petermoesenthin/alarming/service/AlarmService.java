@@ -46,8 +46,11 @@ import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
-public class AlarmService extends Service implements MediaPlayer.OnPreparedListener,
-		MediaPlayer.OnSeekCompleteListener, GlowPadView.OnTriggerListener {
+public class AlarmService extends Service
+		implements
+		MediaPlayer.OnPreparedListener,
+		MediaPlayer.OnSeekCompleteListener,
+		GlowPadView.OnTriggerListener {
 
 	public static final String DEBUG_TAG = "AlarmService";
 	private Context mContext;
