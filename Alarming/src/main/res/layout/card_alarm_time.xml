@@ -106,7 +106,10 @@
 						android:textAllCaps="true"
 						android:textColor="@color/material_black"
 						android:textSize="14sp"/>
+
+				<include layout="@layout/card_alarm_repeat_days"/>
 			</LinearLayout>
+
 
 			<LinearLayout
 					android:id="@+id/layout_choose_color"
