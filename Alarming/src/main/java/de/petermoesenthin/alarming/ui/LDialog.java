@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+ * Copyright (C) 2014-2015 Peter Mösenthin <peter.moesenthin@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package de.petermoesenthin.alarming.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 
 import de.petermoesenthin.alarming.R;
@@ -34,10 +33,6 @@ public class LDialog {
 	public LDialog(Context context, LDialogView dialogView) {
 		mContext = context;
 		mDialogView = dialogView;
-	}
-
-	public interface LClickListener {
-		void onClick(AlertDialog dialog);
 	}
 
 	public void show() {

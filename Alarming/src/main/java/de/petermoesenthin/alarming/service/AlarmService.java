@@ -1,5 +1,5 @@
 package de.petermoesenthin.alarming.service;/*
- * Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+ * Copyright (C) 2014-2015 Peter Mösenthin <peter.moesenthin@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,8 +46,11 @@ import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.PrefUtil;
 
-public class AlarmService extends Service implements MediaPlayer.OnPreparedListener,
-		MediaPlayer.OnSeekCompleteListener, GlowPadView.OnTriggerListener {
+public class AlarmService extends Service
+		implements
+		MediaPlayer.OnPreparedListener,
+		MediaPlayer.OnSeekCompleteListener,
+		GlowPadView.OnTriggerListener {
 
 	public static final String DEBUG_TAG = "AlarmService";
 	private Context mContext;

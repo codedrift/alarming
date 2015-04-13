@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Peter Mösenthin <peter.moesenthin@gmail.com>
+ * Copyright (C) 2014-2015 Peter Mösenthin <peter.moesenthin@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
 		} else {
 			viewHolder = (ViewHolder) v.getTag();
 		}
+
 		viewHolder.itemTitle.setText(listItem.getTitle());
 		viewHolder.itemArtist.setText(listItem.getArtist());
 
