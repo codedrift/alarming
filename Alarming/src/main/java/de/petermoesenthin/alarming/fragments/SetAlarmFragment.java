@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import android.widget.Toast;
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import at.markushi.ui.CircleButton;
 import de.petermoesenthin.alarming.R;
@@ -142,6 +144,13 @@ public class SetAlarmFragment extends Fragment implements
 		AlarmGson alg = mAlarms.get(position);
 		alg.setAlarmSet(true);
 		Calendar calendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
+		Calendar now = Calendar.getInstance();
+		now.setTimeInMillis(System.currentTimeMillis());
+		long time = calendarSet.getTime().getTime() - now.getTime().getTime();
+		Toast.makeText(mContext,String.format("%d hours %d minutes",
+				TimeUnit.MILLISECONDS.toHours(time),
+				TimeUnit.MILLISECONDS.toMinutes(time)
+		),Toast.LENGTH_SHORT).show();
 		AlarmUtil.setAlarm(mContext, calendarSet, alg.getId());
 		PrefUtil.setAlarms(mContext, mAlarms);
 	}
