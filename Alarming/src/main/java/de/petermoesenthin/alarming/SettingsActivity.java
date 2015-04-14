@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.ui.LClickListener;
 import de.petermoesenthin.alarming.ui.LDialog;
 import de.petermoesenthin.alarming.ui.LDialogView;
 import de.petermoesenthin.alarming.util.PrefUtil;
@@ -113,7 +114,7 @@ public class SettingsActivity extends ActionBarActivity {
 		editText_snoozeTime.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
 		dialog.setPositiveButtonListener(
-				new LDialog.LClickListener() {
+				new LClickListener() {
 					@Override
 					public void onClick(AlertDialog dialog) {
 						String text = editText_snoozeTime.getText().toString();
@@ -123,7 +124,7 @@ public class SettingsActivity extends ActionBarActivity {
 					}
 				});
 		dialog.setNegativeButtonListener(
-				new LDialog.LClickListener() {
+				new LClickListener() {
 					@Override
 					public void onClick(AlertDialog dialog) {
 						dialog.dismiss();
@@ -157,7 +158,7 @@ public class SettingsActivity extends ActionBarActivity {
 			}
 		});
 		dialog.setPositiveButtonListener(
-				new LDialog.LClickListener() {
+				new LClickListener() {
 					@Override
 					public void onClick(AlertDialog dialog) {
 						int newVolume = seekBar_volume.getProgress();
@@ -167,7 +168,7 @@ public class SettingsActivity extends ActionBarActivity {
 					}
 				});
 		dialog.setNegativeButtonListener(
-				new LDialog.LClickListener() {
+				new LClickListener() {
 					@Override
 					public void onClick(AlertDialog dialog) {
 						dialog.dismiss();

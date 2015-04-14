@@ -118,14 +118,14 @@ public class PrefUtil {
 
 	public static void updateAlarmSoundUris(Context context) {
 		File[] files = FileUtil.getAlarmDirectoryAudioFileList(context);
-		Log.d(DEBUG_TAG, files.length + " audio files found");
 		String[] fileUris;
 		if (files == null || files.length == 0) {
+			Log.d(DEBUG_TAG, "No audio files found");
 			fileUris = new String[0];
 		} else {
 			fileUris = new String[files.length];
 			for (int i = 0; i < files.length; i++) {
-				Log.d(DEBUG_TAG, "File " + i + ":" + files[i].getAbsolutePath());
+				Log.d(DEBUG_TAG, "Found file " + i + ":" + files[i].getAbsolutePath());
 				fileUris[i] = files[i].getPath();
 			}
 		}

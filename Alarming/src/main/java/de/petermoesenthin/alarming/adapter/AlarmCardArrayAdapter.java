@@ -69,6 +69,7 @@ public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson> {
 		public TextView alarmText;
 		public LinearLayout chooseColor;
 		public ImageView deletAlarm;
+		public LinearLayout weekdayPanel;
 	}
 
 	@Override
@@ -90,6 +91,7 @@ public class AlarmCardArrayAdapter extends ArrayAdapter<AlarmGson> {
 			viewHolder.alarmText = (TextView) v.findViewById(R.id.textView_alarmText);
 			viewHolder.chooseColor = (LinearLayout) v.findViewById(R.id.layout_choose_color);
 			viewHolder.deletAlarm = (ImageView) v.findViewById(R.id.button_deleteAlarm);
+			viewHolder.weekdayPanel = (LinearLayout) v.findViewById(R.id.layout_weekday_panel);
 			v.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) v.getTag();
