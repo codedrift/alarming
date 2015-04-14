@@ -4,9 +4,13 @@ Alarming
 Alarming will help you get out of bed with a smile :) Wake up to your favorite music and choose exactly what part of a song will play.
 Set up all your songs and Alarming will pick one. Never be annoyed by your alarm sound again!
 
+Current status
+----
+Time is rare but the project isn't dead yet. As of now i am the only developer but if you think this project is worth your time feel free to contact me or create your own feature branch. :D
+
 Version
 ----
-0.7.1alpha
+0.7.2alpha
 
 Libraries
 -----------
