@@ -204,6 +204,7 @@ public class SetAlarmFragment extends Fragment implements
 						setCircleButtonActive(viewHolder.alarmSet, alarm.isAlarmSet());
 						viewHolder.vibrate.setChecked(alarm.doesVibrate());
 						viewHolder.repeatAlarm.setChecked(alarm.doesRepeat());
+						showWeekdayPanel(viewHolder.weekdayPanel,alarm.doesRepeat());
 						if (!alarm.getMessage().isEmpty()) {
 							viewHolder.alarmText.setText(alarm.getMessage());
 						}
@@ -252,8 +253,7 @@ public class SetAlarmFragment extends Fragment implements
 						Log.d(DEBUG_TAG, "RepeatAlarmClick at " + position);
 						AlarmGson alg = mAlarms.get(position);
 						boolean doesRepeat = alg.doesRepeat();
-						alg.setVibrate(!doesRepeat);
-						viewHolder.repeatAlarm.setChecked(!doesRepeat);
+						alg.setRepeat(!doesRepeat);
 						PrefUtil.setAlarms(mContext, mAlarms);
 						showWeekdayPanel(viewHolder.weekdayPanel, !doesRepeat);
 					}
