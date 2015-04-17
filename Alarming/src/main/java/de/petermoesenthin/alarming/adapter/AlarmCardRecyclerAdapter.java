@@ -87,8 +87,10 @@ public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecy
 			color = mContext.getResources().getColor(R.color.material_yellow);
 		}
 		colorChooser.setBackgroundColor(color);
-		
-		setOnClickListeners(i, viewHolder);
+
+		if(mAdapterCallBacks != null){
+			setOnClickListeners(i, viewHolder);
+		}
 	}
 
 	@Override
@@ -130,62 +132,48 @@ public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecy
 		viewHolder.alarmTime.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mAdapterCallBacks != null) {
-					mAdapterCallBacks.onAlarmTimeClick(viewHolder, position);
-				}
+				mAdapterCallBacks.onAlarmTimeClick(viewHolder, position);
 			}
 		});
 
 		viewHolder.alarmSet.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mAdapterCallBacks != null) {
-					mAdapterCallBacks.onAlarmSetClick(viewHolder, position);
-				}
+				mAdapterCallBacks.onAlarmSetClick(viewHolder, position);
 			}
 		});
 
 		viewHolder.vibrate.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mAdapterCallBacks != null) {
-					mAdapterCallBacks.onVibrateClick(viewHolder, position);
-				}
+				mAdapterCallBacks.onVibrateClick(viewHolder, position);
 			}
 		});
 
 		viewHolder.repeatAlarm.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mAdapterCallBacks != null) {
-					mAdapterCallBacks.onRepeatAlarmClick(viewHolder, position);
-				}
+				mAdapterCallBacks.onRepeatAlarmClick(viewHolder, position);
 			}
 		});
 
 		viewHolder.alarmText.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mAdapterCallBacks != null) {
-					mAdapterCallBacks.onAlarmTextClick(viewHolder, position);
-				}
+				mAdapterCallBacks.onAlarmTextClick(viewHolder, position);
 			}
 		});
 
 		viewHolder.chooseColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mAdapterCallBacks != null) {
-					mAdapterCallBacks.onChooseColorClick(viewHolder, position);
-				}
+				mAdapterCallBacks.onChooseColorClick(viewHolder, position);
 			}
 		});
 		viewHolder.deletAlarm.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mAdapterCallBacks != null) {
-					mAdapterCallBacks.onDeleteAlarmClick(viewHolder, position);
-				}
+				mAdapterCallBacks.onDeleteAlarmClick(viewHolder, position);
 			}
 		});
 	}

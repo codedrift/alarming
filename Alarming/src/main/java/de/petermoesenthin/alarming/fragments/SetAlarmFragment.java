@@ -149,10 +149,15 @@ public class SetAlarmFragment extends Fragment implements
 		Calendar now = Calendar.getInstance();
 		now.setTimeInMillis(System.currentTimeMillis());
 		long time = calendarSet.getTime().getTime() - now.getTime().getTime();
-		Toast.makeText(mContext,String.format("%d hours %d minutes",
-				TimeUnit.MILLISECONDS.toHours(time),
-				TimeUnit.MILLISECONDS.toMinutes(time)
-		),Toast.LENGTH_SHORT).show();
+		long hours = TimeUnit.MILLISECONDS.toHours(time);
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
+		if(hours == 0){
+			Toast.makeText(mContext, String.format("%d minutes", minutes - (hours * 60) ),
+					Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(mContext, String.format("%d hours %d minutes", hours, minutes - (hours * 60) ),
+					Toast.LENGTH_SHORT).show();
+		}
 		AlarmUtil.setAlarm(mContext, calendarSet, alg.getId());
 		PrefUtil.setAlarms(mContext, mAlarms);
 	}
