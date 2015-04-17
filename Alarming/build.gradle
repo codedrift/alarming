@@ -31,7 +31,8 @@ dependencies {
             'com.edmodo:rangebar:1.0.0',
             'com.github.flavienlaurent.datetimepicker:library:0.0.2',
             'com.android.support:cardview-v7:+',
-            'com.android.support:appcompat-v7:21+'
+            'com.android.support:appcompat-v7:21+',
+            'com.android.support:recyclerview-v7:21.0.+'
     )
 
     compile('de.psdev.licensesdialog:licensesdialog:1.6.0') {
