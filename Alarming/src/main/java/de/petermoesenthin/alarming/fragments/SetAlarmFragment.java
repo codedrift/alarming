@@ -21,16 +21,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 
-import android.widget.Toast;
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
@@ -44,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 
 import at.markushi.ui.CircleButton;
 import de.petermoesenthin.alarming.R;
-import de.petermoesenthin.alarming.adapter.AlarmCardArrayAdapter;
+import de.petermoesenthin.alarming.adapter.AlarmCardRecyclerAdapter;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.ui.LClickListener;
@@ -60,11 +59,10 @@ public class SetAlarmFragment extends Fragment implements
 	public static final String DEBUG_TAG = "SetAlarmFragment";
 
 	private Context mContext;
-	private ListView mAlarmListView;
-	private AlarmCardArrayAdapter mAlarmCardArrayAdapter;
+	private RecyclerView mAlarmListView;
+	private AlarmCardRecyclerAdapter mAlarmCardRecyclerAdapter;
 	private List<AlarmGson> mAlarms = new ArrayList<AlarmGson>();
 	private FloatingActionButton mFAB;
-	private boolean mFlag_create_new = false;
 
 	//----------------------------------------------------------------------------------------------
 	//                                      LIFECYCLE
@@ -75,7 +73,10 @@ public class SetAlarmFragment extends Fragment implements
 							 Bundle savedInstanceState) {
 		mContext = getActivity();
 		View rootView = inflater.inflate(R.layout.fragment_set_alarm, container, false);
-		mAlarmListView = (ListView) rootView.findViewById(R.id.cardListView_alarm);
+		mAlarmListView = (RecyclerView) rootView.findViewById(R.id.cardListView_alarm);
+		final LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+		mAlarmListView.setLayoutManager(layoutManager);
 
 		mFAB = (FloatingActionButton) rootView.findViewById(R.id.fab_add_alarm);
 		mFAB.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +85,8 @@ public class SetAlarmFragment extends Fragment implements
 				addNewAlarm();
 			}
 		});
-		mFAB.listenTo(mAlarmListView);
+		// Fab listening disabled due to recyler view
+		//mFAB.listenTo(mAlarmListView);
 
 		setUpListView();
 		PrefUtil.getApplicationPrefs(mContext)
@@ -113,7 +115,7 @@ public class SetAlarmFragment extends Fragment implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if (key.equals(PrefKey.ALARMS)) {
 			Log.d(DEBUG_TAG, "Preferences have changed");
-			mAlarmCardArrayAdapter.notifyDataSetChanged();
+			mAlarmCardRecyclerAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -132,15 +134,14 @@ public class SetAlarmFragment extends Fragment implements
 		alarm.setMessage(message);
 		//mAlarms.add(0, alarmGson);
 		mAlarms.add(alarm);
-		mFlag_create_new = true;
-		mAlarmCardArrayAdapter.notifyDataSetChanged();
+		mAlarmCardRecyclerAdapter.notifyDataSetChanged();
 		scrollCardListViewToBottom();
 		PrefUtil.putInt(mContext, PrefKey.ALARM_ID_COUNTER, alarmID + 1);
 		PrefUtil.setAlarms(mContext, mAlarms);
 	}
 
 
-	private void activateAlarm(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
+	private void activateAlarm(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position) {
 		Log.d(DEBUG_TAG, "Activate alarm " + position);
 		AlarmGson alg = mAlarms.get(position);
 		alg.setAlarmSet(true);
@@ -148,10 +149,15 @@ public class SetAlarmFragment extends Fragment implements
 		Calendar now = Calendar.getInstance();
 		now.setTimeInMillis(System.currentTimeMillis());
 		long time = calendarSet.getTime().getTime() - now.getTime().getTime();
-		Toast.makeText(mContext,String.format("%d hours %d minutes",
-				TimeUnit.MILLISECONDS.toHours(time),
-				TimeUnit.MILLISECONDS.toMinutes(time)
-		),Toast.LENGTH_SHORT).show();
+		long hours = TimeUnit.MILLISECONDS.toHours(time);
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
+		if(hours == 0){
+			Toast.makeText(mContext, String.format("%d minutes", minutes - (hours * 60) ),
+					Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(mContext, String.format("%d hours %d minutes", hours, minutes - (hours * 60) ),
+					Toast.LENGTH_SHORT).show();
+		}
 		AlarmUtil.setAlarm(mContext, calendarSet, alg.getId());
 		PrefUtil.setAlarms(mContext, mAlarms);
 	}
@@ -160,10 +166,10 @@ public class SetAlarmFragment extends Fragment implements
 		Log.d(DEBUG_TAG, "Delete alarm " + position);
 		mAlarms.remove(position);
 		PrefUtil.setAlarms(mContext, mAlarms);
-		mAlarmCardArrayAdapter.notifyDataSetChanged();
+		mAlarmCardRecyclerAdapter.notifyDataSetChanged();
 	}
 
-	private void deactivateAlarm(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
+	private void deactivateAlarm(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position) {
 		Log.d(DEBUG_TAG, "Deactivate alarm " + position);
 		AlarmGson alg = mAlarms.get(position);
 		alg.setAlarmSet(false);
@@ -185,102 +191,78 @@ public class SetAlarmFragment extends Fragment implements
 	private void setUpListView() {
 		Log.d(DEBUG_TAG, "Set up list view");
 		mAlarms = PrefUtil.getAlarms(mContext);
+		// No alarms present
 		if (mAlarms.isEmpty()) {
 			mAlarms.add(new AlarmGson());
 			PrefUtil.putInt(mContext, PrefKey.ALARM_ID_COUNTER, 1);
 		}
-		createListViewAdapter(mAlarms);
-		mAlarmListView.setAdapter(mAlarmCardArrayAdapter);
-	}
 
+		mAlarmCardRecyclerAdapter = new AlarmCardRecyclerAdapter(mAlarms,
+				new AlarmCardRecyclerAdapter.AdapterCallBacks(){
 
-	private void createListViewAdapter(final List<AlarmGson> alarms) {
-		mAlarmCardArrayAdapter = new AlarmCardArrayAdapter
-				(mContext, R.layout.card_alarm_time, alarms, new AlarmCardArrayAdapter
-						.AdapterCallBacks() {
-					@Override
-					public AlarmCardArrayAdapter.ViewHolder onBuildView(
-							AlarmCardArrayAdapter.ViewHolder viewHolder, AlarmGson alarm) {
-						Log.d(DEBUG_TAG, "onBuildView for " + alarm.getId());
-						setAlarmTimeView(viewHolder.alarmTime, viewHolder.am_pm, alarm.getHour(),
-								alarm.getMinute());
-						setCircleButtonActive(viewHolder.alarmSet, alarm.isAlarmSet());
-						viewHolder.vibrate.setChecked(alarm.doesVibrate());
-						viewHolder.repeatAlarm.setChecked(alarm.doesRepeat());
-						if (!alarm.getMessage().isEmpty()) {
-							viewHolder.alarmText.setText(alarm.getMessage());
-						}
-						View v = viewHolder.chooseColor.findViewById(R.id.view_color_indicator);
-						int color = alarm.getColor();
-						if (color == -1) {
-							color = getResources().getColor(R.color.material_yellow);
-						}
-						v.setBackgroundColor(color);
-						return viewHolder;
-					}
+			@Override
+			public void onAlarmTimeClick(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position) {
+				Log.d(DEBUG_TAG, "AlarmTimeClick  at " + position);
+				showTimePicker(position, viewHolder);
+			}
 
-					@Override
-					public void onAlarmTimeClick(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
-						Log.d(DEBUG_TAG, "AlarmTimeClick  at " + position);
-						showTimePicker(position, viewHolder);
-					}
-
-					@Override
-					public void onAlarmSetClick(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
-						Log.d(DEBUG_TAG, "AlarmSetClick at " + position);
-						AlarmGson alg = alarms.get(position);
-						boolean alarmSet = alg.isAlarmSet();
-						if (alarmSet) {
-							deactivateAlarm(viewHolder, position);
-							setCircleButtonActive(viewHolder.alarmSet, false);
-						} else {
-							activateAlarm(viewHolder, position);
-							setCircleButtonActive(viewHolder.alarmSet, true);
-						}
-					}
-
-					@Override
-					public void onVibrateClick(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
-							Log.d(DEBUG_TAG, "VibrateClick at " + position);
-						AlarmGson alg = mAlarms.get(position);
-						boolean doesVibrate = alg.doesVibrate();
-						alg.setVibrate(!doesVibrate);
-						viewHolder.vibrate.setChecked(!doesVibrate);
-						PrefUtil.setAlarms(mContext, mAlarms);
-					}
-
-					@Override
-					public void onRepeatAlarmClick(AlarmCardArrayAdapter.ViewHolder viewHolder,
-												   int position) {
-						Log.d(DEBUG_TAG, "RepeatAlarmClick at " + position);
-						AlarmGson alg = mAlarms.get(position);
-						boolean doesRepeat = alg.doesRepeat();
-						alg.setVibrate(!doesRepeat);
-						viewHolder.repeatAlarm.setChecked(!doesRepeat);
-						PrefUtil.setAlarms(mContext, mAlarms);
-					}
-
-					@Override
-					public void onAlarmTextClick(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
-						Log.d(DEBUG_TAG, "AlarmTextClick at " + position);
-						showAlarmMessageDialog(viewHolder, position);
-					}
-
-					@Override
-					public void onChooseColorClick(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
-						Log.d(DEBUG_TAG, "ChooseColorClick at " + position);
-						showColorPickerDialog(viewHolder, position);
-					}
-
-					@Override
-					public void onDeleteAlarmClick(AlarmCardArrayAdapter.ViewHolder viewHolder, int position) {
-						Log.d(DEBUG_TAG, "DeleteAlarmClick at " + position);
-						deactivateAlarm(viewHolder, position);
-						deleteAlarm(position);
-					}
+			@Override
+			public void onAlarmSetClick(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position) {
+				Log.d(DEBUG_TAG, "AlarmSetClick at " + position);
+				AlarmGson alg = mAlarms.get(position);
+				boolean alarmSet = alg.isAlarmSet();
+				if (alarmSet) {
+					deactivateAlarm(viewHolder, position);
+					mAlarmCardRecyclerAdapter.setCircleButtonActive(viewHolder, false);
+				} else {
+					activateAlarm(viewHolder, position);
+					mAlarmCardRecyclerAdapter.setCircleButtonActive(viewHolder, true);
 				}
-				);
+			}
+
+			@Override
+			public void onVibrateClick(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position) {
+				Log.d(DEBUG_TAG, "VibrateClick at " + position);
+				AlarmGson alg = mAlarms.get(position);
+				boolean doesVibrate = alg.doesVibrate();
+				alg.setVibrate(!doesVibrate);
+				viewHolder.vibrate.setChecked(!doesVibrate);
+				PrefUtil.setAlarms(mContext, mAlarms);
+			}
+
+			@Override
+			public void onRepeatAlarmClick(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position) {
+				Log.d(DEBUG_TAG, "RepeatAlarmClick at " + position);
+				AlarmGson alg = mAlarms.get(position);
+				boolean doesRepeat = alg.doesRepeat();
+				alg.setRepeat(!doesRepeat);
+				PrefUtil.setAlarms(mContext, mAlarms);
+				mAlarmCardRecyclerAdapter.showWeekdayPanel(viewHolder, !doesRepeat);
+			}
+
+			@Override
+			public void onAlarmTextClick(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position) {
+				Log.d(DEBUG_TAG, "AlarmTextClick at " + position);
+				showAlarmMessageDialog(viewHolder, position);
+			}
+
+			@Override
+			public void onChooseColorClick(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position) {
+				Log.d(DEBUG_TAG, "ChooseColorClick at " + position);
+				showColorPickerDialog(viewHolder, position);
+			}
+
+			@Override
+			public void onDeleteAlarmClick(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position) {
+				Log.d(DEBUG_TAG, "DeleteAlarmClick at " + position);
+				deactivateAlarm(viewHolder, position);
+				deleteAlarm(position);
+			}
+		});
+
+		mAlarmListView.setAdapter(mAlarmCardRecyclerAdapter);
 	}
+
 
 	private void setAlarmTimeView(TextView alarmTime, TextView am_pm, int hour, int minute) {
 		String alarmFormatted = StringUtil.getTimeFormattedSystem(mContext, hour,
@@ -294,26 +276,16 @@ public class SetAlarmFragment extends Fragment implements
 		}
 	}
 
-	private void setCircleButtonActive(CircleButton circleButton, boolean isActive) {
-		if (isActive) {
-			circleButton.setColor(getResources().getColor(R.color.material_yellow));
-			circleButton.setImageResource(R.drawable.ic_bell_ring);
-		} else {
-			circleButton.setColor(getResources().getColor(R.color.veryLightGray));
-			circleButton.setImageResource(R.drawable.ic_bell_outline);
-		}
-	}
-
 	private void scrollCardListViewToBottom() {
 		mAlarmListView.post(new Runnable() {
 			@Override
 			public void run() {
-				mAlarmListView.smoothScrollToPosition(mAlarmCardArrayAdapter.getCount() - 1);
+				mAlarmListView.smoothScrollToPosition(mAlarmCardRecyclerAdapter.getItemCount() - 1);
 			}
 		});
 	}
 
-	private void showColorPickerDialog(final AlarmCardArrayAdapter.ViewHolder viewHolder,
+	private void showColorPickerDialog(final AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder,
 									   final int position) {
 		LDialogView dialogView = new LDialogView(mContext,
 				R.layout.dialog_content_color_picker,
@@ -349,7 +321,7 @@ public class SetAlarmFragment extends Fragment implements
 		dialog.show();
 	}
 
-	private void showAlarmMessageDialog(final AlarmCardArrayAdapter.ViewHolder viewHolder, final int position) {
+	private void showAlarmMessageDialog(final AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, final int position) {
 		Log.d(DEBUG_TAG, "Showing alarm message dialog");
 		LDialogView dialogView = new LDialogView(mContext,
 				R.layout.dialog_content_edit_text,
@@ -381,7 +353,7 @@ public class SetAlarmFragment extends Fragment implements
 		dialog.show();
 	}
 
-	private void showTimePicker(final int position, final AlarmCardArrayAdapter.ViewHolder viewHolder) {
+	private void showTimePicker(final int position, final AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder) {
 		Calendar cal = Calendar.getInstance();
 		String[] time = StringUtil.getTimeFormattedSystem(mContext, 13, 0).split(" ");
 		boolean is24h = time.length < 2;

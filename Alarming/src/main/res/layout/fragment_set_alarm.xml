@@ -21,7 +21,7 @@
 	android:layout_height="match_parent"
 	tools:context=".MainActivity$PlaceholderFragment">
 
-	<ListView
+	<android.support.v7.widget.RecyclerView
 		android:paddingTop="8dp"
 		android:paddingLeft="@dimen/activity_horizontal_margin"
 		android:paddingRight="@dimen/activity_horizontal_margin"
