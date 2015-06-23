@@ -8,9 +8,12 @@ Current status
 ----
 Time is rare but the project isn't dead yet. As of now i am the only developer but if you think this project is worth your time feel free to contact me or create your own feature branch. :D
 
+Build
+-----------
+Simply import the Project in Android Studio and deploy it onto your smartphone.
+
 Libraries
 -----------
-
 See CREDITS for all libraries that are used in this project.
 
 License
