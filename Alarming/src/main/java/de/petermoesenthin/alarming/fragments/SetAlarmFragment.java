@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -88,7 +89,7 @@ public class SetAlarmFragment extends Fragment implements
 			@Override
 			public void onClick(View v)
 			{
-				addNewAlarm();
+				SetAlarmFragment.this.addNewAlarm();
 			}
 		});
 
@@ -161,13 +162,22 @@ public class SetAlarmFragment extends Fragment implements
 		long time = calendarSet.getTime().getTime() - now.getTime().getTime();
 		long hours = TimeUnit.MILLISECONDS.toHours(time);
 		long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
-		if (hours == 0)
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(time);
+		if (minutes == 0)
 		{
-			Toast.makeText(mContext, String.format("%d minutes", minutes - (hours * 60)),
+			Toast.makeText(mContext, String.format("Alarm goes off in %d seconds", seconds - hours * 60 - minutes * 60),
+					Toast.LENGTH_SHORT).show();
+		}
+		else if (hours == 0)
+		{
+			Toast.makeText(mContext,
+					String.format("Alarm goes off in %d minutes %d seconds",
+							minutes - hours * 60,
+							seconds - hours * 60 - minutes * 60),
 					Toast.LENGTH_SHORT).show();
 		} else
 		{
-			Toast.makeText(mContext, String.format("%d hours %d minutes", hours, minutes - (hours * 60)),
+			Toast.makeText(mContext, String.format("Alarm goes off in %d hours %d minutes", hours, minutes - hours * 60),
 					Toast.LENGTH_SHORT).show();
 		}
 		AlarmUtil.setAlarm(mContext, calendarSet, alg.getId());
@@ -308,13 +318,15 @@ public class SetAlarmFragment extends Fragment implements
 	private void scrollCardListViewToBottom()
 	{
 		mAlarmListView.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				mAlarmListView.smoothScrollToPosition(mAlarmCardRecyclerAdapter.getItemCount() - 1);
-			}
-		});
+							{
+								@Override
+								public void run()
+								{
+									mAlarmListView.smoothScrollToPosition(
+											mAlarmCardRecyclerAdapter.getItemCount() - 1);
+								}
+							}
+		);
 	}
 
 	private void showColorPickerDialog(final AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder,
@@ -323,7 +335,7 @@ public class SetAlarmFragment extends Fragment implements
 		LDialogView dialogView = new LDialogView(mContext,
 				R.layout.dialog_content_color_picker,
 				R.string.dialog_title_set_alarm_color);
-		final LDialog dialog = new LDialog(mContext, dialogView);
+		final LDialog colorPickerDialog = new LDialog(mContext, dialogView);
 		final ColorPicker cp = (ColorPicker) dialogView.getView().findViewById(R.id.dialog_color_picker);
 		final AlarmGson alg = mAlarms.get(position);
 		int color = alg.getColor();
@@ -333,7 +345,7 @@ public class SetAlarmFragment extends Fragment implements
 		}
 		cp.setOldCenterColor(color);
 
-		dialog.setPositiveButtonListener(
+		colorPickerDialog.setPositiveButtonListener(
 				new LClickListener()
 				{
 					@Override
@@ -347,7 +359,7 @@ public class SetAlarmFragment extends Fragment implements
 						dialog.dismiss();
 					}
 				});
-		dialog.setNegativeButtonListener(
+		colorPickerDialog.setNegativeButtonListener(
 				new LClickListener()
 				{
 					@Override
@@ -356,7 +368,7 @@ public class SetAlarmFragment extends Fragment implements
 						dialog.dismiss();
 					}
 				});
-		dialog.show();
+		colorPickerDialog.show();
 	}
 
 	private void showAlarmMessageDialog(final AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, final int position)
@@ -365,26 +377,26 @@ public class SetAlarmFragment extends Fragment implements
 		LDialogView dialogView = new LDialogView(mContext,
 				R.layout.dialog_content_edit_text,
 				R.string.dialog_title_set_alarm_message);
-		LDialog dialog = new LDialog(mContext, dialogView);
+		LDialog alarmMessageDialog = new LDialog(mContext, dialogView);
 		final EditText editText = (EditText) dialogView.getView().findViewById(R.id
 				.editText);
 		editText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
 		String prefText = mAlarms.get(position).getMessage();
 		editText.setText(prefText);
-		dialog.setPositiveButtonListener(
+		alarmMessageDialog.setPositiveButtonListener(
 				new LClickListener()
 				{
 					@Override
-					public void onClick(AlertDialog dialog)
+					public void onClick(AlertDialog dialog1)
 					{
 						String text = editText.getText().toString();
 						mAlarms.get(position).setMessage(text);
 						viewHolder.alarmText.setText(text);
 						PrefUtil.setAlarms(mContext, mAlarms);
-						dialog.dismiss();
+						dialog1.dismiss();
 					}
 				});
-		dialog.setNegativeButtonListener(
+		alarmMessageDialog.setNegativeButtonListener(
 				new LClickListener()
 				{
 					@Override
@@ -393,7 +405,7 @@ public class SetAlarmFragment extends Fragment implements
 						dialog.dismiss();
 					}
 				});
-		dialog.show();
+		alarmMessageDialog.show();
 	}
 
 	private void showTimePicker(final int position, final AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder)
@@ -401,6 +413,7 @@ public class SetAlarmFragment extends Fragment implements
 		Calendar cal = Calendar.getInstance();
 		String[] time = StringUtil.getTimeFormattedSystem(mContext, 13, 0).split(" ");
 		boolean is24h = time.length < 2;
+		AlarmGson alarmGson = mAlarms.get(position);
 		final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
 				new TimePickerDialog.OnTimeSetListener()
 				{
@@ -413,8 +426,8 @@ public class SetAlarmFragment extends Fragment implements
 						activateAlarm(viewHolder, position);
 					}
 				},
-				cal.get(Calendar.HOUR_OF_DAY),
-				cal.get(Calendar.MINUTE),
+				alarmGson.getHour(),
+				alarmGson.getMinute(),
 				is24h,
 				false);
 		timePickerDialog.show(getActivity().getSupportFragmentManager(), null);

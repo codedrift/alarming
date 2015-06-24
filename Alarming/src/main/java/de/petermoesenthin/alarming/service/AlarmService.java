@@ -26,6 +26,7 @@ import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.provider.Settings;
@@ -36,6 +37,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 
 import com.fima.glowpadview.GlowPadView;
 
@@ -57,7 +59,7 @@ public class AlarmService extends Service
 		GlowPadView.OnTriggerListener
 {
 
-	public static final String DEBUG_TAG = "AlarmService";
+	public static final String DEBUG_TAG = AlarmService.class.getSimpleName();
 	private Context mContext;
 	private WindowManager mWindowManager;
 	private View mView;
@@ -73,10 +75,17 @@ public class AlarmService extends Service
 
 	private GlowPadView mGlowPadView;
 
+	private Handler mHandler = new Handler();
+
 	//Alarm
 	private int mAlarmId;
 	private AlarmGson mAlarmGson;
 	private List<AlarmGson> mAlarms;
+
+	//----------------------------------------------------------------------------------------------
+	//                                      LIFECYCLE
+	//----------------------------------------------------------------------------------------------
+
 
 	@Override
 	public IBinder onBind(Intent intent)
@@ -92,80 +101,66 @@ public class AlarmService extends Service
 		Log.i(DEBUG_TAG, "onStartCommand called");
 		mAlarmId = intent.getIntExtra("id", -1);
 		mContext = this;
-		registerSystemActionReceiver();
-		//playAlarmSound();
-		//AlarmReceiver.completeWakefulIntent(intent);
-		//showLockScreenView();
+		startEverything();
 		return START_STICKY_COMPATIBILITY;
 	}
 
-
-	private void showLockScreenView()
+	private void startEverything()
 	{
-		Log.i(DEBUG_TAG, "Showing LockScreen view");
-		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-		mView = inflater.inflate(R.layout.alarm_alert, null);
-		mView.setOnClickListener(new View.OnClickListener()
+		mHandler.post(new Runnable()
 		{
 			@Override
-			public void onClick(View v)
+			public void run()
 			{
-				hideLockScreenView();
+				mAlarms = PrefUtil.getAlarms(mContext);
+				mAlarmGson = mAlarms.get(mAlarmId);
+				registerSystemActionReceiver();
+				showLockScreenView(mAlarmGson);
+				if(mAlarmGson.doesVibrate()){
+					startVibration();
+				}
+				playAlarmSound();
+				//AlarmReceiver.completeWakefulIntent(intent);
+			}
+		});
+	}
+
+	private void dismissEverything()
+	{
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				destroyMediaPlayer();
+				stopVibration();
 				unregisterSystemActionReceiver();
+				hideLockScreenView();
+				hideLockScreenView();
 				stopSelf();
 			}
 		});
-
-
-		//SetUp GlowPadView
-		mGlowPadView = (GlowPadView) mView.findViewById(R.id.glow_pad_view);
-
-		mGlowPadView.setOnTriggerListener(this);
-
-
-		final WindowManager.LayoutParams mLayoutParams = new WindowManager.LayoutParams(
-				ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.MATCH_PARENT, 0, 0,
-				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
-				WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-						| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-						| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-						| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-				PixelFormat.RGBA_8888);
-
-
-		mView.setVisibility(View.VISIBLE);
-		mAnimation = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in);
-		mView.setAnimation(mAnimation);
-		mWindowManager.addView(mView, mLayoutParams);
 	}
 
-	private void hideLockScreenView()
-	{
-		Log.i(DEBUG_TAG, "Hiding LockScreen view");
-		if (mView != null && mWindowManager != null)
-		{
-			mWindowManager.removeView(mView);
-			mView = null;
-		}
-	}
 
+
+//	@Override
+//	public void onDestroy()
+//	{
+//		Log.d(DEBUG_TAG, "onDestroy called");
+//		unregisterSystemActionReceiver();
+//		super.onDestroy();
+//	}
+
+	//----------------------------------------------------------------------------------------------
+	//                                      DEVICE
+	//----------------------------------------------------------------------------------------------
 
 	private void registerSystemActionReceiver()
 	{
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_SCREEN_ON);
 		registerReceiver(systemActionReceiver, filter);
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		Log.d(DEBUG_TAG, "onDestroy called");
-		unregisterSystemActionReceiver();
-		super.onDestroy();
 	}
 
 	private void unregisterSystemActionReceiver()
@@ -183,7 +178,7 @@ public class AlarmService extends Service
 			if (action.equals(Intent.ACTION_SCREEN_ON))
 			{
 				Log.d(DEBUG_TAG, "Received ACTION_SCREEN_ON");
-				showLockScreenView();
+				showLockScreenView(mAlarmGson);
 			} else if (action.equals(Intent.ACTION_USER_PRESENT))
 			{
 				Log.d(DEBUG_TAG, "Received ACTION_USER_PRESENT");
@@ -259,6 +254,13 @@ public class AlarmService extends Service
 			mDataSource = Settings.System.DEFAULT_ALARM_ALERT_URI.getPath();
 		}
 		startMediaPlayer();
+	}
+
+	private void destroyMediaPlayer(){
+		if(mMediaPlayer != null && mMediaPlayer.isPlaying()){
+			mMediaPlayer.stop();
+		}
+		mMediaPlayer = null;
 	}
 
 	private void startMediaPlayer()
@@ -354,6 +356,55 @@ public class AlarmService extends Service
 		mPlayerPositionUpdateThread.start();
 	}
 
+
+	//----------------------------------------------------------------------------------------------
+	//                                      UI
+	//----------------------------------------------------------------------------------------------
+
+	private void hideLockScreenView()
+	{
+		Log.i(DEBUG_TAG, "Hiding LockScreen view");
+		if (mView != null && mWindowManager != null)
+		{
+			mWindowManager.removeView(mView);
+			mView = null;
+		}
+	}
+
+	private void showLockScreenView(AlarmGson mAlarmGson)
+	{
+		Log.i(DEBUG_TAG, "Showing LockScreen view");
+		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		mView = inflater.inflate(R.layout.alarm_alert, null);
+		RelativeLayout alarmView = (RelativeLayout) mView.findViewById(R.id.layout_bg_alarm_receiver);
+
+		alarmView.setBackgroundColor(mAlarmGson.getColor());
+
+		//SetUp GlowPadView
+		mGlowPadView = (GlowPadView) mView.findViewById(R.id.glow_pad_view);
+
+		mGlowPadView.setOnTriggerListener(this);
+
+
+		final WindowManager.LayoutParams mLayoutParams = new WindowManager.LayoutParams(
+				ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.MATCH_PARENT, 0, 0,
+				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+				WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+						| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+						| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+						| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+				PixelFormat.RGBA_8888);
+
+
+		mView.setVisibility(View.VISIBLE);
+		mAnimation = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in);
+		mView.setAnimation(mAnimation);
+		mWindowManager.addView(mView, mLayoutParams);
+	}
+
 	//----------------------------------------------------------------------------------------------
 	//                                      GLOWPAD
 	//----------------------------------------------------------------------------------------------
@@ -376,6 +427,7 @@ public class AlarmService extends Service
 	public void onTrigger(View v, int target)
 	{
 		Log.d(DEBUG_TAG, "onTrigger");
+		dismissEverything();
 	}
 
 	@Override
