@@ -18,7 +18,8 @@
  */
 package de.petermoesenthin.alarming.pref;
 
-public class AlarmGson {
+public class AlarmGson
+{
 
 	private int hour = 0;
 	private int minute = 0;
@@ -29,70 +30,87 @@ public class AlarmGson {
 	private int color = -1;
 	private int id = 0;
 
-	public AlarmGson() {
+	public AlarmGson()
+	{
 	}
 
-	public int getHour() {
+	public int getHour()
+	{
 		return hour;
 	}
 
-	public void setHour(int hour) {
+	public void setHour(int hour)
+	{
 		this.hour = hour;
 	}
 
-	public int getMinute() {
+	public int getMinute()
+	{
 		return minute;
 	}
 
-	public void setMinute(int minute) {
+	public void setMinute(int minute)
+	{
 		this.minute = minute;
 	}
 
-	public boolean isAlarmSet() {
+	public boolean isAlarmSet()
+	{
 		return alarmSet;
 	}
 
-	public void setAlarmSet(boolean alarmSet) {
+	public void setAlarmSet(boolean alarmSet)
+	{
 		this.alarmSet = alarmSet;
 	}
 
-	public boolean doesVibrate() {
+	public boolean doesVibrate()
+	{
 		return vibrate;
 	}
 
-	public void setVibrate(boolean vibrate) {
+	public void setVibrate(boolean vibrate)
+	{
 		this.vibrate = vibrate;
 	}
 
-	public boolean doesRepeat() {
+	public boolean doesRepeat()
+	{
 		return repeatAlarm;
 	}
 
-	public void setRepeat(boolean repeatAlarm) {
+	public void setRepeat(boolean repeatAlarm)
+	{
 		this.repeatAlarm = repeatAlarm;
 	}
 
-	public int getColor() {
+	public int getColor()
+	{
 		return color;
 	}
 
-	public void setColor(int color) {
+	public void setColor(int color)
+	{
 		this.color = color;
 	}
 
-	public String getMessage() {
+	public String getMessage()
+	{
 		return message;
 	}
 
-	public void setMessage(String message) {
+	public void setMessage(String message)
+	{
 		this.message = message;
 	}
 
-	public int getId() {
+	public int getId()
+	{
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
 }

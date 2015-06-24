@@ -19,7 +19,8 @@
 
 package de.petermoesenthin.alarming.pref;
 
-public class AlarmSoundGson {
+public class AlarmSoundGson
+{
 
 	private String path = "";
 	private String metaTitle = "";
@@ -29,59 +30,73 @@ public class AlarmSoundGson {
 	private int length = 0;
 	private int hash = 0;
 
-	public String getPath() {
+	public String getPath()
+	{
 		return path;
 	}
 
-	public void setPath(String path) {
+	public void setPath(String path)
+	{
 		this.path = path;
 	}
 
-	public int getStartMillis() {
+	public int getStartMillis()
+	{
 		return startMillis;
 	}
 
-	public void setStartMillis(int startMillis) {
+	public void setStartMillis(int startMillis)
+	{
 		this.startMillis = startMillis;
 	}
 
-	public int getEndMillis() {
+	public int getEndMillis()
+	{
 		return endMillis;
 	}
 
-	public void setEndMillis(int endMillis) {
+	public void setEndMillis(int endMillis)
+	{
 		this.endMillis = endMillis;
 	}
 
-	public int getHash() {
+	public int getHash()
+	{
 		return hash;
 	}
 
-	public void setHash(int hash) {
+	public void setHash(int hash)
+	{
 		this.hash = hash;
 	}
 
-	public String getMetaTitle() {
+	public String getMetaTitle()
+	{
 		return metaTitle;
 	}
 
-	public void setMetaTitle(String metaTitle) {
+	public void setMetaTitle(String metaTitle)
+	{
 		this.metaTitle = metaTitle;
 	}
 
-	public String getMetaArtist() {
+	public String getMetaArtist()
+	{
 		return metaArtist;
 	}
 
-	public void setMetaArtist(String metaArtist) {
+	public void setMetaArtist(String metaArtist)
+	{
 		this.metaArtist = metaArtist;
 	}
 
-	public int getLength() {
+	public int getLength()
+	{
 		return length;
 	}
 
-	public void setLength(int length) {
+	public void setLength(int length)
+	{
 		this.length = length;
 	}
 }

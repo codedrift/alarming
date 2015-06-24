@@ -25,8 +25,10 @@ import android.media.MediaMetadataRetriever;
 import android.util.Log;
 
 import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.pref.PrefUtil;
 
-public class MediaUtil {
+public class MediaUtil
+{
 
 	public static final String DEBUG_TAG = "MediaUtil";
 
@@ -42,7 +44,8 @@ public class MediaUtil {
 	 * @param filePath path to the file
 	 * @return String array with metadata.
 	 */
-	public static String[] getBasicMetaData(String filePath) {
+	public static String[] getBasicMetaData(String filePath)
+	{
 		Log.d(DEBUG_TAG, "Reading audio metadata for " + filePath);
 		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 		mmr.setDataSource(filePath);
@@ -53,10 +56,12 @@ public class MediaUtil {
 				mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
 		metaData[2] =
 				mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-		if (metaData[0] == null) {
+		if (metaData[0] == null)
+		{
 			metaData[0] = "-";
 		}
-		if (metaData[1] == null) {
+		if (metaData[1] == null)
+		{
 			String[] pathSep = filePath.split("/");
 			metaData[1] = pathSep[pathSep.length - 1];
 		}
@@ -69,7 +74,8 @@ public class MediaUtil {
 	 *
 	 * @param context Application context.
 	 */
-	public static void setAlarmVolumeFromPreference(Context context) {
+	public static void setAlarmVolumeFromPreference(Context context)
+	{
 		int percent = PrefUtil.getInt(context, PrefKey.ALARM_SOUND_VOLUME, 80);
 		int maxVolume = getAudioStreamMaxVolume(context);
 		int volume = Math.round(((float) percent / 100) * maxVolume);
@@ -83,7 +89,8 @@ public class MediaUtil {
 	 *
 	 * @param context Application context.
 	 */
-	public static void resetSystemMediaVolume(Context context) {
+	public static void resetSystemMediaVolume(Context context)
+	{
 		int originalVolume = PrefUtil.getInt(context, PrefKey.AUDIO_ORIGINAL_VOLUME, 0);
 		Log.d(DEBUG_TAG, "Resetting system STREAM_ALARM volume to " + originalVolume);
 		setStreamMusicVolume(context, originalVolume);
@@ -93,7 +100,8 @@ public class MediaUtil {
 	 * @param context Application context.
 	 * @return AudioManger system service.
 	 */
-	public static AudioManager getAudioManager(Context context) {
+	public static AudioManager getAudioManager(Context context)
+	{
 		return (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 	}
 
@@ -103,7 +111,8 @@ public class MediaUtil {
 	 *
 	 * @param context Application context.
 	 */
-	public static void saveSystemMediaVolume(Context context) {
+	public static void saveSystemMediaVolume(Context context)
+	{
 		int currentVolume = getAudioManager(context).getStreamVolume(AudioManager.STREAM_ALARM);
 		Log.d(DEBUG_TAG, "Saving system STREAM_ALARM volume. Found " + currentVolume);
 		PrefUtil.putInt(context, PrefKey.AUDIO_ORIGINAL_VOLUME, currentVolume);
@@ -115,7 +124,8 @@ public class MediaUtil {
 	 * @param context Application context.
 	 * @param volume  Value to set the volume to.
 	 */
-	public static void setStreamMusicVolume(Context context, int volume) {
+	public static void setStreamMusicVolume(Context context, int volume)
+	{
 		getAudioManager(context).setStreamVolume(
 				AudioManager.STREAM_ALARM,
 				volume,
@@ -126,7 +136,8 @@ public class MediaUtil {
 	 * @param context Application context.
 	 * @return Maximum value for STREAM_ALARM volume.
 	 */
-	public static int getAudioStreamMaxVolume(Context context) {
+	public static int getAudioStreamMaxVolume(Context context)
+	{
 		return getAudioManager(context).getStreamMaxVolume(AudioManager.STREAM_ALARM);
 	}
 

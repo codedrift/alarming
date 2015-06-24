@@ -28,6 +28,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import at.markushi.ui.CircleButton;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.pref.AlarmGson;
@@ -35,7 +36,8 @@ import de.petermoesenthin.alarming.util.StringUtil;
 
 import java.util.List;
 
-public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecyclerAdapter.AlarmCardViewHolder>{
+public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecyclerAdapter.AlarmCardViewHolder>
+{
 
 	public static final String DEBUG_TAG = AlarmCardRecyclerAdapter.class.getSimpleName();
 
@@ -43,16 +45,19 @@ public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecy
 	private Context mContext;
 	private AdapterCallBacks mAdapterCallBacks;
 
-	public AlarmCardRecyclerAdapter(List<AlarmGson> mAlarms) {
+	public AlarmCardRecyclerAdapter(List<AlarmGson> mAlarms)
+	{
 		this.mAlarms = mAlarms;
 	}
 
-	public AlarmCardRecyclerAdapter(List<AlarmGson> mAlarms, AdapterCallBacks adapterCallBacks) {
+	public AlarmCardRecyclerAdapter(List<AlarmGson> mAlarms, AdapterCallBacks adapterCallBacks)
+	{
 		this.mAdapterCallBacks = adapterCallBacks;
 		this.mAlarms = mAlarms;
 	}
 
-	public interface AdapterCallBacks {
+	public interface AdapterCallBacks
+	{
 
 		void onAlarmTimeClick(AlarmCardViewHolder viewHolder, int position);
 
@@ -70,7 +75,8 @@ public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecy
 	}
 
 	@Override
-	public AlarmCardViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+	public AlarmCardViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+	{
 		mContext = viewGroup.getContext();
 		View itemView = LayoutInflater.
 				from(mContext).
@@ -80,7 +86,8 @@ public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecy
 	}
 
 	@Override
-	public void onBindViewHolder(AlarmCardViewHolder viewHolder, int i) {
+	public void onBindViewHolder(AlarmCardViewHolder viewHolder, int i)
+	{
 		AlarmGson alarm = mAlarms.get(i);
 		setAlarmTimeView(viewHolder, alarm.getHour(), alarm.getMinute());
 
@@ -90,111 +97,139 @@ public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecy
 
 		viewHolder.repeatAlarm.setChecked(alarm.doesRepeat());
 
-		showWeekdayPanel(viewHolder,alarm.doesRepeat());
+		showWeekdayPanel(viewHolder, alarm.doesRepeat());
 
-		if (!alarm.getMessage().isEmpty()) {
+		if (!alarm.getMessage().isEmpty())
+		{
 			viewHolder.alarmText.setText(alarm.getMessage());
 		}
 
 		View colorChooser = viewHolder.chooseColor.findViewById(R.id.view_color_indicator);
 		int color = alarm.getColor();
-		if (color == -1) {
+		if (color == -1)
+		{
 			color = mContext.getResources().getColor(R.color.material_yellow);
 		}
 		colorChooser.setBackgroundColor(color);
 
-		if(mAdapterCallBacks != null){
+		if (mAdapterCallBacks != null)
+		{
 			setOnClickListeners(i, viewHolder);
 		}
 	}
 
 	@Override
-	public int getItemCount() {
+	public int getItemCount()
+	{
 		return mAlarms.size();
 	}
 
-	private void setAlarmTimeView(AlarmCardViewHolder viewHolder, int hour, int minute) {
+	private void setAlarmTimeView(AlarmCardViewHolder viewHolder, int hour, int minute)
+	{
 		String alarmFormatted = StringUtil.getTimeFormattedSystem(mContext, hour,
 				minute);
 		String[] timeSplit = alarmFormatted.split(" ");
 		viewHolder.am_pm.setVisibility(View.INVISIBLE);
 		viewHolder.alarmTime.setText(timeSplit[0]);
-		if (timeSplit.length > 1) {
+		if (timeSplit.length > 1)
+		{
 			viewHolder.am_pm.setText(timeSplit[1]);
 			viewHolder.am_pm.setVisibility(View.VISIBLE);
 		}
 	}
 
-	public void setCircleButtonActive(AlarmCardViewHolder viewHolder, boolean isActive) {
-		if (isActive) {
+	public void setCircleButtonActive(AlarmCardViewHolder viewHolder, boolean isActive)
+	{
+		if (isActive)
+		{
 			viewHolder.alarmSet.setColor(mContext.getResources().getColor(R.color.material_yellow));
 			viewHolder.alarmSet.setImageResource(R.drawable.ic_bell_ring);
-		} else {
+		} else
+		{
 			viewHolder.alarmSet.setColor(mContext.getResources().getColor(R.color.veryLightGray));
 			viewHolder.alarmSet.setImageResource(R.drawable.ic_bell_outline);
 		}
 	}
 
-	public void showWeekdayPanel(AlarmCardViewHolder viewHolder, boolean show){
-		if(show){
+	public void showWeekdayPanel(AlarmCardViewHolder viewHolder, boolean show)
+	{
+		if (show)
+		{
 			viewHolder.weekdayPanel.setVisibility(View.VISIBLE);
-		}else {
+		} else
+		{
 			viewHolder.weekdayPanel.setVisibility(View.GONE);
 		}
 	}
 
-	private void setOnClickListeners(final int position, final AlarmCardViewHolder viewHolder) {
-		viewHolder.alarmTime.setOnClickListener(new View.OnClickListener() {
+	private void setOnClickListeners(final int position, final AlarmCardViewHolder viewHolder)
+	{
+		viewHolder.alarmTime.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mAdapterCallBacks.onAlarmTimeClick(viewHolder, position);
 			}
 		});
 
-		viewHolder.alarmSet.setOnClickListener(new View.OnClickListener() {
+		viewHolder.alarmSet.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mAdapterCallBacks.onAlarmSetClick(viewHolder, position);
 			}
 		});
 
-		viewHolder.vibrate.setOnClickListener(new View.OnClickListener() {
+		viewHolder.vibrate.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mAdapterCallBacks.onVibrateClick(viewHolder, position);
 			}
 		});
 
-		viewHolder.repeatAlarm.setOnClickListener(new View.OnClickListener() {
+		viewHolder.repeatAlarm.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mAdapterCallBacks.onRepeatAlarmClick(viewHolder, position);
 			}
 		});
 
-		viewHolder.alarmText.setOnClickListener(new View.OnClickListener() {
+		viewHolder.alarmText.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mAdapterCallBacks.onAlarmTextClick(viewHolder, position);
 			}
 		});
 
-		viewHolder.chooseColor.setOnClickListener(new View.OnClickListener() {
+		viewHolder.chooseColor.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mAdapterCallBacks.onChooseColorClick(viewHolder, position);
 			}
 		});
-		viewHolder.deletAlarm.setOnClickListener(new View.OnClickListener() {
+		viewHolder.deletAlarm.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mAdapterCallBacks.onDeleteAlarmClick(viewHolder, position);
 			}
 		});
 	}
 
 
-	public static class AlarmCardViewHolder extends RecyclerView.ViewHolder {
+	public static class AlarmCardViewHolder extends RecyclerView.ViewHolder
+	{
 
 		public TextView alarmTime;
 		public TextView am_pm;
@@ -207,10 +242,12 @@ public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecy
 		public LinearLayout weekdayPanel;
 
 
-		public AlarmCardViewHolder(View itemView) {
+		public AlarmCardViewHolder(View itemView)
+		{
 			super(itemView);
 
-			if (itemView != null) {
+			if (itemView != null)
+			{
 				alarmTime = (TextView) itemView.findViewById(R.id.textView_alarmTime);
 				am_pm = (TextView) itemView.findViewById(R.id.textView_am_pm);
 				alarmSet = (CircleButton) itemView.findViewById(R.id.button_alarm_set);
@@ -223,5 +260,5 @@ public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecy
 			}
 		}
 	}
-	
+
 }

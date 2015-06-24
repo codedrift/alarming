@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.petermoesenthin.alarming.util;
+package de.petermoesenthin.alarming.pref;
 
 import android.app.Activity;
 import android.content.Context;
@@ -30,10 +30,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.petermoesenthin.alarming.pref.AlarmGson;
-import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.util.FileUtil;
 
-public class PrefUtil {
+public class PrefUtil
+{
 
 	public static final String DEBUG_TAG = "PrefUtil";
 
@@ -41,7 +41,8 @@ public class PrefUtil {
 	//                                      WRITE
 	//----------------------------------------------------------------------------------------------
 
-	public static void putString(Context context, String key, String value) {
+	public static void putString(Context context, String key, String value)
+	{
 		getApplicationPrefs(context)
 				.edit().putString(
 				key,
@@ -49,7 +50,8 @@ public class PrefUtil {
 		).commit();
 	}
 
-	public static void putLong(Context context, String key, long value) {
+	public static void putLong(Context context, String key, long value)
+	{
 		getApplicationPrefs(context)
 				.edit().putLong(
 				key,
@@ -57,7 +59,8 @@ public class PrefUtil {
 		).commit();
 	}
 
-	public static void putBoolean(Context context, String key, boolean value) {
+	public static void putBoolean(Context context, String key, boolean value)
+	{
 		getApplicationPrefs(context)
 				.edit().putBoolean(
 				key,
@@ -65,7 +68,8 @@ public class PrefUtil {
 		).commit();
 	}
 
-	public static void putInt(Context context, String key, int value) {
+	public static void putInt(Context context, String key, int value)
+	{
 		getApplicationPrefs(context)
 				.edit().putInt(
 				key,
@@ -73,7 +77,8 @@ public class PrefUtil {
 		).commit();
 	}
 
-	public static void putFloat(Context context, String key, float value) {
+	public static void putFloat(Context context, String key, float value)
+	{
 		getApplicationPrefs(context)
 				.edit().putFloat(
 				key,
@@ -85,23 +90,28 @@ public class PrefUtil {
 	//                                      READ
 	//----------------------------------------------------------------------------------------------
 
-	public static String getString(Context context, String key, String defaultValue) {
+	public static String getString(Context context, String key, String defaultValue)
+	{
 		return getApplicationPrefs(context).getString(key, defaultValue);
 	}
 
-	public static long getLong(Context context, String key, long defaultValue) {
+	public static long getLong(Context context, String key, long defaultValue)
+	{
 		return getApplicationPrefs(context).getLong(key, defaultValue);
 	}
 
-	public static boolean getBoolean(Context context, String key, boolean defaultValue) {
+	public static boolean getBoolean(Context context, String key, boolean defaultValue)
+	{
 		return getApplicationPrefs(context).getBoolean(key, defaultValue);
 	}
 
-	public static int getInt(Context context, String key, int defaultValue) {
+	public static int getInt(Context context, String key, int defaultValue)
+	{
 		return getApplicationPrefs(context).getInt(key, defaultValue);
 	}
 
-	public static float getFloat(Context context, String key, float defaultValue) {
+	public static float getFloat(Context context, String key, float defaultValue)
+	{
 		return getApplicationPrefs(context).getFloat(key, defaultValue);
 	}
 
@@ -115,19 +125,24 @@ public class PrefUtil {
 	 * @param context
 	 * @return
 	 */
-	public static SharedPreferences getApplicationPrefs(Context context) {
+	public static SharedPreferences getApplicationPrefs(Context context)
+	{
 		return context.getSharedPreferences(PrefKey.PREF_FILE_NAME, Activity.MODE_PRIVATE);
 	}
 
-	public static void updateAlarmSoundUris(Context context) {
+	public static void updateAlarmSoundUris(Context context)
+	{
 		File[] files = FileUtil.getAlarmDirectoryAudioFileList(context);
 		String[] fileUris;
-		if (files == null || files.length == 0) {
+		if (files == null || files.length == 0)
+		{
 			Log.d(DEBUG_TAG, "No audio files found");
 			fileUris = new String[0];
-		} else {
+		} else
+		{
 			fileUris = new String[files.length];
-			for (int i = 0; i < files.length; i++) {
+			for (int i = 0; i < files.length; i++)
+			{
 				Log.d(DEBUG_TAG, "Found file " + i + ":" + files[i].getAbsolutePath());
 				fileUris[i] = files[i].getPath();
 			}
@@ -137,7 +152,8 @@ public class PrefUtil {
 		putString(context, PrefKey.ALARM_SOUND_URIS_GSON, urisJson);
 	}
 
-	public static String[] getAlarmSoundUris(Context context) {
+	public static String[] getAlarmSoundUris(Context context)
+	{
 		String[] files;
 		Gson gson = new Gson();
 		files = gson.fromJson(
@@ -146,44 +162,49 @@ public class PrefUtil {
 		return files;
 	}
 
-	public static void setAlarmGson(Context context, AlarmGson alg) {
-		Gson gson = new Gson();
-		String js = gson.toJson(alg);
-		PrefUtil.putString(context, PrefKey.ALARM_GSON, js);
+	/**
+	 * Get alarm Gson with incremented id
+	 *
+	 * @param context
+	 * @return
+	 */
+	public static AlarmGson getNewAlarmGson(Context context)
+	{
+		AlarmGson alarm = new AlarmGson();
+		int alarmID = PrefUtil.getInt(context, PrefKey.ALARM_ID_COUNTER, 0);
+		alarm.setId(alarmID);
+		PrefUtil.putInt(context, PrefKey.ALARM_ID_COUNTER, alarmID + 1);
+		return alarm;
 	}
 
-	public static AlarmGson getAlarmGson(Context context) {
-		Gson gson = new Gson();
-		AlarmGson alg;
-		String js = getString(context, PrefKey.ALARM_GSON, null);
-		alg = gson.fromJson(js, AlarmGson.class);
-		if (alg == null) {
-			alg = new AlarmGson();
-		}
-		return alg;
-	}
-
-	public static List<AlarmGson> getAlarms(Context context) {
+	public static List<AlarmGson> getAlarms(Context context)
+	{
 		Gson gson = new Gson();
 		String js = getString(context, PrefKey.ALARMS, null);
-		List<AlarmGson> alarms = gson.fromJson(js, new TypeToken<ArrayList<AlarmGson>>() {
+		List<AlarmGson> alarms = gson.fromJson(js, new TypeToken<ArrayList<AlarmGson>>()
+		{
 		}.getType
 				());
-		if (alarms == null) {
+		if (alarms == null)
+		{
 			alarms = new ArrayList<AlarmGson>();
 		}
 		return alarms;
 	}
 
-	public static void setAlarms(Context context, List<AlarmGson> alarms) {
+	public static void setAlarms(Context context, List<AlarmGson> alarms)
+	{
 		Gson gson = new Gson();
 		String js = gson.toJson(alarms);
 		PrefUtil.putString(context, PrefKey.ALARMS, js);
 	}
 
-	public static AlarmGson findAlarmWithID(List<AlarmGson> alarms, int id) {
-		for (AlarmGson alg : alarms) {
-			if (alg.getId() == id) {
+	public static AlarmGson findAlarmWithID(List<AlarmGson> alarms, int id)
+	{
+		for (AlarmGson alg : alarms)
+		{
+			if (alg.getId() == id)
+			{
 				return alg;
 			}
 		}

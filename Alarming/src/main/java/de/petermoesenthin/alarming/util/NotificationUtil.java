@@ -30,8 +30,10 @@ import android.util.Log;
 import de.petermoesenthin.alarming.MainActivity;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.pref.PrefUtil;
 
-public class NotificationUtil {
+public class NotificationUtil
+{
 
 	public static final String ACTION_DISMISS_SNOOZE =
 			"de.petermoesenthin.alarming.ACTION_DISMISS_SNOOZE";
@@ -45,11 +47,13 @@ public class NotificationUtil {
 	/**
 	 * Shows a persistent notification indicating the alarm time if is set.
 	 */
-	public static void showAlarmSetNotification(Context context, int hour, int minute, int id) {
+	public static void showAlarmSetNotification(Context context, int hour, int minute, int id)
+	{
 		//Early out if a notification is not wanted
 		boolean showNotification = PrefUtil.getBoolean(context,
 				PrefKey.SHOW_ALARM_NOTIFICATION, true);
-		if (!showNotification) {
+		if (!showNotification)
+		{
 			Log.d(DEBUG_TAG, "Notifications disabled. Returning.");
 			return;
 		}
@@ -74,7 +78,8 @@ public class NotificationUtil {
 		getNotificationManager(context).notify(id, notBuilder.build());
 	}
 
-	public static void showSnoozeNotification(Context context, int hour, int minute, int id) {
+	public static void showSnoozeNotification(Context context, int hour, int minute, int id)
+	{
 		Intent intent = new Intent();
 		intent.setAction(ACTION_DISMISS_SNOOZE);
 		intent.putExtra("id", id);
@@ -96,15 +101,18 @@ public class NotificationUtil {
 		getNotificationManager(context).notify(id, notBuilder.build());
 	}
 
-	public static void clearAlarmNotifcation(Context context, int id) {
+	public static void clearAlarmNotifcation(Context context, int id)
+	{
 		getNotificationManager(context).cancel(id);
 	}
 
-	public static void clearSnoozeNotification(Context context, int id) {
+	public static void clearSnoozeNotification(Context context, int id)
+	{
 		getNotificationManager(context).cancel(id);
 	}
 
-	public static NotificationManager getNotificationManager(Context context) {
+	public static NotificationManager getNotificationManager(Context context)
+	{
 		return (NotificationManager) context.getSystemService(
 				Activity.NOTIFICATION_SERVICE);
 	}

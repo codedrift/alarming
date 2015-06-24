@@ -26,7 +26,8 @@ import android.widget.TextView;
 
 import de.petermoesenthin.alarming.R;
 
-public class LDialogView {
+public class LDialogView
+{
 
 	private int mDialogTitleResource;
 	private Context mContext;
@@ -34,13 +35,15 @@ public class LDialogView {
 	private TextView mNegativeButton;
 	private View mLayout;
 
-	public LDialogView(Context context, int contentView, int dialogTitleResource) {
+	public LDialogView(Context context, int contentView, int dialogTitleResource)
+	{
 		mContext = context;
 		mDialogTitleResource = dialogTitleResource;
 		init(contentView);
 	}
 
-	private void init(int contentView) {
+	private void init(int contentView)
+	{
 		LayoutInflater inflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mLayout = inflater.inflate(R.layout.l_dialog_view, null);
@@ -56,15 +59,18 @@ public class LDialogView {
 		stub.inflate();
 	}
 
-	public View getView() {
+	public View getView()
+	{
 		return mLayout;
 	}
 
-	public void setPositiveButtonOnClickListener(View.OnClickListener onClickListener) {
+	public void setPositiveButtonOnClickListener(View.OnClickListener onClickListener)
+	{
 		mPositiveButton.setOnClickListener(onClickListener);
 	}
 
-	public void setNegativeButtonOnClickListener(View.OnClickListener onClickListener) {
+	public void setNegativeButtonOnClickListener(View.OnClickListener onClickListener)
+	{
 		mNegativeButton.setOnClickListener(onClickListener);
 	}
 

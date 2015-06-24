@@ -48,13 +48,14 @@ import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
-import de.petermoesenthin.alarming.util.PrefUtil;
+import de.petermoesenthin.alarming.pref.PrefUtil;
 
 public class AlarmService extends Service
 		implements
 		MediaPlayer.OnPreparedListener,
 		MediaPlayer.OnSeekCompleteListener,
-		GlowPadView.OnTriggerListener {
+		GlowPadView.OnTriggerListener
+{
 
 	public static final String DEBUG_TAG = "AlarmService";
 	private Context mContext;
@@ -78,14 +79,16 @@ public class AlarmService extends Service
 	private List<AlarmGson> mAlarms;
 
 	@Override
-	public IBinder onBind(Intent intent) {
+	public IBinder onBind(Intent intent)
+	{
 		Log.d(DEBUG_TAG, "onBind called");
 		return null;
 	}
 
 
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+	public int onStartCommand(Intent intent, int flags, int startId)
+	{
 		Log.i(DEBUG_TAG, "onStartCommand called");
 		mAlarmId = intent.getIntExtra("id", -1);
 		mContext = this;
@@ -97,15 +100,18 @@ public class AlarmService extends Service
 	}
 
 
-	private void showLockScreenView() {
+	private void showLockScreenView()
+	{
 		Log.i(DEBUG_TAG, "Showing LockScreen view");
 		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
 		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		mView = inflater.inflate(R.layout.alarm_alert, null);
-		mView.setOnClickListener(new View.OnClickListener() {
+		mView.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				hideLockScreenView();
 				unregisterSystemActionReceiver();
 				stopSelf();
@@ -136,65 +142,79 @@ public class AlarmService extends Service
 		mWindowManager.addView(mView, mLayoutParams);
 	}
 
-	private void hideLockScreenView() {
+	private void hideLockScreenView()
+	{
 		Log.i(DEBUG_TAG, "Hiding LockScreen view");
-		if (mView != null && mWindowManager != null) {
+		if (mView != null && mWindowManager != null)
+		{
 			mWindowManager.removeView(mView);
 			mView = null;
 		}
 	}
 
 
-	private void registerSystemActionReceiver() {
+	private void registerSystemActionReceiver()
+	{
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_SCREEN_ON);
 		registerReceiver(systemActionReceiver, filter);
 	}
 
 	@Override
-	public void onDestroy() {
+	public void onDestroy()
+	{
 		Log.d(DEBUG_TAG, "onDestroy called");
 		unregisterSystemActionReceiver();
 		super.onDestroy();
 	}
 
-	private void unregisterSystemActionReceiver() {
+	private void unregisterSystemActionReceiver()
+	{
 		hideLockScreenView();
 		unregisterReceiver(systemActionReceiver);
 	}
 
-	private BroadcastReceiver systemActionReceiver = new BroadcastReceiver() {
+	private BroadcastReceiver systemActionReceiver = new BroadcastReceiver()
+	{
 		@Override
-		public void onReceive(Context context, Intent intent) {
+		public void onReceive(Context context, Intent intent)
+		{
 			String action = intent.getAction();
-			if (action.equals(Intent.ACTION_SCREEN_ON)) {
+			if (action.equals(Intent.ACTION_SCREEN_ON))
+			{
 				Log.d(DEBUG_TAG, "Received ACTION_SCREEN_ON");
 				showLockScreenView();
-			} else if (action.equals(Intent.ACTION_USER_PRESENT)) {
+			} else if (action.equals(Intent.ACTION_USER_PRESENT))
+			{
 				Log.d(DEBUG_TAG, "Received ACTION_USER_PRESENT");
 				hideLockScreenView();
-			} else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+			} else if (action.equals(Intent.ACTION_SCREEN_OFF))
+			{
 				Log.d(DEBUG_TAG, "Received ACTION_SCREEN_OFF");
 				hideLockScreenView();
 			}
 		}
 	};
 
-	private void startVibration() {
+	private void startVibration()
+	{
 		Log.d(DEBUG_TAG, "Starting vibration");
 		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		// Start without a delay
 		// Vibrate for 500 milliseconds
 		// Sleep for 500 milliseconds
 		long[] pattern = {0, 500, 500};
-		if (mVibrator.hasVibrator()) {
+		if (mVibrator.hasVibrator())
+		{
 			mVibrator.vibrate(pattern, 0);
 		}
 	}
 
-	private void stopVibration() {
+	private void stopVibration()
+	{
 		Log.d(DEBUG_TAG, "Stopping vibration");
-		if (mVibrator != null) {
+		if (mVibrator != null)
+		{
 			mVibrator.cancel();
 		}
 	}
@@ -206,29 +226,34 @@ public class AlarmService extends Service
 	/**
 	 * Prepares alarm sound playback
 	 */
-	private void playAlarmSound() {
+	private void playAlarmSound()
+	{
 		Log.d(DEBUG_TAG, "Playing alarm sound");
 		MediaUtil.saveSystemMediaVolume(this);
 		MediaUtil.setAlarmVolumeFromPreference(this);
 		String[] uris = PrefUtil.getAlarmSoundUris(this);
 		boolean fileOK = false;
-		if (uris != null && uris.length > 0) {
+		if (uris != null && uris.length > 0)
+		{
 			Random r = new Random();
 			int rand = r.nextInt(uris.length);
-				Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #" + rand + ".");
+			Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #" + rand + ".");
 			mDataSource = uris[rand];
 			fileOK = FileUtil.fileIsOK(this, mDataSource);
 			AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(mDataSource);
-			if (alsg != null) {
+			if (alsg != null)
+			{
 				mStartMillis = alsg.getStartMillis();
 				mEndMillis = alsg.getEndMillis();
 				//TODO loopAudio = alsg.isLooping();
-			} else {
+			} else
+			{
 				mStartMillis = 0;
 				mEndMillis = 0;
 			}
 		}
-		if (!fileOK) {
+		if (!fileOK)
+		{
 			Log.d(DEBUG_TAG, "No uri available, playing default alarm sound.");
 			// Play default alarm sound
 			mDataSource = Settings.System.DEFAULT_ALARM_ALERT_URI.getPath();
@@ -236,14 +261,17 @@ public class AlarmService extends Service
 		startMediaPlayer();
 	}
 
-	private void startMediaPlayer() {
+	private void startMediaPlayer()
+	{
 		Log.d(DEBUG_TAG, "Starting media player.");
 		mMediaPlayer = new MediaPlayer();
 		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
 		//mMediaPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
-		try {
+		try
+		{
 			mMediaPlayer.setDataSource(mDataSource);
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			Log.d(DEBUG_TAG, "Unable to set data source");
 		}
 		mMediaPlayer.setOnPreparedListener(this);
@@ -251,35 +279,47 @@ public class AlarmService extends Service
 		mMediaPlayer.prepareAsync();
 	}
 
-	private void createPlayerPositionUpdateThread() {
-		mPlayerPositionUpdateThread = new Thread(new Runnable() {
+	private void createPlayerPositionUpdateThread()
+	{
+		mPlayerPositionUpdateThread = new Thread(new Runnable()
+		{
 			@Override
-			public void run() {
+			public void run()
+			{
 				Log.d(DEBUG_TAG, "Starting player position thread.");
 				int currentPlayerMillis = 0;
-				if (mEndMillis == 0) {
-					mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+				if (mEndMillis == 0)
+				{
+					mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+					{
 						@Override
-						public void onCompletion(MediaPlayer mp) {
+						public void onCompletion(MediaPlayer mp)
+						{
 							loopAudio();
 						}
 					});
 					return;
 				}
-				while (mAudioPlaying) {
-					try {
+				while (mAudioPlaying)
+				{
+					try
+					{
 						currentPlayerMillis = mMediaPlayer.getCurrentPosition();
-					} catch (Exception e) {
-						Log.d(DEBUG_TAG, "Unable to update player position." +" Exiting thread");
+					} catch (Exception e)
+					{
+						Log.d(DEBUG_TAG, "Unable to update player position." + " Exiting thread");
 						return;
 					}
-					if (currentPlayerMillis > mEndMillis) {
+					if (currentPlayerMillis > mEndMillis)
+					{
 						loopAudio();
 						return;
 					}
-					try {
+					try
+					{
 						Thread.sleep(50);
-					} catch (InterruptedException e) {
+					} catch (InterruptedException e)
+					{
 						Log.e(DEBUG_TAG,
 								"Update thread for current position has been interrupted.");
 					}
@@ -288,8 +328,10 @@ public class AlarmService extends Service
 		});
 	}
 
-	private void loopAudio() {
-		if (mPlayerPositionUpdateThread != null) {
+	private void loopAudio()
+	{
+		if (mPlayerPositionUpdateThread != null)
+		{
 			mPlayerPositionUpdateThread.interrupt();
 			mPlayerPositionUpdateThread = null;
 		}
@@ -298,12 +340,14 @@ public class AlarmService extends Service
 	}
 
 	@Override
-	public void onPrepared(MediaPlayer mediaPlayer) {
+	public void onPrepared(MediaPlayer mediaPlayer)
+	{
 		mMediaPlayer.seekTo(mStartMillis);
 	}
 
 	@Override
-	public void onSeekComplete(MediaPlayer mediaPlayer) {
+	public void onSeekComplete(MediaPlayer mediaPlayer)
+	{
 		mMediaPlayer.start();
 		mAudioPlaying = true;
 		createPlayerPositionUpdateThread();
@@ -316,28 +360,33 @@ public class AlarmService extends Service
 
 
 	@Override
-	public void onGrabbed(View v, int handle) {
+	public void onGrabbed(View v, int handle)
+	{
 		Log.d(DEBUG_TAG, "onGrabbed");
 	}
 
 	@Override
-	public void onReleased(View v, int handle) {
+	public void onReleased(View v, int handle)
+	{
 		Log.d(DEBUG_TAG, "onReleased");
 		mGlowPadView.ping();
 	}
 
 	@Override
-	public void onTrigger(View v, int target) {
+	public void onTrigger(View v, int target)
+	{
 		Log.d(DEBUG_TAG, "onTrigger");
 	}
 
 	@Override
-	public void onGrabbedStateChange(View v, int handle) {
+	public void onGrabbedStateChange(View v, int handle)
+	{
 		Log.d(DEBUG_TAG, "onGrabbedStateChange");
 	}
 
 	@Override
-	public void onFinishFinalAnimation() {
+	public void onFinishFinalAnimation()
+	{
 		Log.d(DEBUG_TAG, "onFinishFinalAnimation");
 	}
 }

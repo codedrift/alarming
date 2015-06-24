@@ -21,7 +21,8 @@ package de.petermoesenthin.alarming.util;
 
 import android.util.Log;
 
-public class NumberUtil {
+public class NumberUtil
+{
 
 	public static final String DEBUG_TAG = "NumberUtil";
 
@@ -31,15 +32,19 @@ public class NumberUtil {
 	 * @param number
 	 * @return
 	 */
-	public static int parseLongToCappedInt(long number) {
+	public static int parseLongToCappedInt(long number)
+	{
 		Log.d(DEBUG_TAG, "Parsing Long to int");
 		int maxInt = Integer.MAX_VALUE;
 		int minInt = Integer.MIN_VALUE;
-		if (number >= maxInt) {
+		if (number >= maxInt)
+		{
 			return maxInt;
-		} else if (number <= minInt) {
+		} else if (number <= minInt)
+		{
 			return minInt;
-		} else {
+		} else
+		{
 			return (int) number;
 		}
 	}

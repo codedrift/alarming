@@ -27,16 +27,20 @@ import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.NotificationUtil;
 
 
-public class SnoozeDismissReceiver extends BroadcastReceiver {
+public class SnoozeDismissReceiver extends BroadcastReceiver
+{
 
 	public static final String DEBUG_TAG = "SnoozeDismissReceiver";
 
 	@Override
-	public void onReceive(Context context, Intent intent) {
-		if (intent.getAction().equals(NotificationUtil.ACTION_DISMISS_SNOOZE)) {
+	public void onReceive(Context context, Intent intent)
+	{
+		if (intent.getAction().equals(NotificationUtil.ACTION_DISMISS_SNOOZE))
+		{
 			Log.d(DEBUG_TAG, "Received intent to dismiss snooze");
 			int id = intent.getIntExtra("id", -1);
-			if (id == -1) {
+			if (id == -1)
+			{
 				Log.d(DEBUG_TAG, "Received invalid id to dismiss snooze. Returning.");
 				return;
 			}

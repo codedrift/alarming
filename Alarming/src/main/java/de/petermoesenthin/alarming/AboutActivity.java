@@ -36,13 +36,15 @@ import de.psdev.licensesdialog.LicenseResolver;
 import de.psdev.licensesdialog.LicensesDialog;
 
 
-public class AboutActivity extends ActionBarActivity {
+public class AboutActivity extends ActionBarActivity
+{
 
 	private ListView mListView;
 	public static final String DEBUG_TAG = "AboutActivity";
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
 		getSupportActionBar().setHomeButtonEnabled(true);
@@ -53,8 +55,10 @@ public class AboutActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
 			case android.R.id.home:
 				// app icon in action bar clicked; go home
 				Intent intent = new Intent(this, MainActivity.class);
@@ -67,13 +71,16 @@ public class AboutActivity extends ActionBarActivity {
 	}
 
 
-	private void showInfoDialog(String title, int textRes) {
+	private void showInfoDialog(String title, int textRes)
+	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(title).setMessage(textRes)
 				.setCancelable(false)
 				.setPositiveButton(R.string.dialog_button_ok,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
+						new DialogInterface.OnClickListener()
+						{
+							public void onClick(DialogInterface dialog, int id)
+							{
 								dialog.dismiss();
 							}
 						}
@@ -82,7 +89,8 @@ public class AboutActivity extends ActionBarActivity {
 		alert.show();
 	}
 
-	private void showLicensesDialog() {
+	private void showLicensesDialog()
+	{
 		LicenseResolver.registerLicense(new OpenFontLicense());
 		LicensesDialog.Builder ldb = new LicensesDialog.Builder(this)
 				.setNotices(R.raw.notices);
@@ -90,15 +98,19 @@ public class AboutActivity extends ActionBarActivity {
 		ld.show();
 	}
 
-	private void setUpListView() {
+	private void setUpListView()
+	{
 		Log.d(DEBUG_TAG, "Setting up listView");
 		final String[] aboutTitles = getResources().getStringArray(R.array.about_actions);
 		mListView.setAdapter(new ArrayAdapter<String>(this, R.layout.listitem_about,
 				aboutTitles));
-		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
 			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-				switch (position) {
+			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
+			{
+				switch (position)
+				{
 					// About
 					case 0:
 						showInfoDialog(aboutTitles[0], R.string.about_this_app);

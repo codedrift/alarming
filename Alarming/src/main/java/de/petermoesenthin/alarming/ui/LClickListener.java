@@ -20,7 +20,8 @@ package de.petermoesenthin.alarming.ui;
 
 import android.app.AlertDialog;
 
-public interface LClickListener {
+public interface LClickListener
+{
 
 	void onClick(AlertDialog dialog);
 }

@@ -34,16 +34,19 @@ import java.util.List;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.ui.DrawerItem;
 
-public class DrawerItemArrayAdapter extends ArrayAdapter<DrawerItem> {
+public class DrawerItemArrayAdapter extends ArrayAdapter<DrawerItem>
+{
 
 	private Context mContext;
 
-	public DrawerItemArrayAdapter(Context context, int layoutId, List<DrawerItem> drawerItemList) {
+	public DrawerItemArrayAdapter(Context context, int layoutId, List<DrawerItem> drawerItemList)
+	{
 		super(context, layoutId, drawerItemList);
 		this.mContext = context;
 	}
 
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, ViewGroup parent)
+	{
 		ViewHolder viewHolder = null;
 		DrawerItem drawerItem = getItem(position);
 		View v = convertView;
@@ -51,17 +54,20 @@ public class DrawerItemArrayAdapter extends ArrayAdapter<DrawerItem> {
 		LayoutInflater layoutInflater = (LayoutInflater)
 				mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
-		if (v == null) {
+		if (v == null)
+		{
 			v = layoutInflater.inflate(R.layout.listitem_drawer,
 					null);
 			viewHolder = new ViewHolder();
 			viewHolder.itemImage = (ImageView) v.findViewById(R.id.drawer_listItem_ImageView);
 			viewHolder.itemText = (TextView) v.findViewById(R.id.drawer_listItem_TextView);
-			if (position == 0) {
+			if (position == 0)
+			{
 				viewHolder.itemText.setTypeface(null, Typeface.BOLD);
 			}
 			v.setTag(viewHolder);
-		} else {
+		} else
+		{
 			viewHolder = (ViewHolder) v.getTag();
 		}
 
@@ -71,7 +77,8 @@ public class DrawerItemArrayAdapter extends ArrayAdapter<DrawerItem> {
 		return v;
 	}
 
-	private class ViewHolder {
+	private class ViewHolder
+	{
 		ImageView itemImage;
 		TextView itemText;
 	}

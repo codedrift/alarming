@@ -25,7 +25,8 @@ import android.view.View;
 
 import de.petermoesenthin.alarming.R;
 
-public class LDialog {
+public class LDialog
+{
 
 	private LDialogView mDialogView;
 	private Context mContext;
@@ -33,12 +34,14 @@ public class LDialog {
 	private LClickListener mPositiveButtonListener;
 	private LClickListener mNegativeButtonListener;
 
-	public LDialog(Context context, LDialogView dialogView) {
+	public LDialog(Context context, LDialogView dialogView)
+	{
 		mContext = context;
 		mDialogView = dialogView;
 	}
 
-	public void show() {
+	public void show()
+	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setView(mDialogView.getView());
 		builder.setCancelable(true);
@@ -47,13 +50,18 @@ public class LDialog {
 		mDialog.show();
 	}
 
-	public void setPositiveButtonListener(LClickListener listener) {
+	public void setPositiveButtonListener(LClickListener listener)
+	{
 		mPositiveButtonListener = listener;
-		if (listener != null) {
-			mDialogView.setPositiveButtonOnClickListener(new View.OnClickListener() {
+		if (listener != null)
+		{
+			mDialogView.setPositiveButtonOnClickListener(new View.OnClickListener()
+			{
 				@Override
-				public void onClick(View v) {
-					if (mPositiveButtonListener != null) {
+				public void onClick(View v)
+				{
+					if (mPositiveButtonListener != null)
+					{
 						mPositiveButtonListener.onClick(mDialog);
 					}
 				}
@@ -61,13 +69,18 @@ public class LDialog {
 		}
 	}
 
-	public void setNegativeButtonListener(LClickListener listener) {
+	public void setNegativeButtonListener(LClickListener listener)
+	{
 		mNegativeButtonListener = listener;
-		if (listener != null) {
-			mDialogView.setNegativeButtonOnClickListener(new View.OnClickListener() {
+		if (listener != null)
+		{
+			mDialogView.setNegativeButtonOnClickListener(new View.OnClickListener()
+			{
 				@Override
-				public void onClick(View v) {
-					if (mNegativeButtonListener != null) {
+				public void onClick(View v)
+				{
+					if (mNegativeButtonListener != null)
+					{
 						mNegativeButtonListener.onClick(mDialog);
 					}
 				}

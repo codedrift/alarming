@@ -31,11 +31,13 @@ import java.util.List;
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.ui.AlarmSoundListItem;
 
-public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
+public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem>
+{
 
 	private Context mContext;
 
-	public AlarmSoundListAdapter(Context context, int layoutId, List<AlarmSoundListItem> itemList) {
+	public AlarmSoundListAdapter(Context context, int layoutId, List<AlarmSoundListItem> itemList)
+	{
 		super(context, layoutId, itemList);
 		this.mContext = context;
 	}
@@ -44,12 +46,14 @@ public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
 	// Methods
 	//==========================================================================
 
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, ViewGroup parent)
+	{
 		ViewHolder viewHolder = null;
 		AlarmSoundListItem listItem = getItem(position);
 		View v = convertView;
 
-		if (v == null) {
+		if (v == null)
+		{
 			LayoutInflater layoutInflater = (LayoutInflater) mContext
 					.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 			v = layoutInflater.inflate(R.layout.listitem_alarm_sound, null);
@@ -57,7 +61,8 @@ public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
 			viewHolder.itemTitle = (TextView) v.findViewById(R.id.listItem_textView_soundTitle);
 			viewHolder.itemArtist = (TextView) v.findViewById(R.id.listItem_textView_soundArtist);
 			v.setTag(viewHolder);
-		} else {
+		} else
+		{
 			viewHolder = (ViewHolder) v.getTag();
 		}
 
@@ -67,7 +72,8 @@ public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem> {
 		return v;
 	}
 
-	private class ViewHolder {
+	private class ViewHolder
+	{
 		TextView itemTitle;
 		TextView itemArtist;
 	}

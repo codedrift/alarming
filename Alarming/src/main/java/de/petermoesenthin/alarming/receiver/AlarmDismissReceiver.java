@@ -28,18 +28,22 @@ import java.util.List;
 import de.petermoesenthin.alarming.pref.AlarmGson;
 import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.NotificationUtil;
-import de.petermoesenthin.alarming.util.PrefUtil;
+import de.petermoesenthin.alarming.pref.PrefUtil;
 
-public class AlarmDismissReceiver extends BroadcastReceiver {
+public class AlarmDismissReceiver extends BroadcastReceiver
+{
 
 	public static final String DEBUG_TAG = "AlarmDismissReceiver";
 
 	@Override
-	public void onReceive(Context context, Intent intent) {
-		if (intent.getAction().equals(NotificationUtil.ACTION_DISMISS_ALARM)) {
+	public void onReceive(Context context, Intent intent)
+	{
+		if (intent.getAction().equals(NotificationUtil.ACTION_DISMISS_ALARM))
+		{
 			Log.d(DEBUG_TAG, "Received intent to dismiss alarm");
 			int id = intent.getIntExtra("id", -1);
-			if (id == -1) {
+			if (id == -1)
+			{
 				Log.d(DEBUG_TAG, "Received invalid id to dismiss alarm. Returning.");
 				return;
 			}

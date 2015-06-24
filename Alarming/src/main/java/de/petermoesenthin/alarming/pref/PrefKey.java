@@ -19,7 +19,8 @@
 
 package de.petermoesenthin.alarming.pref;
 
-public class PrefKey {
+public class PrefKey
+{
 
 	//----------------------------------------------------------------------------------------------
 	//                                      GENERAL

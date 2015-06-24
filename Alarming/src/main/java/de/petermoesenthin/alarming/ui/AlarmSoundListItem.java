@@ -18,29 +18,35 @@
  */
 package de.petermoesenthin.alarming.ui;
 
-public class AlarmSoundListItem {
+public class AlarmSoundListItem
+{
 
 	private String artist;
 	private String title;
 
-	public AlarmSoundListItem(String artist, String title) {
+	public AlarmSoundListItem(String artist, String title)
+	{
 		this.artist = artist;
 		this.title = title;
 	}
 
-	public String getArtist() {
+	public String getArtist()
+	{
 		return artist;
 	}
 
-	public void setArtist(String artist) {
+	public void setArtist(String artist)
+	{
 		this.artist = artist;
 	}
 
-	public String getTitle() {
+	public String getTitle()
+	{
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(String title)
+	{
 		this.title = title;
 	}
 }

@@ -38,10 +38,11 @@ import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.ui.LClickListener;
 import de.petermoesenthin.alarming.ui.LDialog;
 import de.petermoesenthin.alarming.ui.LDialogView;
-import de.petermoesenthin.alarming.util.PrefUtil;
+import de.petermoesenthin.alarming.pref.PrefUtil;
 
 
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends ActionBarActivity
+{
 
 	public static final String DEBUG_TAG = "SettingsActivity";
 
@@ -50,7 +51,8 @@ public class SettingsActivity extends ActionBarActivity {
 	//----------------------------------------------------------------------------------------------
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 		getSupportActionBar().setHomeButtonEnabled(true);
@@ -61,8 +63,10 @@ public class SettingsActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
 			case android.R.id.home:
 				// app icon in action bar clicked; go home
 				Intent intent = new Intent(this, MainActivity.class);
@@ -78,13 +82,16 @@ public class SettingsActivity extends ActionBarActivity {
 	//                                      UI
 	//----------------------------------------------------------------------------------------------
 
-	private void setUpUi() {
+	private void setUpUi()
+	{
 		CheckBox checkBox_showNotification = (CheckBox) findViewById(
 				R.id.checkBox_setting_notification);
 		checkBox_showNotification.setOnCheckedChangeListener(
-				new CompoundButton.OnCheckedChangeListener() {
+				new CompoundButton.OnCheckedChangeListener()
+				{
 					@Override
-					public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+					public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked)
+					{
 						Log.d(DEBUG_TAG, "Setting " + PrefKey.SHOW_ALARM_NOTIFICATION + " to " + isChecked);
 						PrefUtil.putBoolean(getApplicationContext(), PrefKey.SHOW_ALARM_NOTIFICATION, isChecked);
 					}
@@ -92,23 +99,28 @@ public class SettingsActivity extends ActionBarActivity {
 		boolean showNotification = PrefUtil.getBoolean(this, PrefKey.SHOW_ALARM_NOTIFICATION, true);
 		checkBox_showNotification.setChecked(showNotification);
 		LinearLayout linearLayout_setAlarmVolume = (LinearLayout) findViewById(R.id.linearLayout_setAlarmVolume);
-		linearLayout_setAlarmVolume.setOnClickListener(new View.OnClickListener() {
+		linearLayout_setAlarmVolume.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 				showVolumeSetDialog();
 			}
 		});
 
 		LinearLayout linearLayout_setSnoozeTime = (LinearLayout) findViewById(R.id.linearLayout_setSnoozeTime);
-		linearLayout_setSnoozeTime.setOnClickListener(new View.OnClickListener() {
+		linearLayout_setSnoozeTime.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 				showSetSnoozeTimeDialog();
 			}
 		});
 	}
 
-	private void showSetSnoozeTimeDialog() {
+	private void showSetSnoozeTimeDialog()
+	{
 		LDialogView dialogView = new LDialogView(this,
 				R.layout.dialog_content_edit_text,
 				R.string.dialog_title_set_snooze_time);
@@ -119,9 +131,11 @@ public class SettingsActivity extends ActionBarActivity {
 		editText_snoozeTime.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
 		dialog.setPositiveButtonListener(
-				new LClickListener() {
+				new LClickListener()
+				{
 					@Override
-					public void onClick(AlertDialog dialog) {
+					public void onClick(AlertDialog dialog)
+					{
 						String text = editText_snoozeTime.getText().toString();
 						int number = Integer.parseInt(text);
 						PrefUtil.putInt(getApplicationContext(), PrefKey.SNOOZE_TIME, Math.abs(number));
@@ -129,16 +143,19 @@ public class SettingsActivity extends ActionBarActivity {
 					}
 				});
 		dialog.setNegativeButtonListener(
-				new LClickListener() {
+				new LClickListener()
+				{
 					@Override
-					public void onClick(AlertDialog dialog) {
+					public void onClick(AlertDialog dialog)
+					{
 						dialog.dismiss();
 					}
 				});
 		dialog.show();
 	}
 
-	private void showVolumeSetDialog() {
+	private void showVolumeSetDialog()
+	{
 		LDialogView dialogView = new LDialogView(this,
 				R.layout.dialog_content_seekbar,
 				R.string.dialog_title_alarm_sound_volume);
@@ -147,25 +164,31 @@ public class SettingsActivity extends ActionBarActivity {
 		final SeekBar seekBar_volume = (SeekBar) dialogView.getView().findViewById(R.id.seekBar);
 		seekBar_volume.setMax(100);
 		seekBar_volume.setProgress(volume);
-		seekBar_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+		seekBar_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+		{
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+			public void onProgressChanged(SeekBar seekBar, int i, boolean b)
+			{
 			}
 
 			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
+			public void onStartTrackingTouch(SeekBar seekBar)
+			{
 				// Nothing
 			}
 
 			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
+			public void onStopTrackingTouch(SeekBar seekBar)
+			{
 				//TODO play test audio
 			}
 		});
 		dialog.setPositiveButtonListener(
-				new LClickListener() {
+				new LClickListener()
+				{
 					@Override
-					public void onClick(AlertDialog dialog) {
+					public void onClick(AlertDialog dialog)
+					{
 						int newVolume = seekBar_volume.getProgress();
 						Log.d(DEBUG_TAG, "Setting " + PrefKey.ALARM_SOUND_VOLUME + " to " + newVolume);
 						PrefUtil.putInt(getApplicationContext(), PrefKey.ALARM_SOUND_VOLUME, newVolume);
@@ -173,9 +196,11 @@ public class SettingsActivity extends ActionBarActivity {
 					}
 				});
 		dialog.setNegativeButtonListener(
-				new LClickListener() {
+				new LClickListener()
+				{
 					@Override
-					public void onClick(AlertDialog dialog) {
+					public void onClick(AlertDialog dialog)
+					{
 						dialog.dismiss();
 					}
 				});

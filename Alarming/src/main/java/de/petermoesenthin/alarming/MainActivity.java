@@ -42,10 +42,11 @@ import de.petermoesenthin.alarming.fragments.SetAlarmFragment;
 import de.petermoesenthin.alarming.fragments.SoundManagerFragment;
 import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.ui.DrawerItem;
-import de.petermoesenthin.alarming.util.PrefUtil;
+import de.petermoesenthin.alarming.pref.PrefUtil;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity
+{
 
 	// Navigation Drawer
 	private String[] mDrawerTitles;
@@ -66,7 +67,8 @@ public class MainActivity extends ActionBarActivity {
 	//                                      LIFECYCLE
 	//----------------------------------------------------------------------------------------------
 
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		setUpNavigationDrawer();
@@ -81,9 +83,11 @@ public class MainActivity extends ActionBarActivity {
 		checkFirstStart();
 	}
 
-	private void checkFirstStart() {
+	private void checkFirstStart()
+	{
 		boolean firstStart = PrefUtil.getBoolean(this, PrefKey.APP_FIRST_START, true);
-		if (firstStart) {
+		if (firstStart)
+		{
 			Log.d(DEBUG_TAG, "First start detected.");
 			PrefUtil.updateAlarmSoundUris(this);
 			PrefUtil.putBoolean(this, PrefKey.APP_FIRST_START, false);
@@ -91,15 +95,18 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
+	protected void onPostCreate(Bundle savedInstanceState)
+	{
 		super.onPostCreate(savedInstanceState);
 		// Sync the toggle state after onRestoreInstanceState has occurred.
 		mDrawerToggle.syncState();
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (mDrawerToggle.onOptionsItemSelected(item))
+		{
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -109,7 +116,8 @@ public class MainActivity extends ActionBarActivity {
 	//                                      UI
 	//----------------------------------------------------------------------------------------------
 
-	public void setTitle(CharSequence title) {
+	public void setTitle(CharSequence title)
+	{
 		this.mTitle = title;
 		getSupportActionBar().setTitle(this.mTitle);
 	}
@@ -117,19 +125,23 @@ public class MainActivity extends ActionBarActivity {
 	/**
 	 * Sets up everything needed for the navigation drawer
 	 */
-	private void setUpNavigationDrawer() {
+	private void setUpNavigationDrawer()
+	{
 		Log.d(DEBUG_TAG, "Setting up navigation drawer.");
 		mDrawerTitles = getResources().getStringArray(R.array.nav_drawer_titles);
 		mDrawerListView = (ListView) findViewById(R.id.drawer_listView);
 		mTitle = mDrawerTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.material_yellow_dark));
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
-			public void onDrawerClosed(View view) {
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close)
+		{
+			public void onDrawerClosed(View view)
+			{
 				setTitle(mTitle);
 			}
 
-			public void onDrawerOpened(View drawerView) {
+			public void onDrawerOpened(View drawerView)
+			{
 				setTitle(mDrawerTitle);
 			}
 		};
@@ -138,7 +150,8 @@ public class MainActivity extends ActionBarActivity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		List<DrawerItem> mDrawerItemList = new ArrayList<DrawerItem>();
-		for (int i = 0; i < mDrawerTitles.length; i++) {
+		for (int i = 0; i < mDrawerTitles.length; i++)
+		{
 			DrawerItem drawerItem = new DrawerItem(mDrawerImages[i], mDrawerTitles[i]);
 			mDrawerItemList.add(drawerItem);
 		}
@@ -147,30 +160,36 @@ public class MainActivity extends ActionBarActivity {
 		mDrawerListView.setOnItemClickListener(drawerItemClickListener);
 
 		RelativeLayout settingsButton = (RelativeLayout) findViewById(R.id.drawer_button_settings);
-		settingsButton.setOnClickListener(new View.OnClickListener() {
+		settingsButton.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				showSettingsActivity();
 				mDrawerLayout.closeDrawers();
 			}
 		});
 
 		RelativeLayout aboutButton = (RelativeLayout) findViewById(R.id.drawer_button_about);
-		aboutButton.setOnClickListener(new View.OnClickListener() {
+		aboutButton.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				showAboutActivity();
 				mDrawerLayout.closeDrawers();
 			}
 		});
 	}
 
-	private void showAboutActivity() {
+	private void showAboutActivity()
+	{
 		Intent i = new Intent(this, AboutActivity.class);
 		startActivity(i);
 	}
 
-	private void showSettingsActivity() {
+	private void showSettingsActivity()
+	{
 		Intent i = new Intent(this, SettingsActivity.class);
 		startActivity(i);
 	}
@@ -180,7 +199,8 @@ public class MainActivity extends ActionBarActivity {
 	 *
 	 * @param fragment
 	 */
-	public void transactNewFragment(Fragment fragment) {
+	public void transactNewFragment(Fragment fragment)
+	{
 		Log.d(DEBUG_TAG, "Transacting new fragment.");
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.content_frame, fragment)
@@ -196,17 +216,21 @@ public class MainActivity extends ActionBarActivity {
 	/**
 	 * Handles click events in the navigation drawer.
 	 */
-	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+	private class DrawerItemClickListener implements ListView.OnItemClickListener
+	{
 
 		private ListView drawerListView;
 
-		public DrawerItemClickListener() {
+		public DrawerItemClickListener()
+		{
 			drawerListView = mDrawerListView;
 		}
 
-		private void setDrawerItemTypefaceDefault() {
+		private void setDrawerItemTypefaceDefault()
+		{
 			TextView textView;
-			for (int i = 0; i < drawerListView.getChildCount(); i++) {
+			for (int i = 0; i < drawerListView.getChildCount(); i++)
+			{
 				textView = (TextView) drawerListView
 						.getChildAt(i).findViewById(R.id.drawer_listItem_TextView);
 				textView.setTypeface(null, Typeface.NORMAL);
@@ -218,10 +242,12 @@ public class MainActivity extends ActionBarActivity {
 		 *
 		 * @param position The selected position
 		 */
-		private void selectItem(int position) {
+		private void selectItem(int position)
+		{
 			// Create/Load Fragment
 			Fragment fragment = null;
-			switch (position) {
+			switch (position)
+			{
 				case 0:
 					fragment = new SetAlarmFragment();
 					break;
@@ -237,7 +263,8 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+		{
 			setDrawerItemTypefaceDefault();
 			TextView tv = (TextView) view.findViewById(
 					R.id.drawer_listItem_TextView);
