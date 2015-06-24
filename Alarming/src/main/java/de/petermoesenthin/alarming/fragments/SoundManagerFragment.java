@@ -240,7 +240,12 @@ public class SoundManagerFragment extends Fragment implements
 	{
 		Log.d(DEBUG_TAG, "Starting file intent");
 		Intent audioIntent = new Intent();
-		audioIntent.setType("file/*");
+		//select files
+		//audioIntent.setType("file/*");
+
+		//select audio files
+		audioIntent.setType("audio/*");
+
 		audioIntent.setAction(Intent.ACTION_GET_CONTENT);
 		try
 		{
