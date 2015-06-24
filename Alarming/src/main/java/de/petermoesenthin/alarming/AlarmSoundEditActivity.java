@@ -47,7 +47,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 		MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener
 {
 
-	public static final String DEBUG_TAG = "AlarmSoundEditActivity";
+	public static final String DEBUG_TAG = AlarmSoundEditActivity.class.getSimpleName();
 
 	// MediaPlayer
 	private MediaPlayer mMediaPlayer;

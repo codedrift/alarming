@@ -44,7 +44,7 @@ import de.petermoesenthin.alarming.pref.PrefUtil;
 public class SettingsActivity extends ActionBarActivity
 {
 
-	public static final String DEBUG_TAG = "SettingsActivity";
+	public static final String DEBUG_TAG = SettingsActivity.class.getSimpleName();
 
 	//----------------------------------------------------------------------------------------------
 	//                                      LIFECYCLE

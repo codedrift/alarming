@@ -77,7 +77,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	private Vibrator mVibrator;
 	private PowerManager.WakeLock mWakeLock;
 
-	public static final String DEBUG_TAG = "AlarmReceiverActivity";
+	public static final String DEBUG_TAG = AlarmReceiverActivity.class.getSimpleName();
 
 	private TextView button_snooze;
 	private TextView button_dismiss;

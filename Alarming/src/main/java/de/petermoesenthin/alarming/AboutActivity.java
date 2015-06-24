@@ -40,7 +40,7 @@ public class AboutActivity extends ActionBarActivity
 {
 
 	private ListView mListView;
-	public static final String DEBUG_TAG = "AboutActivity";
+	public static final String DEBUG_TAG = AboutActivity.class.getSimpleName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

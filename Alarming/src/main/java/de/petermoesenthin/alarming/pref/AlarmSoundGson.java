@@ -99,4 +99,18 @@ public class AlarmSoundGson
 	{
 		this.length = length;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "AlarmSoundGson{" +
+				"path='" + path + '\'' +
+				", metaTitle='" + metaTitle + '\'' +
+				", metaArtist='" + metaArtist + '\'' +
+				", startMillis=" + startMillis +
+				", endMillis=" + endMillis +
+				", length=" + length +
+				", hash=" + hash +
+				'}';
+	}
 }

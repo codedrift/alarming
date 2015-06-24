@@ -30,7 +30,7 @@ import de.petermoesenthin.alarming.util.NotificationUtil;
 public class SnoozeDismissReceiver extends BroadcastReceiver
 {
 
-	public static final String DEBUG_TAG = "SnoozeDismissReceiver";
+	public static final String DEBUG_TAG = SnoozeDismissReceiver.class.getSimpleName();
 
 	@Override
 	public void onReceive(Context context, Intent intent)

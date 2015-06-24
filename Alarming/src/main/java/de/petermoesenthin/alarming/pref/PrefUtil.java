@@ -35,7 +35,7 @@ import de.petermoesenthin.alarming.util.FileUtil;
 public class PrefUtil
 {
 
-	public static final String DEBUG_TAG = "PrefUtil";
+	public static final String DEBUG_TAG = PrefUtil.class.getSimpleName();
 
 	//----------------------------------------------------------------------------------------------
 	//                                      WRITE

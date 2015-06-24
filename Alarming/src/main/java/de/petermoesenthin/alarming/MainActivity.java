@@ -60,7 +60,7 @@ public class MainActivity extends ActionBarActivity
 			R.drawable.ic_drawer_sound};
 
 	// Debug
-	public static final String DEBUG_TAG = "MainActivity";
+	public static final String DEBUG_TAG = MainActivity.class.getSimpleName();
 
 
 	//----------------------------------------------------------------------------------------------

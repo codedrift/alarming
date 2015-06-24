@@ -45,7 +45,7 @@ import de.petermoesenthin.alarming.pref.AlarmSoundGson;
 public class FileUtil
 {
 
-	public static final String DEBUG_TAG = "FileUtil";
+	public static final String DEBUG_TAG = FileUtil.class.getSimpleName();
 
 	public static final String APP_EXT_STORAGE_FOLDER = "alarming";
 	public static final String AUDIO_METADATA_FILE_EXTENSION = "alarmingmeta";

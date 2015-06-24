@@ -30,7 +30,7 @@ import de.petermoesenthin.alarming.pref.PrefUtil;
 public class MediaUtil
 {
 
-	public static final String DEBUG_TAG = "MediaUtil";
+	public static final String DEBUG_TAG = MediaUtil.class.getSimpleName();
 
 	/**
 	 * Creates an array of basic information about an audio file obtained through the

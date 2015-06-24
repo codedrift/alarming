@@ -113,4 +113,20 @@ public class AlarmGson
 	{
 		this.id = id;
 	}
+
+
+	@Override
+	public String toString()
+	{
+		return "AlarmGson{" +
+				"hour=" + hour +
+				", minute=" + minute +
+				", alarmSet=" + alarmSet +
+				", repeatAlarm=" + repeatAlarm +
+				", vibrate=" + vibrate +
+				", message='" + message + '\'' +
+				", color=" + color +
+				", id=" + id +
+				'}';
+	}
 }

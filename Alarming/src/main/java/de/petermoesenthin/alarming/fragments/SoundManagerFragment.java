@@ -59,7 +59,7 @@ public class SoundManagerFragment extends Fragment implements
 		SharedPreferences.OnSharedPreferenceChangeListener
 {
 
-	public static final String DEBUG_TAG = "SoundManagerFragment";
+	public static final String DEBUG_TAG = SoundManagerFragment.class.getSimpleName();
 
 	private ListView mListView;
 	private AlertDialog mOptionsDialog;

@@ -21,10 +21,10 @@ package de.petermoesenthin.alarming.util;
 
 import android.util.Log;
 
-public class NumberUtil
+public class NumbersUtil
 {
 
-	public static final String DEBUG_TAG = "NumberUtil";
+	public static final String DEBUG_TAG = NumbersUtil.class.getSimpleName();
 
 	/**
 	 * Parses a long number to an integer and caps it to MIN/MAX Integer values

@@ -35,17 +35,18 @@ import de.petermoesenthin.alarming.pref.PrefUtil;
 public class NotificationUtil
 {
 
-	public static final String ACTION_DISMISS_SNOOZE =
-			"de.petermoesenthin.alarming.ACTION_DISMISS_SNOOZE";
+	public static final String ACTION_DISMISS_SNOOZE = "de.petermoesenthin.alarming.ACTION_DISMISS_SNOOZE";
 
-	public static final String ACTION_DISMISS_ALARM =
-			"de.petermoesenthin.alarming.ACTION_DISMISS_ALARM";
+	public static final String ACTION_DISMISS_ALARM = "de.petermoesenthin.alarming.ACTION_DISMISS_ALARM";
 
-
-	public static final String DEBUG_TAG = "NotificationUtil";
+	public static final String DEBUG_TAG = NotificationUtil.class.getSimpleName();
 
 	/**
 	 * Shows a persistent notification indicating the alarm time if is set.
+	 * @param context
+	 * @param hour
+	 * @param minute
+	 * @param id
 	 */
 	public static void showAlarmSetNotification(Context context, int hour, int minute, int id)
 	{

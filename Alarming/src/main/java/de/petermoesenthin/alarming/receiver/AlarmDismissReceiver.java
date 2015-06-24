@@ -33,7 +33,7 @@ import de.petermoesenthin.alarming.pref.PrefUtil;
 public class AlarmDismissReceiver extends BroadcastReceiver
 {
 
-	public static final String DEBUG_TAG = "AlarmDismissReceiver";
+	public static final String DEBUG_TAG = AlarmDismissReceiver.class.getSimpleName();
 
 	@Override
 	public void onReceive(Context context, Intent intent)

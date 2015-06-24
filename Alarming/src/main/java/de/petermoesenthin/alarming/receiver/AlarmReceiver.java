@@ -29,7 +29,7 @@ import de.petermoesenthin.alarming.service.AlarmService;
 public class AlarmReceiver extends BroadcastReceiver
 {
 
-	public static final String DEBUG_TAG = "AlarmReceiver";
+	public static final String DEBUG_TAG = AlarmReceiver.class.getSimpleName();
 
 	@Override
 	public void onReceive(Context context, Intent intent)

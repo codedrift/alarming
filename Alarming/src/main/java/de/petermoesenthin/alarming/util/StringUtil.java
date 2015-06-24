@@ -25,6 +25,11 @@ import java.util.Calendar;
 public class StringUtil
 {
 
+	/**
+	 * Get a zero padded string with two characters
+	 * @param number
+	 * @return
+	 */
 	public static String getZeroPaddedString(int number)
 	{
 		if (number >= 10)
@@ -33,6 +38,11 @@ public class StringUtil
 			return "0" + String.valueOf(number);
 	}
 
+	/**
+	 * Get a zero padded string with two characters
+	 * @param number
+	 * @return
+	 */
 	public static String getZeroPaddedString(long number)
 	{
 		if (number >= 10)
@@ -41,6 +51,12 @@ public class StringUtil
 			return "0" + String.valueOf(number);
 	}
 
+	/**
+	 * Get a time string formatted as 00:00
+	 * @param hourOfDay
+	 * @param minute
+	 * @return
+	 */
 	public static String getTimeFormatted(int hourOfDay, int minute)
 	{
 		String alarmTimeFormatted = "";
@@ -49,6 +65,13 @@ public class StringUtil
 		return alarmTimeFormatted;
 	}
 
+	/**
+	 * Get time formatted in the default system style
+	 * @param context
+	 * @param hour
+	 * @param minute
+	 * @return
+	 */
 	public static String getTimeFormattedSystem(Context context, int hour, int minute)
 	{
 		Calendar c = AlarmUtil.getNextAlarmTimeAbsolute(hour, minute);

@@ -32,10 +32,6 @@ import de.petermoesenthin.alarming.pref.PrefUtil;
 public class AlarmStateBootReceiver extends BroadcastReceiver
 {
 
-	//================================================================================
-	// Lifecycle
-	//================================================================================
-
 	@Override
 	public void onReceive(Context context, Intent intent)
 	{

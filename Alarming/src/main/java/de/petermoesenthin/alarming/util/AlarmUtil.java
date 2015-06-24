@@ -32,9 +32,14 @@ import de.petermoesenthin.alarming.receiver.AlarmReceiver;
 public class AlarmUtil
 {
 
-	public static final String DEBUG_TAG = "AlarmUtil";
+	public static final String DEBUG_TAG = AlarmUtil.class.getSimpleName();
 
-
+	/**
+	 * Create an alarm event with RTC wakeup and notification
+	 * @param context
+	 * @param calendar
+	 * @param id
+	 */
 	public static void setAlarm(Context context, Calendar calendar, int id)
 	{
 		Log.d(DEBUG_TAG, "Activating Alarming: Time=" + calendar.getTime() + ".");
@@ -50,6 +55,12 @@ public class AlarmUtil
 		}
 	}
 
+	/**
+	 * Create a snooze event with RTC wakeup and notification
+	 * @param context
+	 * @param calendar
+	 * @param id
+	 */
 	public static void setSnooze(Context context, Calendar calendar, int id)
 	{
 		Log.d(DEBUG_TAG, "Activating Snooze: Time=" + calendar.getTime() + ".");
@@ -65,6 +76,13 @@ public class AlarmUtil
 		}
 	}
 
+	/**
+	 * Sets the RTC wakeup so the device fires the intent at the right time
+	 * @param context
+	 * @param calendar
+	 * @param id
+	 * @param isSnooze
+	 */
 	private static void setRTCWakeup(Context context, Calendar calendar, int id, boolean isSnooze)
 	{
 		PendingIntent pi = PendingIntent.getBroadcast(context, id, getAlarmIntent(context, id, isSnooze),
@@ -77,6 +95,11 @@ public class AlarmUtil
 				pi);
 	}
 
+	/**
+	 * Cancels a pending alarm intent
+	 * @param context
+	 * @param id
+	 */
 	public static void deactivateAlarm(Context context, int id)
 	{
 		Log.d(DEBUG_TAG, "Canceling alarm.");
@@ -85,6 +108,11 @@ public class AlarmUtil
 		NotificationUtil.clearAlarmNotifcation(context, id);
 	}
 
+	/**
+	 * Cancels a pending snooze intent
+	 * @param context
+	 * @param id
+	 */
 	public static void deactivateSnooze(Context context, int id)
 	{
 		Log.d(DEBUG_TAG, "Canceling snooze.");
@@ -93,6 +121,13 @@ public class AlarmUtil
 		NotificationUtil.clearAlarmNotifcation(context, id);
 	}
 
+	/**
+	 * Create the intent for fireing an alarm
+	 * @param context
+	 * @param id
+	 * @param isSnooze
+	 * @return
+	 */
 	private static Intent getAlarmIntent(Context context, int id, boolean isSnooze)
 	{
 		Intent intent = new Intent(context, AlarmReceiver.class);
@@ -101,6 +136,12 @@ public class AlarmUtil
 		return intent;
 	}
 
+	/**
+	 * Creates a calendar object with the next absolute time determined by hour and minute
+	 * @param hourOfDay
+	 * @param minute
+	 * @return
+	 */
 	public static Calendar getNextAlarmTimeAbsolute(int hourOfDay, int minute)
 	{
 		Calendar cal = Calendar.getInstance();

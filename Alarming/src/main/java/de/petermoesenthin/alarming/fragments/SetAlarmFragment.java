@@ -60,7 +60,7 @@ public class SetAlarmFragment extends Fragment implements
 		SharedPreferences.OnSharedPreferenceChangeListener
 {
 
-	public static final String DEBUG_TAG = "SetAlarmFragment";
+	public static final String DEBUG_TAG = SetAlarmFragment.class.getSimpleName();
 
 	private Context mContext;
 	private RecyclerView mAlarmListView;
