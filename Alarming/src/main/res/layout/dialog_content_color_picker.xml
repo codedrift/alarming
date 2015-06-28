@@ -28,12 +28,13 @@
 		android:layout_gravity="center_horizontal"
 		android:padding="5dp"
 		android:layout_height="wrap_content" />
-	<!--
+
 		<com.larswerkman.holocolorpicker.SVBar
 			android:id="@+id/colorDialog_svBar"
+			android:layout_marginTop="5dp"
+			android:layout_marginBottom="5dp"
 			android:layout_gravity="center_horizontal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
-	-->
 
 </LinearLayout>
