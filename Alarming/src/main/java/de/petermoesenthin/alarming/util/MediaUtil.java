@@ -111,7 +111,7 @@ public class MediaUtil
 	 *
 	 * @param context Application context.
 	 */
-	public static void saveSystemMediaVolume(Context context)
+	public static void saveSystemAlarmVolume(Context context)
 	{
 		int currentVolume = getAudioManager(context).getStreamVolume(AudioManager.STREAM_ALARM);
 		Log.d(DEBUG_TAG, "Saving system STREAM_ALARM volume. Found " + currentVolume);

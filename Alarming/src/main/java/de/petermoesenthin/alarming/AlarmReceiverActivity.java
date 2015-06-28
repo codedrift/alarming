@@ -332,7 +332,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 	private void playAlarmSound()
 	{
 		Log.d(DEBUG_TAG, "Play alarm sound");
-		MediaUtil.saveSystemMediaVolume(this);
+		MediaUtil.saveSystemAlarmVolume(this);
 		MediaUtil.setAlarmVolumeFromPreference(this);
 		String[] uris = PrefUtil.getAlarmSoundUris(this);
 		boolean fileOK = false;

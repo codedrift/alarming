@@ -134,7 +134,6 @@ public class AlarmService extends Service
 				stopVibration();
 				unregisterSystemActionReceiver();
 				hideLockScreenView();
-				hideLockScreenView();
 				stopSelf();
 			}
 		});
@@ -222,7 +221,7 @@ public class AlarmService extends Service
 	private void playAlarmSound()
 	{
 		Log.d(DEBUG_TAG, "Playing alarm sound");
-		MediaUtil.saveSystemMediaVolume(this);
+		MediaUtil.saveSystemAlarmVolume(this);
 		MediaUtil.setAlarmVolumeFromPreference(this);
 		String[] uris = PrefUtil.getAlarmSoundUris(this);
 		boolean fileOK = false;
