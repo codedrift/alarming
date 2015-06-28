@@ -25,7 +25,7 @@ import android.util.Log;
 
 import java.util.List;
 
-import de.petermoesenthin.alarming.pref.AlarmGson;
+import de.petermoesenthin.alarming.pref.AlarmPref;
 import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.NotificationUtil;
 import de.petermoesenthin.alarming.pref.PrefUtil;
@@ -48,8 +48,8 @@ public class AlarmDismissReceiver extends BroadcastReceiver
 				return;
 			}
 			AlarmUtil.deactivateAlarm(context, id);
-			List<AlarmGson> alarms = PrefUtil.getAlarms(context);
-			AlarmGson alg = PrefUtil.findAlarmWithID(alarms, id);
+			List<AlarmPref> alarms = PrefUtil.getAlarms(context);
+			AlarmPref alg = PrefUtil.getAlarmByID(alarms, id);
 			alg.setAlarmSet(false);
 			PrefUtil.setAlarms(context, alarms);
 		}

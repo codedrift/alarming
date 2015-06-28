@@ -25,11 +25,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
-import java.util.List;
-
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.ui.AlarmSoundListItem;
+
+import java.util.List;
 
 public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem>
 {
@@ -41,10 +40,6 @@ public class AlarmSoundListAdapter extends ArrayAdapter<AlarmSoundListItem>
 		super(context, layoutId, itemList);
 		this.mContext = context;
 	}
-
-	//==========================================================================
-	// Methods
-	//==========================================================================
 
 	public View getView(int position, View convertView, ViewGroup parent)
 	{

@@ -37,21 +37,20 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
-
-import de.petermoesenthin.alarming.pref.AlarmGson;
-import de.petermoesenthin.alarming.pref.AlarmSoundGson;
+import de.petermoesenthin.alarming.pref.AlarmPref;
+import de.petermoesenthin.alarming.pref.AlarmSoundPref;
 import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.pref.PrefUtil;
 import de.petermoesenthin.alarming.ui.SwipeToDismissTouchListener;
 import de.petermoesenthin.alarming.util.AlarmUtil;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.util.NotificationUtil;
-import de.petermoesenthin.alarming.pref.PrefUtil;
+
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Random;
 
 public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPreparedListener,
 		MediaPlayer.OnSeekCompleteListener
@@ -67,8 +66,8 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 
 	//Alarm
 	private int mAlarmId;
-	private AlarmGson mAlarmGson;
-	private List<AlarmGson> mAlarms;
+	private AlarmPref mAlarmPref;
+	private List<AlarmPref> mAlarms;
 	private boolean flag_user_call = false;
 
 	//System
@@ -101,12 +100,12 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 		textView_alarmMessage = (TextView) findViewById(R.id.textView_alarm_message);
 		readIntent();
 		mAlarms = PrefUtil.getAlarms(this);
-		mAlarmGson = PrefUtil.findAlarmWithID(mAlarms, mAlarmId);
+		mAlarmPref = PrefUtil.getAlarmByID(mAlarms, mAlarmId);
 		setUpViews();
 		//acquireWakeLock();
 		//disableKeyguard();
 		playAlarmSound();
-		if (mAlarmGson.doesVibrate())
+		if (mAlarmPref.doesVibrate())
 		{
 			startVibration();
 		}
@@ -319,7 +318,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 		NotificationUtil.clearSnoozeNotification(this, mAlarmId);
 		AlarmUtil.deactivateSnooze(this, mAlarmId);
 		// Unset alarm from preferences
-		mAlarmGson.setAlarmSet(false);
+		mAlarmPref.setAlarmSet(false);
 		PrefUtil.setAlarms(this, mAlarms);
 	}
 
@@ -344,7 +343,7 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 			Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #" + rand + ".");
 			mDataSource = uris[rand];
 			fileOK = FileUtil.fileIsOK(this, mDataSource);
-			AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(mDataSource);
+			AlarmSoundPref alsg = FileUtil.readSoundConfigurationFile(mDataSource);
 			if (alsg != null)
 			{
 				mStartMillis = alsg.getStartMillis();
@@ -509,13 +508,13 @@ public class AlarmReceiverActivity extends Activity implements MediaPlayer.OnPre
 		});
 
 		RelativeLayout rl = (RelativeLayout) findViewById(R.id.layout_bg_alarm_receiver);
-		int color = mAlarmGson.getColor();
+		int color = mAlarmPref.getColor();
 		if (color == -1)
 		{
 			color = getResources().getColor(R.color.material_yellow);
 		}
 		rl.setBackgroundColor(color);
-		textView_alarmMessage.setText(mAlarmGson.getMessage());
+		textView_alarmMessage.setText(mAlarmPref.getMessage());
 	}
 
 

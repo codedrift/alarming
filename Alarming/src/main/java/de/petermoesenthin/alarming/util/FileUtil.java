@@ -25,22 +25,14 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
-
 import com.google.gson.Gson;
-
+import de.petermoesenthin.alarming.pref.AlarmSoundPref;
+import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.pref.PrefUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import de.petermoesenthin.alarming.pref.AlarmSoundGson;
+import java.io.*;
 
 public class FileUtil
 {
@@ -49,6 +41,28 @@ public class FileUtil
 
 	public static final String APP_EXT_STORAGE_FOLDER = "alarming";
 	public static final String AUDIO_METADATA_FILE_EXTENSION = "alarmingmeta";
+
+	public static void updateAlarmSoundUris(Context context)
+	{
+		File[] files = getAlarmDirectoryAudioFileList(context);
+		String[] fileUris;
+		if (files == null || files.length == 0)
+		{
+			Log.d(DEBUG_TAG, "No audio files found");
+			fileUris = new String[0];
+		} else
+		{
+			fileUris = new String[files.length];
+			for (int i = 0; i < files.length; i++)
+			{
+				Log.d(DEBUG_TAG, "Found file " + i + ":" + files[i].getAbsolutePath());
+				fileUris[i] = files[i].getPath();
+			}
+		}
+		Gson gson = new Gson();
+		String urisJson = gson.toJson(fileUris);
+		PrefUtil.putString(context, PrefKey.ALARM_SOUND_URIS_GSON, urisJson);
+	}
 
 	public interface OnCopyFinishedListener
 	{
@@ -264,9 +278,9 @@ public class FileUtil
 		});
 	}
 
-	public static AlarmSoundGson buildBasicMetaFile(String path)
+	public static AlarmSoundPref buildBasicMetaFile(String path)
 	{
-		AlarmSoundGson alsg = new AlarmSoundGson();
+		AlarmSoundPref alsg = new AlarmSoundPref();
 		String[] meta = MediaUtil.getBasicMetaData(path);
 		alsg.setMetaArtist(meta[0]);
 		alsg.setMetaTitle(meta[1]);
@@ -281,7 +295,7 @@ public class FileUtil
 	 * @param soundFilePath the path of the used sound file and
 	 * @param alsg          the configuration in form of a AlarmSoundGson object
 	 */
-	public static void writeSoundConfigurationFile(String soundFilePath, AlarmSoundGson alsg)
+	public static void writeSoundConfigurationFile(String soundFilePath, AlarmSoundPref alsg)
 	{
 		Log.d(DEBUG_TAG, "Writing sound configuration file");
 		String configFilePath =
@@ -304,7 +318,7 @@ public class FileUtil
 	 * @param soundFilePath Path to the sound file since the configuration is next to it
 	 * @return
 	 */
-	public static AlarmSoundGson readSoundConfigurationFile(String soundFilePath)
+	public static AlarmSoundPref readSoundConfigurationFile(String soundFilePath)
 	{
 		Log.d(DEBUG_TAG, "Reading sound configuration file");
 		Gson gs = new Gson();
@@ -323,7 +337,7 @@ public class FileUtil
 			Log.e(DEBUG_TAG, "Unable to read file");
 			return null;
 		}
-		return gs.fromJson(js, AlarmSoundGson.class);
+		return gs.fromJson(js, AlarmSoundPref.class);
 	}
 
 

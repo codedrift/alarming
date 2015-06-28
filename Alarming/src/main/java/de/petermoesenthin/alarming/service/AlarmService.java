@@ -38,19 +38,17 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
-
 import com.fima.glowpadview.GlowPadView;
+import de.petermoesenthin.alarming.R;
+import de.petermoesenthin.alarming.pref.AlarmPref;
+import de.petermoesenthin.alarming.pref.AlarmSoundPref;
+import de.petermoesenthin.alarming.pref.PrefUtil;
+import de.petermoesenthin.alarming.util.FileUtil;
+import de.petermoesenthin.alarming.util.MediaUtil;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
-
-import de.petermoesenthin.alarming.R;
-import de.petermoesenthin.alarming.pref.AlarmGson;
-import de.petermoesenthin.alarming.pref.AlarmSoundGson;
-import de.petermoesenthin.alarming.util.FileUtil;
-import de.petermoesenthin.alarming.util.MediaUtil;
-import de.petermoesenthin.alarming.pref.PrefUtil;
 
 public class AlarmService extends Service
 		implements
@@ -79,8 +77,8 @@ public class AlarmService extends Service
 
 	//Alarm
 	private int mAlarmId;
-	private AlarmGson mAlarmGson;
-	private List<AlarmGson> mAlarms;
+	private AlarmPref mAlarmPref;
+	private List<AlarmPref> mAlarms;
 
 	//----------------------------------------------------------------------------------------------
 	//                                      LIFECYCLE
@@ -113,10 +111,10 @@ public class AlarmService extends Service
 			public void run()
 			{
 				mAlarms = PrefUtil.getAlarms(mContext);
-				mAlarmGson = mAlarms.get(mAlarmId);
+				mAlarmPref = PrefUtil.getAlarmByID(mAlarms, mAlarmId);
 				registerSystemActionReceiver();
-				showLockScreenView(mAlarmGson);
-				if(mAlarmGson.doesVibrate()){
+				showLockScreenView(mAlarmPref);
+				if(mAlarmPref.doesVibrate()){
 					startVibration();
 				}
 				playAlarmSound();
@@ -178,7 +176,7 @@ public class AlarmService extends Service
 			if (action.equals(Intent.ACTION_SCREEN_ON))
 			{
 				Log.d(DEBUG_TAG, "Received ACTION_SCREEN_ON");
-				showLockScreenView(mAlarmGson);
+				showLockScreenView(mAlarmPref);
 			} else if (action.equals(Intent.ACTION_USER_PRESENT))
 			{
 				Log.d(DEBUG_TAG, "Received ACTION_USER_PRESENT");
@@ -235,7 +233,7 @@ public class AlarmService extends Service
 			Log.d(DEBUG_TAG, "Found " + uris.length + " alarm sounds. Playing #" + rand + ".");
 			mDataSource = uris[rand];
 			fileOK = FileUtil.fileIsOK(this, mDataSource);
-			AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(mDataSource);
+			AlarmSoundPref alsg = FileUtil.readSoundConfigurationFile(mDataSource);
 			if (alsg != null)
 			{
 				mStartMillis = alsg.getStartMillis();
@@ -371,7 +369,7 @@ public class AlarmService extends Service
 		}
 	}
 
-	private void showLockScreenView(AlarmGson mAlarmGson)
+	private void showLockScreenView(AlarmPref mAlarmPref)
 	{
 		Log.i(DEBUG_TAG, "Showing LockScreen view");
 		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -380,7 +378,7 @@ public class AlarmService extends Service
 		mView = inflater.inflate(R.layout.alarm_alert, null);
 		RelativeLayout alarmView = (RelativeLayout) mView.findViewById(R.id.layout_bg_alarm_receiver);
 
-		alarmView.setBackgroundColor(mAlarmGson.getColor());
+		alarmView.setBackgroundColor(mAlarmPref.getColor());
 
 		//SetUp GlowPadView
 		mGlowPadView = (GlowPadView) mView.findViewById(R.id.glow_pad_view);

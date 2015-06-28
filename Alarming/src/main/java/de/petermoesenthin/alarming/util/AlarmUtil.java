@@ -24,10 +24,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import de.petermoesenthin.alarming.R;
+import de.petermoesenthin.alarming.pref.AlarmPref;
+import de.petermoesenthin.alarming.pref.PrefUtil;
+import de.petermoesenthin.alarming.receiver.AlarmReceiver;
 
 import java.util.Calendar;
-
-import de.petermoesenthin.alarming.receiver.AlarmReceiver;
+import java.util.Random;
 
 public class AlarmUtil
 {
@@ -159,4 +162,5 @@ public class AlarmUtil
 		}
 		return cal;
 	}
+
 }

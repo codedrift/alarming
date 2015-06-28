@@ -20,7 +20,6 @@ package de.petermoesenthin.alarming.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,7 @@ import android.widget.TextView;
 
 import at.markushi.ui.CircleButton;
 import de.petermoesenthin.alarming.R;
-import de.petermoesenthin.alarming.pref.AlarmGson;
+import de.petermoesenthin.alarming.pref.AlarmPref;
 import de.petermoesenthin.alarming.util.StringUtil;
 
 import java.util.List;
@@ -41,19 +40,19 @@ public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecy
 
 	public static final String DEBUG_TAG = AlarmCardRecyclerAdapter.class.getSimpleName();
 
-	private List<AlarmGson> mAlarms;
+	final private List<AlarmPref> mAlarmPrefs;
 	private Context mContext;
 	private AdapterCallBacks mAdapterCallBacks;
 
-	public AlarmCardRecyclerAdapter(List<AlarmGson> mAlarms)
+	public AlarmCardRecyclerAdapter(List<AlarmPref> alarmPrefs)
 	{
-		this.mAlarms = mAlarms;
+		this.mAlarmPrefs = alarmPrefs;
 	}
 
-	public AlarmCardRecyclerAdapter(List<AlarmGson> mAlarms, AdapterCallBacks adapterCallBacks)
+	public AlarmCardRecyclerAdapter(final List<AlarmPref> alarmPrefs, AdapterCallBacks adapterCallBacks)
 	{
 		this.mAdapterCallBacks = adapterCallBacks;
-		this.mAlarms = mAlarms;
+		this.mAlarmPrefs = alarmPrefs;
 	}
 
 	public interface AdapterCallBacks
@@ -88,7 +87,7 @@ public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecy
 	@Override
 	public void onBindViewHolder(AlarmCardViewHolder viewHolder, int i)
 	{
-		AlarmGson alarm = mAlarms.get(i);
+		AlarmPref alarm = mAlarmPrefs.get(i);
 		setAlarmTimeView(viewHolder, alarm.getHour(), alarm.getMinute());
 
 		setCircleButtonActive(viewHolder, alarm.isAlarmSet());
@@ -121,7 +120,7 @@ public class AlarmCardRecyclerAdapter extends RecyclerView.Adapter<AlarmCardRecy
 	@Override
 	public int getItemCount()
 	{
-		return mAlarms.size();
+		return mAlarmPrefs.size();
 	}
 
 	private void setAlarmTimeView(AlarmCardViewHolder viewHolder, int hour, int minute)

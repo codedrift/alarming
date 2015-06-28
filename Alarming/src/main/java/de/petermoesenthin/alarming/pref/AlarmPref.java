@@ -18,7 +18,7 @@
  */
 package de.petermoesenthin.alarming.pref;
 
-public class AlarmGson
+public class AlarmPref
 {
 
 	private int hour = 0;
@@ -30,7 +30,7 @@ public class AlarmGson
 	private int color = -1;
 	private int id = 0;
 
-	public AlarmGson()
+	public AlarmPref()
 	{
 	}
 

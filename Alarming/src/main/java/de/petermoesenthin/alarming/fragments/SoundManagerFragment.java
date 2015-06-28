@@ -161,7 +161,7 @@ public class SoundManagerFragment extends Fragment implements
 							@Override
 							public void onOperationFinished()
 							{
-								PrefUtil.updateAlarmSoundUris(mContext);
+								FileUtil.updateAlarmSoundUris(mContext);
 								mHandler.post(new Runnable()
 								{
 									@Override
@@ -300,7 +300,7 @@ public class SoundManagerFragment extends Fragment implements
 							{
 								FileUtil.deleteFile(
 										PrefUtil.getAlarmSoundUris(mContext)[itemPosition]);
-								PrefUtil.updateAlarmSoundUris(mContext);
+								FileUtil.updateAlarmSoundUris(mContext);
 								dialog.dismiss();
 							}
 						}

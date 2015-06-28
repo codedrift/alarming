@@ -23,7 +23,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,29 +31,29 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.larswerkman.holocolorpicker.ColorPicker;
+import com.larswerkman.holocolorpicker.SVBar;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
 import de.petermoesenthin.alarming.R;
 import de.petermoesenthin.alarming.adapter.AlarmCardRecyclerAdapter;
-import de.petermoesenthin.alarming.pref.AlarmGson;
+import de.petermoesenthin.alarming.pref.AlarmPref;
 import de.petermoesenthin.alarming.pref.PrefKey;
+import de.petermoesenthin.alarming.pref.PrefUtil;
 import de.petermoesenthin.alarming.ui.LClickListener;
 import de.petermoesenthin.alarming.ui.LDialog;
 import de.petermoesenthin.alarming.ui.LDialogView;
 import de.petermoesenthin.alarming.util.AlarmUtil;
-import de.petermoesenthin.alarming.pref.PrefUtil;
 import de.petermoesenthin.alarming.util.StringUtil;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SetAlarmFragment extends Fragment implements
 		SharedPreferences.OnSharedPreferenceChangeListener
@@ -65,7 +64,7 @@ public class SetAlarmFragment extends Fragment implements
 	private Context mContext;
 	private RecyclerView mAlarmListView;
 	private AlarmCardRecyclerAdapter mAlarmCardRecyclerAdapter;
-	private List<AlarmGson> mAlarms = new ArrayList<AlarmGson>();
+	private List<AlarmPref> mAlarmPrefs = new ArrayList<AlarmPref>();
 	private FloatingActionButton mFAB;
 
 	//----------------------------------------------------------------------------------------------
@@ -139,24 +138,20 @@ public class SetAlarmFragment extends Fragment implements
 	private void addNewAlarm()
 	{
 		Log.d(DEBUG_TAG, "Add new alarm");
-		AlarmGson alarm = PrefUtil.getNewAlarmGson(mContext);
-		Random r = new Random();
-		String[] messages = getResources().getStringArray(R.array.alarm_texts);
-		String message = messages[r.nextInt(messages.length)];
-		alarm.setMessage(message);
-		mAlarms.add(alarm);
+		AlarmPref alarm = PrefUtil.getNewAlarmPref(mContext);
+		mAlarmPrefs.add(alarm);
 		mAlarmCardRecyclerAdapter.notifyDataSetChanged();
 		scrollCardListViewToBottom();
-		PrefUtil.setAlarms(mContext, mAlarms);
+		PrefUtil.setAlarms(mContext, mAlarmPrefs);
 	}
 
 
 	private void activateAlarm(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position)
 	{
 		Log.d(DEBUG_TAG, "Activate alarm " + position);
-		AlarmGson alg = mAlarms.get(position);
-		alg.setAlarmSet(true);
-		Calendar calendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alg.getHour(), alg.getMinute());
+		AlarmPref alarm = mAlarmPrefs.get(position);
+		alarm.setAlarmSet(true);
+		Calendar calendarSet = AlarmUtil.getNextAlarmTimeAbsolute(alarm.getHour(), alarm.getMinute());
 		Calendar now = Calendar.getInstance();
 		now.setTimeInMillis(System.currentTimeMillis());
 		long time = calendarSet.getTime().getTime() - now.getTime().getTime();
@@ -180,33 +175,33 @@ public class SetAlarmFragment extends Fragment implements
 			Toast.makeText(mContext, String.format("Alarm goes off in %d hours %d minutes", hours, minutes - hours * 60),
 					Toast.LENGTH_SHORT).show();
 		}
-		AlarmUtil.setAlarm(mContext, calendarSet, alg.getId());
-		PrefUtil.setAlarms(mContext, mAlarms);
+		AlarmUtil.setAlarm(mContext, calendarSet, alarm.getId());
+		PrefUtil.setAlarms(mContext, mAlarmPrefs);
 	}
 
 	private void deleteAlarm(int position)
 	{
 		Log.d(DEBUG_TAG, "Delete alarm " + position);
-		mAlarms.remove(position);
-		PrefUtil.setAlarms(mContext, mAlarms);
+		mAlarmPrefs.remove(position);
+		PrefUtil.setAlarms(mContext, mAlarmPrefs);
 		mAlarmCardRecyclerAdapter.notifyDataSetChanged();
 	}
 
 	private void deactivateAlarm(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position)
 	{
 		Log.d(DEBUG_TAG, "Deactivate alarm " + position);
-		AlarmGson alg = mAlarms.get(position);
-		alg.setAlarmSet(false);
-		AlarmUtil.deactivateAlarm(mContext, alg.getId());
-		PrefUtil.setAlarms(mContext, mAlarms);
+		AlarmPref alarm = mAlarmPrefs.get(position);
+		alarm.setAlarmSet(false);
+		AlarmUtil.deactivateAlarm(mContext, alarm.getId());
+		PrefUtil.setAlarms(mContext, mAlarmPrefs);
 	}
 
 	public void setAlarmTime(int position, int hourOfDay, int minute)
 	{
 		Log.d(DEBUG_TAG, "Time picker finished. Setting alarm time at " + position);
-		AlarmGson alg = mAlarms.get(position);
-		alg.setHour(hourOfDay);
-		alg.setMinute(minute);
+		AlarmPref alarm = mAlarmPrefs.get(position);
+		alarm.setHour(hourOfDay);
+		alarm.setMinute(minute);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -216,15 +211,22 @@ public class SetAlarmFragment extends Fragment implements
 	private void setUpListView()
 	{
 		Log.d(DEBUG_TAG, "Set up list view");
-		mAlarms = PrefUtil.getAlarms(mContext);
+		mAlarmPrefs = PrefUtil.getAlarms(mContext);
 		// No alarms present
-		if (mAlarms.isEmpty())
+		if (mAlarmPrefs.isEmpty())
 		{
-			mAlarms.add(new AlarmGson());
+			mAlarmPrefs.add(new AlarmPref());
 			PrefUtil.putInt(mContext, PrefKey.ALARM_ID_COUNTER, 1);
 		}
 
-		mAlarmCardRecyclerAdapter = new AlarmCardRecyclerAdapter(mAlarms,
+		setUpAlarmCardAdapter();
+
+		mAlarmListView.setAdapter(mAlarmCardRecyclerAdapter);
+	}
+
+	private void setUpAlarmCardAdapter()
+	{
+		mAlarmCardRecyclerAdapter = new AlarmCardRecyclerAdapter(mAlarmPrefs,
 				new AlarmCardRecyclerAdapter.AdapterCallBacks()
 				{
 
@@ -239,8 +241,8 @@ public class SetAlarmFragment extends Fragment implements
 					public void onAlarmSetClick(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position)
 					{
 						Log.d(DEBUG_TAG, "AlarmSetClick at " + position);
-						AlarmGson alg = mAlarms.get(position);
-						boolean alarmSet = alg.isAlarmSet();
+						AlarmPref alarm = mAlarmPrefs.get(position);
+						boolean alarmSet = alarm.isAlarmSet();
 						if (alarmSet)
 						{
 							deactivateAlarm(viewHolder, position);
@@ -256,21 +258,21 @@ public class SetAlarmFragment extends Fragment implements
 					public void onVibrateClick(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position)
 					{
 						Log.d(DEBUG_TAG, "VibrateClick at " + position);
-						AlarmGson alg = mAlarms.get(position);
-						boolean doesVibrate = alg.doesVibrate();
-						alg.setVibrate(!doesVibrate);
+						AlarmPref alarm = mAlarmPrefs.get(position);
+						boolean doesVibrate = alarm.doesVibrate();
+						alarm.setVibrate(!doesVibrate);
 						viewHolder.vibrate.setChecked(!doesVibrate);
-						PrefUtil.setAlarms(mContext, mAlarms);
+						PrefUtil.setAlarms(mContext, mAlarmPrefs);
 					}
 
 					@Override
 					public void onRepeatAlarmClick(AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder, int position)
 					{
 						Log.d(DEBUG_TAG, "RepeatAlarmClick at " + position);
-						AlarmGson alg = mAlarms.get(position);
-						boolean doesRepeat = alg.doesRepeat();
-						alg.setRepeat(!doesRepeat);
-						PrefUtil.setAlarms(mContext, mAlarms);
+						AlarmPref alarm = mAlarmPrefs.get(position);
+						boolean doesRepeat = alarm.doesRepeat();
+						alarm.setRepeat(!doesRepeat);
+						PrefUtil.setAlarms(mContext, mAlarmPrefs);
 						mAlarmCardRecyclerAdapter.showWeekdayPanel(viewHolder, !doesRepeat);
 					}
 
@@ -296,10 +298,7 @@ public class SetAlarmFragment extends Fragment implements
 						deleteAlarm(position);
 					}
 				});
-
-		mAlarmListView.setAdapter(mAlarmCardRecyclerAdapter);
 	}
-
 
 	private void setAlarmTimeView(TextView alarmTime, TextView am_pm, int hour, int minute)
 	{
@@ -337,8 +336,10 @@ public class SetAlarmFragment extends Fragment implements
 				R.string.dialog_title_set_alarm_color);
 		final LDialog colorPickerDialog = new LDialog(mContext, dialogView);
 		final ColorPicker cp = (ColorPicker) dialogView.getView().findViewById(R.id.dialog_color_picker);
-		final AlarmGson alg = mAlarms.get(position);
-		int color = alg.getColor();
+		final SVBar svBar = (SVBar) dialogView.getView().findViewById(R.id.colorDialog_svBar);
+		cp.addSVBar(svBar);
+		final AlarmPref alarm = mAlarmPrefs.get(position);
+		int color = alarm.getColor();
 		if (color == -1)
 		{
 			color = getResources().getColor(R.color.material_yellow);
@@ -352,10 +353,10 @@ public class SetAlarmFragment extends Fragment implements
 					public void onClick(AlertDialog dialog)
 					{
 						int colorChoice = cp.getColor();
-						alg.setColor(colorChoice);
+						alarm.setColor(colorChoice);
 						View v = viewHolder.chooseColor.findViewById(R.id.view_color_indicator);
 						v.setBackgroundColor(colorChoice);
-						PrefUtil.setAlarms(mContext, mAlarms);
+						PrefUtil.setAlarms(mContext, mAlarmPrefs);
 						dialog.dismiss();
 					}
 				});
@@ -381,7 +382,7 @@ public class SetAlarmFragment extends Fragment implements
 		final EditText editText = (EditText) dialogView.getView().findViewById(R.id
 				.editText);
 		editText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
-		String prefText = mAlarms.get(position).getMessage();
+		String prefText = mAlarmPrefs.get(position).getMessage();
 		editText.setText(prefText);
 		alarmMessageDialog.setPositiveButtonListener(
 				new LClickListener()
@@ -390,9 +391,9 @@ public class SetAlarmFragment extends Fragment implements
 					public void onClick(AlertDialog dialog1)
 					{
 						String text = editText.getText().toString();
-						mAlarms.get(position).setMessage(text);
+						mAlarmPrefs.get(position).setMessage(text);
 						viewHolder.alarmText.setText(text);
-						PrefUtil.setAlarms(mContext, mAlarms);
+						PrefUtil.setAlarms(mContext, mAlarmPrefs);
 						dialog1.dismiss();
 					}
 				});
@@ -410,10 +411,9 @@ public class SetAlarmFragment extends Fragment implements
 
 	private void showTimePicker(final int position, final AlarmCardRecyclerAdapter.AlarmCardViewHolder viewHolder)
 	{
-		Calendar cal = Calendar.getInstance();
 		String[] time = StringUtil.getTimeFormattedSystem(mContext, 13, 0).split(" ");
 		boolean is24h = time.length < 2;
-		AlarmGson alarmGson = mAlarms.get(position);
+		AlarmPref alarmPref = mAlarmPrefs.get(position);
 		final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
 				new TimePickerDialog.OnTimeSetListener()
 				{
@@ -426,8 +426,8 @@ public class SetAlarmFragment extends Fragment implements
 						activateAlarm(viewHolder, position);
 					}
 				},
-				alarmGson.getHour(),
-				alarmGson.getMinute(),
+				alarmPref.getHour(),
+				alarmPref.getMinute(),
 				is24h,
 				false);
 		timePickerDialog.show(getActivity().getSupportFragmentManager(), null);

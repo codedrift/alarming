@@ -21,16 +21,14 @@ package de.petermoesenthin.alarming.pref;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-
+import android.content.res.TypedArray;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import de.petermoesenthin.alarming.R;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.petermoesenthin.alarming.util.FileUtil;
+import java.util.Random;
 
 public class PrefUtil
 {
@@ -130,28 +128,6 @@ public class PrefUtil
 		return context.getSharedPreferences(PrefKey.PREF_FILE_NAME, Activity.MODE_PRIVATE);
 	}
 
-	public static void updateAlarmSoundUris(Context context)
-	{
-		File[] files = FileUtil.getAlarmDirectoryAudioFileList(context);
-		String[] fileUris;
-		if (files == null || files.length == 0)
-		{
-			Log.d(DEBUG_TAG, "No audio files found");
-			fileUris = new String[0];
-		} else
-		{
-			fileUris = new String[files.length];
-			for (int i = 0; i < files.length; i++)
-			{
-				Log.d(DEBUG_TAG, "Found file " + i + ":" + files[i].getAbsolutePath());
-				fileUris[i] = files[i].getPath();
-			}
-		}
-		Gson gson = new Gson();
-		String urisJson = gson.toJson(fileUris);
-		putString(context, PrefKey.ALARM_SOUND_URIS_GSON, urisJson);
-	}
-
 	public static String[] getAlarmSoundUris(Context context)
 	{
 		String[] files;
@@ -162,46 +138,31 @@ public class PrefUtil
 		return files;
 	}
 
-	/**
-	 * Get alarm Gson with incremented id
-	 *
-	 * @param context
-	 * @return
-	 */
-	public static AlarmGson getNewAlarmGson(Context context)
-	{
-		AlarmGson alarm = new AlarmGson();
-		int alarmID = PrefUtil.getInt(context, PrefKey.ALARM_ID_COUNTER, 0);
-		alarm.setId(alarmID);
-		PrefUtil.putInt(context, PrefKey.ALARM_ID_COUNTER, alarmID + 1);
-		return alarm;
-	}
-
-	public static List<AlarmGson> getAlarms(Context context)
+	public static List<AlarmPref> getAlarms(Context context)
 	{
 		Gson gson = new Gson();
 		String js = getString(context, PrefKey.ALARMS, null);
-		List<AlarmGson> alarms = gson.fromJson(js, new TypeToken<ArrayList<AlarmGson>>()
+		List<AlarmPref> alarms = gson.fromJson(js, new TypeToken<ArrayList<AlarmPref>>()
 		{
 		}.getType
 				());
 		if (alarms == null)
 		{
-			alarms = new ArrayList<AlarmGson>();
+			alarms = new ArrayList<AlarmPref>();
 		}
 		return alarms;
 	}
 
-	public static void setAlarms(Context context, List<AlarmGson> alarms)
+	public static void setAlarms(Context context, List<AlarmPref> alarms)
 	{
 		Gson gson = new Gson();
 		String js = gson.toJson(alarms);
 		PrefUtil.putString(context, PrefKey.ALARMS, js);
 	}
 
-	public static AlarmGson findAlarmWithID(List<AlarmGson> alarms, int id)
+	public static AlarmPref getAlarmByID(List<AlarmPref> alarms, int id)
 	{
-		for (AlarmGson alg : alarms)
+		for (AlarmPref alg : alarms)
 		{
 			if (alg.getId() == id)
 			{
@@ -211,4 +172,45 @@ public class PrefUtil
 		return null;
 	}
 
+	/**
+	 * Get id for and alarm pref and increment it in the preferences
+	 * @param context
+	 * @return
+	 */
+	public static int getIncrementedAlarmID(Context context)
+	{
+		int alarmID = getInt(context, PrefKey.ALARM_ID_COUNTER, 0);
+		putInt(context, PrefKey.ALARM_ID_COUNTER, alarmID + 1);
+		return alarmID;
+	}
+
+	/**
+	 * Get alarm gson object with incremented id and default values
+	 *
+	 * @param context
+	 * @return
+	 */
+	public static AlarmPref getNewAlarmPref(Context context)
+	{
+		AlarmPref alarm = new AlarmPref();
+
+		int alarmID = getIncrementedAlarmID(context);
+		alarm.setId(alarmID);
+
+		Random r = new Random();
+		String[] messages = context.getResources().getStringArray(R.array.alarm_texts);
+		String message = messages[r.nextInt(messages.length)];
+		alarm.setMessage(message);
+
+		TypedArray colorTypedArray = context.getResources().obtainTypedArray(R.array.alarm_default_colors);
+		int[] colors = new int[colorTypedArray.length()];
+		for (int i = 0; i < colorTypedArray.length(); i++) {
+			colors[i] = colorTypedArray.getColor(i, 0);
+		}
+		alarm.setColor(colors[r.nextInt(colors.length)]);
+
+		colorTypedArray.recycle();
+
+		return alarm;
+	}
 }

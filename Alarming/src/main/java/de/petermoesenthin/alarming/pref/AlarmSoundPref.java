@@ -19,7 +19,7 @@
 
 package de.petermoesenthin.alarming.pref;
 
-public class AlarmSoundGson
+public class AlarmSoundPref
 {
 
 	private String path = "";

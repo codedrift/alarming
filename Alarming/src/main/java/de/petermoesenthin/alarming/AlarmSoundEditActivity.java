@@ -37,7 +37,7 @@ import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 
-import de.petermoesenthin.alarming.pref.AlarmSoundGson;
+import de.petermoesenthin.alarming.pref.AlarmSoundPref;
 import de.petermoesenthin.alarming.util.FileUtil;
 import de.petermoesenthin.alarming.util.MediaUtil;
 import de.petermoesenthin.alarming.pref.PrefUtil;
@@ -201,7 +201,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 	private void readConfig()
 	{
 		Log.d(DEBUG_TAG, "Reading configuration.");
-		AlarmSoundGson alsg = FileUtil.readSoundConfigurationFile(mSoundFilePath);
+		AlarmSoundPref alsg = FileUtil.readSoundConfigurationFile(mSoundFilePath);
 		if (alsg == null)
 		{
 			mStartMillis = 0;
@@ -219,7 +219,7 @@ public class AlarmSoundEditActivity extends ActionBarActivity implements MediaPl
 	private void saveConfig()
 	{
 		Log.d(DEBUG_TAG, "Saving configuration.");
-		AlarmSoundGson alsg = new AlarmSoundGson();
+		AlarmSoundPref alsg = new AlarmSoundPref();
 		alsg.setStartMillis(mStartMillis);
 		alsg.setEndMillis(mEndMillis);
 		alsg.setPath(mSoundFilePath);

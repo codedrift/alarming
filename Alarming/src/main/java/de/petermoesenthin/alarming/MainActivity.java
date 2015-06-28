@@ -43,7 +43,7 @@ import de.petermoesenthin.alarming.fragments.SoundManagerFragment;
 import de.petermoesenthin.alarming.pref.PrefKey;
 import de.petermoesenthin.alarming.ui.DrawerItem;
 import de.petermoesenthin.alarming.pref.PrefUtil;
-
+import de.petermoesenthin.alarming.util.FileUtil;
 
 public class MainActivity extends ActionBarActivity
 {
@@ -89,7 +89,7 @@ public class MainActivity extends ActionBarActivity
 		if (firstStart)
 		{
 			Log.d(DEBUG_TAG, "First start detected.");
-			PrefUtil.updateAlarmSoundUris(this);
+			FileUtil.updateAlarmSoundUris(this);
 			PrefUtil.putBoolean(this, PrefKey.APP_FIRST_START, false);
 		}
 	}
